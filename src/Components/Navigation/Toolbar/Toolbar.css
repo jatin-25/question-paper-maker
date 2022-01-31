@@ -1,0 +1,90 @@
+.Toolbar {
+    height: 56px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #323F4B;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 900;
+    color: white;
+}
+.Toolbar img {
+    background-color: #323F4B;
+}
+.Toolbar nav {
+    display: flex;
+    height: 100%;
+    width: 60%;
+    background-color: #323F4B;
+    justify-content: center;
+    align-items: center;
+    /* padding: 0; */
+}
+.NavItems{
+    background-color: #323F4B;
+    width: 100%;
+    padding: 0;
+}
+.NavItems a{
+    text-decoration: none;
+    list-style-type: none;
+    color: white;
+    width: 100%;
+    padding: 15px 0;
+    margin: 0 1em;
+    background-color: #323F4B;
+}
+.NavItems a:hover{
+    border-bottom: 2px solid white;
+}
+.AddQuestion{
+    cursor: pointer;
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #323F4B;
+}
+.AddQuestion img, .AddQuestion span {
+    margin: 3px;
+    background-color: #323F4B;
+}
+
+.None {
+    display: none;
+    background-color: #323F4B;
+    transition: all 0.4s ease-in;
+    transform: translateY(0);
+}
+
+.QuestionTypes{
+    display: block;
+    position: absolute;
+    background-color: #323F4B;
+    top: 40px;
+    right: 5px;
+    justify-self: left;
+    color: white;
+    transition: all 0.4s ease-in;
+    transform: translateY(-100vh);
+}
+.QuestionTypes ul{
+    list-style-type: none;
+    background-color: #323F4B;
+    padding-left: 15px;
+}
+.QuestionTypes ul li{
+    margin: 0.5em 0;
+    background-color: #323F4B;
+    justify-content: flex-start;
+}
+@media (max-width: 499px) {
+    .DesktopOnly {
+        display: none;
+    }
+}

@@ -1,0 +1,31 @@
+.EssentialFeildForm {
+    background-color: #CBD2D9;
+    color: black;
+    border-radius: 0.5em;
+    width: 23%;
+    height: 100%;
+    padding: 1em 1em;
+    margin-top: 5rem;
+}
+
+
+.EssentialFeildForm input[type=text] {
+    width: 100%;
+    padding: 8px 10px;
+    margin: 10px 0;
+    margin-top : 7px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 0px solid black;
+    background: white;
+  }
+.EssentialFeildForm input[type=text]:focus,input[type=text]:hover {
+    transition: all 1s linear;
+    border: none;
+    border-color: transparent;
+    outline: 0px;
+  }
+.EssentialFeildForm p,.Text span{
+    margin: 10px 0;
+}

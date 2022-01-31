@@ -1,0 +1,31 @@
+.Modal {
+    position: fixed;
+    z-index: 500;
+    background-color: #3E4C59;
+    width: 60%;
+    max-height: 70vh;
+    border: 0px solid #1F2933;
+    -moz-box-shadow:    8px 8px 6px -6px #05090c;
+    -webkit-box-shadow: 8px 8px 6px -6px #05090c;
+    box-shadow: 8px 8px 6px -6px #05090c;
+    padding: 15px 18px;
+    left: 15%;
+    top: 30%;
+    box-sizing: border-box;
+    transition: all 0.3s ease-out;
+    color: white;
+    border-radius: 0.5rem;
+    overflow-wrap: anywhere;
+    overflow: auto;
+    scroll-behavior: smooth;
+}
+.Modal div, .Modal p{
+    background-color: #3E4C59;
+    color: white;
+}
+@media (min-width: 600px) {
+    .Modal {
+        width: 400px;
+        left: calc(50% - 250px);
+    }
+}
