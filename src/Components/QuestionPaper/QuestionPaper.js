@@ -64,7 +64,6 @@ class QuestionPaper extends Component{
             questionArr: this.state.questionArr
         }
 
-        const qkey = this.props.qkey;
         axios.post('/responses.json?auth='+this.props.token,questionPaperResponse).then(
             response => {
                 console.log(response);

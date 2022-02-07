@@ -209,18 +209,18 @@ class NewPaper extends Component{
             <input type='text' onChange={(e) => this.onChangeTitleHandler(e)}></input>
         </div> : null;
         
-        let addQuestionTypes = null;
-        addQuestionTypes = <div className={classes.AddQuestion} onMouseEnter={this.onHoverHandler} onMouseLeave={this.onHoverLeaveHandler}>
-            <img src={add} alt="Add Question" />
-            <span>Add Question</span>
-            <div className={classes.QuestionTypes} style={{ transform: this.state.isHovered ? "translateY(0)" : "translateY(10vh)", opacity: this.state.isHovered ? "1" : "0" }} onMouseEnter={this.onHoverHandler} onMouseLeave={this.onHoverLeaveHandler}>
-                <ul>
-                    <li onClick={this.showSingleChoiceInputForm}>Single Choice Question</li>
-                    <li onClick={this.showMultipleChoiceInputForm}>Multiple Choice Question</li>
-                    <li onClick={this.showParagraphInputForm}>Paragraph Question</li>
-                </ul>
-            </div>
-        </div>
+        // let addQuestionTypes = null;
+        // addQuestionTypes = <div className={classes.AddQuestion} onMouseEnter={this.onHoverHandler} onMouseLeave={this.onHoverLeaveHandler}>
+        //     <img src={add} alt="Add Question" />
+        //     <span>Add Question</span>
+        //     <div className={classes.QuestionTypes} style={{ transform: this.state.isHovered ? "translateY(0)" : "translateY(10vh)", opacity: this.state.isHovered ? "1" : "0" }} onMouseEnter={this.onHoverHandler} onMouseLeave={this.onHoverLeaveHandler}>
+        //         <ul>
+        //             <li onClick={this.showSingleChoiceInputForm}>Single Choice Question</li>
+        //             <li onClick={this.showMultipleChoiceInputForm}>Multiple Choice Question</li>
+        //             <li onClick={this.showParagraphInputForm}>Paragraph Question</li>
+        //         </ul>
+        //     </div>
+        // </div>
         return (
             <div className={classes.QuestionArea}>
                 <Toolbar clicked = {this.invertToggle} clickFunctions = {{scq: this.showSingleChoiceInputForm,mcq: this.showMultipleChoiceInputForm,pq: this.showParagraphInputForm}} initialToolbar = {false}></Toolbar>

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import classes from './AuthForm.css';
 import log from '../../assets/log.svg';
 import register from '../../assets/register.svg';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import googleIcon from '../../assets/google-logo.png';
 import facebookIcon from '../../assets/facebook-brands.svg';
 import twitterIcon from '../../assets/twitter-brands.svg';
@@ -12,7 +11,6 @@ import emailIcon from '../../assets/envelope-solid.svg';
 import passwordIcon from '../../assets/lock-solid.svg';
 import * as actions from '../../Store/Actions/index';
 import { connect } from 'react-redux';
-import Spinner from "../UI/Spinner/Spinner";
 class AuthForm extends Component{
 
     state = {
@@ -208,7 +206,7 @@ class AuthForm extends Component{
         const loginFormElements = loginFormObject.map((elementData, i) => {
             return <div key={i} className={[classes.inputField, (elementData.touched && !(elementData.valid)) ? classes.invalidElement : null].join(" ")}>
                 {/* {console.log(elementData.touched, !elementData.valid)} */}
-                <img src={elementData.imageSrc} className={classes.icon}/>
+                <img src={elementData.imageSrc} className={classes.icon} alt={loginKeyArr[i]}/>
                 <input
                     {...elementData.elementConfig}
                     value={elementData.value}
@@ -220,7 +218,7 @@ class AuthForm extends Component{
 
         const signUpFormElements = signUpFormObject.map((elementData, i) => {
             return <div key={i} className={[classes.inputField, (elementData.touched && !(elementData.valid)) ? classes.invalidElement : null].join(" ")}>
-                <img src={elementData.imageSrc} className={classes.icon} />
+                <img src={elementData.imageSrc} className={classes.icon} alt={signUpKeyArr[i]} />
                 <input
                     {...elementData.elementConfig}
                     value={elementData.value}
@@ -239,33 +237,24 @@ class AuthForm extends Component{
             <div className={this.state.isSignUp === false?classes.container:[classes.container,classes.signUpMode].join(" ")}>
                 <div className={classes.formsContainer}>
                     <div className={classes.signinSignup}>
-                        <form action="#" className={classes.signInForm}>
+                        <form className={classes.signInForm}>
                             <h2 className={classes.title}>Sign in</h2>
                             {errorMessage}
-                            {/*
-                            <div className={classes.inputField}>
-                                <img src={emailIcon} className={classes.icon}/>
-                                <input type="text" placeholder="Email"/>
-                            </div>
-                            <div className={classes.inputField}>
-                                <img src={passwordIcon} className={classes.icon}/>
-                                <input type="password" placeholder="Password" />
-                            </div> */}
                             {loginFormElements}
                             <button className={[classes.btn, this.state.loginForm.formIsValid?classes.valid:null].join(" ")} onClick={this.submitHandler} disabled={!this.state.loginForm.formIsValid}>Login</button>
                             <p className={classes.socialText}>Sign in with social platforms</p>
                             <div className={classes.socialMedia}>
-                                <a href="#" className={classes.socialIcon}>
-                                    <img src={googleIcon} className={ classes.icon}/>
+                                <a className={classes.socialIcon}>
+                                    <img src={googleIcon} className={ classes.icon} alt="Google"/>
                                 </a>
-                                <a href="#" className={classes.socialIcon}>
-                                    <img src={appleIcon} />
+                                <a className={classes.socialIcon}>
+                                    <img src={appleIcon} alt = "Apple"/>
                                 </a>
-                                <a href="#" className={classes.socialIcon}>
-                                    <img src={facebookIcon} />
+                                <a className={classes.socialIcon}>
+                                    <img src={facebookIcon} alt = "Facebook"/>
                                 </a>
-                                <a href="#" className={classes.socialIcon}>
-                                    <img src={twitterIcon} />
+                                <a className={classes.socialIcon}>
+                                    <img src={twitterIcon} alt="Twitter" />
                                 </a>
                             </div>
                         </form>
@@ -275,18 +264,18 @@ class AuthForm extends Component{
                             <button className={[classes.btn, this.state.signUpForm.formIsValid ? classes.valid : null].join(" ")} onClick={this.submitHandler} disabled={!this.state.signUpForm.formIsValid}>Sign Up</button>
                             <p className={classes.socialText}>Sign Up with social platforms</p>
                             <div className={classes.socialMedia}>
-                                <a href="#" className={classes.socialIcon}>
-                                    <img src={googleIcon} className={classes.icon} />
+                                <a className={classes.socialIcon}>
+                                    <img src={googleIcon} className={classes.icon} alt="Google" />
                                 </a>
-                                <a href="#" className={classes.socialIcon}>
-                                    <img src={appleIcon} />
+                                <a className={classes.socialIcon}>
+                                    <img src={appleIcon} alt="Apple" />
                                 </a>
-                                <a href="#" className={classes.socialIcon}>
-                                    <img src={facebookIcon} />
+                                <a className={classes.socialIcon}>
+                                    <img src={facebookIcon} alt="Facebook" />
                                 </a>
-                                <a href="#" className={classes.socialIcon}>
-                                    <img src={twitterIcon} />
-                                </a>    
+                                <a className={classes.socialIcon}>
+                                    <img src={twitterIcon} alt="Twitter" />
+                                </a>   
                             </div>
                         </form>
                     </div>
@@ -299,7 +288,7 @@ class AuthForm extends Component{
                             <p>
                                 Join Now and start your journey of creating your own papers.
                             </p>
-                            <button className={[classes.btn, classes.transparent,classes.valid].join(" ")} id="sign-up-btn" onClick={this.changeToSignUp}>
+                            <button className={[classes.btn, classes.transparent,classes.valid].join(" ")}  onClick={this.changeToSignUp}>
                                 Sign up
                             </button>
                         </div>
@@ -311,7 +300,7 @@ class AuthForm extends Component{
                             <p>
                                 Then start creating your own papers.
                             </p>
-                            <button className={[classes.btn, classes.transparent].join(" ")} id="sign-in-btn" onClick={this.changeToSignIn}>
+                            <button className={[classes.btn, classes.transparent].join(" ")} onClick={this.changeToSignIn}>
                                 Sign in
                             </button>
                         </div>
