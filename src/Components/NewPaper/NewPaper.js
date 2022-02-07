@@ -12,7 +12,7 @@ import Toolbar from '../Navigation/Toolbar/Toolbar';
 import { connect } from "react-redux";
 import {v4 as uuid} from 'uuid';
 import {Redirect} from "react-router-dom";
-import add from '../../assets/plus-circle.svg';
+// import add from '../../assets/plus-circle.svg';
 
 class NewPaper extends Component{
 
