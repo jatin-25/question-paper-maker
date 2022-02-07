@@ -6,7 +6,7 @@
     left: 0;
     background-color: #323F4B;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 0 20px;
     box-sizing: border-box;
@@ -15,20 +15,21 @@
 }
 .Toolbar img {
     background-color: #323F4B;
+    justify-self: flex-start;
 }
 .Toolbar nav {
     display: flex;
     height: 100%;
-    width: 60%;
     background-color: #323F4B;
-    justify-content: center;
+    justify-content: space-between;
+    width: 100%;
     align-items: center;
     /* padding: 0; */
 }
 .NavItems{
     background-color: #323F4B;
-    width: 100%;
-    padding: 0;
+    margin-left: 8rem;
+    margin-right: 0;
 }
 .NavItems a{
     text-decoration: none;
@@ -36,7 +37,7 @@
     color: white;
     width: 100%;
     padding: 15px 0;
-    margin: 0 1em;
+    margin: 0;
     background-color: #323F4B;
 }
 .NavItems a:hover{
@@ -45,7 +46,8 @@
 .AddQuestion{
     cursor: pointer;
     display: flex;
-    width: 100%;
+    width: fit-content;
+    white-space: nowrap;
     justify-content: flex-end;
     align-items: center;
     background-color: #323F4B;
@@ -87,4 +89,23 @@
     .DesktopOnly {
         display: none;
     }
+}
+
+.Toolbar nav a{
+    text-decoration: none;
+    list-style-type: none;
+    color: white;
+    margin: 0 1em;
+    background-color: #323F4B;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.Toolbar span{
+    cursor: pointer;
+}
+.CornerItems{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
 }

@@ -5,12 +5,14 @@ import ParagraphQuestion from "../QuestionTypes/ParagraphQuestion/ParagraphQuest
 import axios from '../../axios';
 import classes from './QuestionPaper.css';
 import EssentialFeildForm from "../EssentialFeildForm/EssentialFeildForm";
+import { connect } from "react-redux";
+import {v4 as uuid} from 'uuid';
+
 
 class QuestionPaper extends Component{
     
     state = {
-        questionData: {
-        },
+        title: "",
         essentialFeilds:{
             answer:[]
         },
@@ -18,11 +20,20 @@ class QuestionPaper extends Component{
     }
     componentDidMount(){
         // console.log("Hello");
-        axios.get("/questionPapers/"+this.props.qkey+'.json').then(response => response.data?this.setState({
-            essentialFeilds: response.data.essentialFeilds,
-            questionArr: response.data.questionArr
-        }):null)
-        axios.get("/questionPapers/"+this.props.qkey+'.json').then(response => response.data?console.log(response.data):null);
+        const queryParams = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${this.props.qkey}"`
+        axios.get("/questionPapers.json"+queryParams).then(response => {
+
+            const questionPaper = Object.values(response.data);
+            console.log(questionPaper);
+
+            response.data&&this.setState({
+                title: questionPaper[0].title,
+                essentialFeilds: questionPaper[0].essentialFeilds,
+                questionArr: questionPaper[0].questionArr
+        })
+    })
+        // axios.get("/questionPapers/"+this.props.qkey+'.json?auth='+this.props.token).then(response => response.data?console.log(response.data):null);
+
     }
 
     updateAnswerHandler = (answerObject) => {
@@ -47,11 +58,24 @@ class QuestionPaper extends Component{
         this.onSubmitHandler();
         if(this.onSubmitHandler()){
         const questionPaperResponse =  {
+            responseId: uuid(),
+            paperId: this.props.qkey,
             essentialFeilds: this.state.essentialFeilds,
             questionArr: this.state.questionArr
         }
-            axios.post('/questionPapers/'+this.props.qkey+'/responses.json',questionPaperResponse).then(
-                response => console.log(response)).catch(error => console.log(error));
+
+        const qkey = this.props.qkey;
+        axios.post('/responses.json?auth='+this.props.token,questionPaperResponse).then(
+            response => {
+                console.log(response);
+                const currentResponseId = {
+                    responseId: questionPaperResponse.responseId,
+                    paperTitle: this.state.title
+                };
+                axios.post("/users/"+localStorage.getItem("userKey")+"/submittedResponses.json?auth="+this.props.token,currentResponseId).then(response => {
+                    console.log(response)
+                }).catch(error => console.log(error));
+            }).catch(error => console.log(error));
         }
         else{
             alert("Essential Feilds can't be Empty.");
@@ -83,6 +107,7 @@ class QuestionPaper extends Component{
     render(){
 
         let essentialFeildInputForm = null;
+        console.log(this.state.essentialFeilds);
         if(Object.keys(this.state.essentialFeilds).indexOf('title') !== -1){
             essentialFeildInputForm = <EssentialFeildForm essentialFeilds = {this.state.essentialFeilds.title} updateAnswer = {this.updateEssentialFeildAnswerHandler}/>
         }
@@ -125,4 +150,10 @@ class QuestionPaper extends Component{
     }
 }
 
-export default QuestionPaper;
+const mapStateToProps = (state) => {
+    return {
+        token: state.auth.token,
+        userId: state.auth.userId
+    }
+}
+export default connect(mapStateToProps)(QuestionPaper);

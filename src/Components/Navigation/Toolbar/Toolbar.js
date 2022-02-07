@@ -3,6 +3,8 @@ import classes from './Toolbar.css';
 import menuBars from '../../../assets/menu.svg';
 import add from '../../../assets/plus-circle.svg';
 import {NavLink} from 'react-router-dom';
+import * as actions from '../../../Store/Actions/index';
+import {connect} from 'react-redux';
 
 class Toolbar extends Component{
 
@@ -33,16 +35,27 @@ class Toolbar extends Component{
         }
         return (
             <header className={classes.Toolbar}>
-            <img src={menuBars} alt="Menu" onClick={this.props.clicked}/>
             <nav>
+            <img src={menuBars} alt="Menu" onClick={this.props.clicked}/>
             <div className={classes.NavItems}>
             <NavLink to="/newPaper">Create Paper</NavLink>
             <NavLink to="/yourPapers">Your Papers</NavLink>
+            <NavLink to="/submittedResponses">Submitted Responses</NavLink>
             </div>
+                <div className={classes.CornerItems}>
                 {addQuestionTypes}
+                <span onClick={() => this.props.onLogoutClicked(0)}>Logout</span>
+                <NavLink to="/profile">Your Profile</NavLink>
+                </div>
             </nav>
         </header>
         );
     }
 }
-export default Toolbar;
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onLogoutClicked: (expirationTime) => dispatch(actions.setExpirationTime(expirationTime))
+    }
+}
+export default connect(null,mapDispatchToProps)(Toolbar);

@@ -9,6 +9,10 @@ import classes from './NewPaper.css'
 import Modal from "../hoc/QuestionPopUp/Modal";
 import axios from '../../axios';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
+import { connect } from "react-redux";
+import {v4 as uuid} from 'uuid';
+import {Redirect} from "react-router-dom";
+import add from '../../assets/plus-circle.svg';
 
 class NewPaper extends Component{
 
@@ -29,6 +33,7 @@ class NewPaper extends Component{
         },
         isToggleShown: false,
         isPaperReady: false,
+        isPaperSubmitted: false
     }
 
     updateQuestionArr = (questionObject) => {
@@ -77,13 +82,25 @@ class NewPaper extends Component{
         }
         else{
             const questionPaper =  {
+                paperId: uuid(),
                 title: this.state.title,
                 essentialFeilds: this.state.essentialFeilds,
-               questionArr: this.state.questionArr
+                questionArr: this.state.questionArr
             }
 
-            axios.post('/questionPapers.json',questionPaper).then(
-                response => console.log(response)).catch(error => console.log(error));
+            axios.post('/questionPapers.json?auth='+this.props.token,questionPaper).then(
+            response => {
+                console.log(response);
+                const currentPaperId = {
+                    paperId: questionPaper.paperId,
+                    paperTitle: this.state.title
+                };
+            axios.post("/users/"+localStorage.getItem("userKey")+"/createdPapers.json?auth="+this.props.token,currentPaperId).then(response => {
+                console.log(response);
+                this.setState({isPaperSubmitted: true})
+            }).catch(error => console.log(error));
+            }).catch(error => console.log(error));
+            
         }
     }
 
@@ -121,6 +138,13 @@ class NewPaper extends Component{
 
     onChangeTitleHandler = (e) => {
         this.setState({title: e.target.value});
+    }
+
+    onHoverHandler = () => {
+        this.setState({ isHovered: true });
+    }
+    onHoverLeaveHandler = () => {
+        this.setState({ isHovered: false });
     }
     render(){
         let questionsComponent = null;
@@ -183,7 +207,20 @@ class NewPaper extends Component{
         let paperTitle = this.state.isPaperReady?<div className={classes.Title}>
             <p>Paper Title</p>
             <input type='text' onChange={(e) => this.onChangeTitleHandler(e)}></input>
-        </div>:null;
+        </div> : null;
+        
+        let addQuestionTypes = null;
+        addQuestionTypes = <div className={classes.AddQuestion} onMouseEnter={this.onHoverHandler} onMouseLeave={this.onHoverLeaveHandler}>
+            <img src={add} alt="Add Question" />
+            <span>Add Question</span>
+            <div className={classes.QuestionTypes} style={{ transform: this.state.isHovered ? "translateY(0)" : "translateY(10vh)", opacity: this.state.isHovered ? "1" : "0" }} onMouseEnter={this.onHoverHandler} onMouseLeave={this.onHoverLeaveHandler}>
+                <ul>
+                    <li onClick={this.showSingleChoiceInputForm}>Single Choice Question</li>
+                    <li onClick={this.showMultipleChoiceInputForm}>Multiple Choice Question</li>
+                    <li onClick={this.showParagraphInputForm}>Paragraph Question</li>
+                </ul>
+            </div>
+        </div>
         return (
             <div className={classes.QuestionArea}>
                 <Toolbar clicked = {this.invertToggle} clickFunctions = {{scq: this.showSingleChoiceInputForm,mcq: this.showMultipleChoiceInputForm,pq: this.showParagraphInputForm}} initialToolbar = {false}></Toolbar>
@@ -210,14 +247,21 @@ class NewPaper extends Component{
                 </Modal>
                 
                 {questionsComponent}
-            </div>
+                </div>
+                {/* {addQuestionTypes} */}
             <div className={classes.BtnArea}>
-                <button onClick={this.submitQuestionPaperHandler} className={classes.Button} style={{display: this.state.isPaperReady?"inline": "none"}}>Submit</button>
+                <button onClick={() => this.submitQuestionPaperHandler()} className={classes.Button} style={{display: this.state.isPaperReady?"inline": "none"}}>Submit</button>
             </div>
+            {this.state.isPaperSubmitted && <Redirect to='/yourPapers'/>}
             </div>
             
         );
     }
 }
-
-export default NewPaper;
+const mapStateToProps = (state) => {
+    return {
+        token: state.auth.token,
+        userId: state.auth.userId
+    }
+}
+export default connect(mapStateToProps)(NewPaper);

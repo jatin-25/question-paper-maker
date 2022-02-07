@@ -6,18 +6,19 @@ import classes from './Response.css';
 
 class Response extends Component{
     
-    constructor(props){
-        super(props);
-        this.state = {
-            questionArr: this.props.data?this.props.data:[]
-        }
+    state = {
+        isDataArrived: this.props.isDataArrived,
+        questionArr: this.props.isDataArrived?this.props.data:[]
     }
+
 
     render(){
 
         let questionsComponent = null;
+        console.log(this.state.questionArr);
         questionsComponent =  this.state.questionArr.map( ( question, i) => {
             let questionComp = null;
+            console.log(question);
             switch(question.type){
                 case "SingleChoiceQuestion":
                 questionComp = <SingleChoiceQuestion optionsList = {this.state.questionArr[i].optionsList} question = {this.state.questionArr[i].question} answer = {this.state.questionArr[i].answer} key={i} qkey = {i} questionNo = {i+1} pageOnWhichRendered = "response"/>
@@ -37,9 +38,8 @@ class Response extends Component{
         })
         return(
             <div className={classes.Response}>
-                {console.log(this.props,"Hello")}
+                {console.log(this.props.data,"Hello")}
                 {questionsComponent}
-                
             </div>
         );
     }

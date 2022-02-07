@@ -1,3 +1,9 @@
 {
-    "files.autoSave": "afterDelay"
+    "files.autoSave": "off",
+    "editor.defaultFormatter": "mgmcdermott.vscode-language-babel",
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    }
 }

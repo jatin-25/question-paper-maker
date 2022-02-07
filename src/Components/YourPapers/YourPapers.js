@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import { NavLink } from "react-router-dom";
 import axios from '../../axios';
 import classes from './YourPapers.css';
-
+import { connect } from "react-redux";
 
 class YourPapers extends Component {
     state = {
@@ -11,8 +11,14 @@ class YourPapers extends Component {
     }
         componentDidMount(){
             console.log("Hello");
-            axios.get("/questionPapers.json").then(response => response.data?this.setState({questionData: Object.values(response.data),questionKeyArr: Object.keys(response.data)}):null);
-            axios.get("/questionPapers.json").then(response => console.log(response.data));
+            const queryParams = `?auth=${this.props.token}`;
+            axios.get("/users/"+localStorage.getItem("userKey")+"/createdPapers.json"+queryParams).then(response => {
+
+                response.data && this.setState({questionData: Object.values(response.data),questionKeyArr: Object.keys(response.data)})
+                // console.log(Object.values(response.data))
+                // const queryParams = `?auth=${this.props.token}&orderBy="paperId"&equalTo=""`
+                // axios.get("/questionPapers.json").then(response => response.data?this.setState({questionData: Object.values(response.data),questionKeyArr: Object.keys(response.data)}):null);
+            })
         }
 
         showData = () => {
@@ -20,14 +26,15 @@ class YourPapers extends Component {
         }
 
         showQuestionHandler = (i) => {
-            console.log(this.props);
-            this.props.updateQuestionRouteData({idx: i,id:this.state.questionKeyArr[i]});
+            // console.log(this.props);
+            console.log(this.state.questionData[i].paperId);
+            this.props.updateQuestionRouteData({idx: i,id:this.state.questionData[i].paperId});
             // this.props.history.push('/yourPapers/'+i)
         }
         
         showResponsesHandler = (i) => {
             console.log("Entered");
-            this.props.updateResponsesRouteData({idx: i,id:this.state.questionKeyArr[i]})
+            this.props.updateResponsesRouteData({idx: i,id:this.state.questionData[i].paperId})
             // this.props.history.push('/yourPapers/'+i+'/responses');
         }
     render(){
@@ -45,7 +52,7 @@ class YourPapers extends Component {
                 return (
                     <div key={i} className={classes.QuestionPapers}>
 
-                        <span>{question.title}</span>
+                        <span>{question.paperTitle}</span>
 
                         <NavLink to = {'/yourPapers/'+i} className={classes.Button} onClick={() => this.showQuestionHandler(i)}>View Question Paper</NavLink>
 
@@ -59,9 +66,14 @@ class YourPapers extends Component {
             <div className={classes.Content}>
                 {essentialFeildTitles}
                 {questions}
+                {console.log(this.state.questionData)}
             </div>  
         );
     }
 }
-
-export default YourPapers;
+const mapStateToProps = (state) => {
+    return {
+        token: state.auth.token
+    }
+}
+export default connect(mapStateToProps)(YourPapers);

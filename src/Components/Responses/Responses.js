@@ -3,6 +3,8 @@ import classes from './Responses.css';
 import Response from './Response/Response';
 import Collapse from '@kunukn/react-collapse';
 import axios from '../../axios';
+import {connect} from 'react-redux';
+import Button from '../UI/Button/Button';
 
 class Responses extends Component {
     state = {
@@ -12,8 +14,12 @@ class Responses extends Component {
         
     componentDidMount(){
         console.log("Hello");
-        axios.get("/questionPapers/"+this.props.qkey+'/responses.json').then(response => response.data?this.setState({responseData: Object.values(response.data)}):null)
-        axios.get("/questionPapers/"+this.props.qkey+'/responses.json').then(response => response.data?console.log(Object.values(response.data)):null);
+        const queryParams = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${this.props.qkey}"`
+        axios.get('/responses.json'+queryParams).then(response => response.data?this.setState({
+            responseData: Object.values(response.data),
+            isVisible: Array(Object.values(response.data).length).fill(false)
+        }):null)
+        axios.get('/responses.json'+queryParams).then(response => response.data?console.log(Object.values(response.data)):null);
     }
         showData = () => {
             console.log(this.state.responseData);
@@ -52,8 +58,10 @@ class Responses extends Component {
                     </div>
                     <div className={classes.Collapsible}>
                     <Collapse isOpen = {this.state.isVisible[i]} transition="height 0.7s cubic-bezier(.4, 0, .2, 1)" className={classes.CollapsibleContent}>
-                        <Response data = {response.questionArr}/>
-                        <button onClick={() => this.closeResponseHandler(i)}>Close</button>
+                    <div>
+                        <Response isDataArrived = {true} data = {response.questionArr}/>
+                        <Button clicked={() => this.closeResponseHandler(i)}>Close</Button>
+                    </div>
                     </Collapse>
                     </div>
                     </div>
@@ -70,4 +78,9 @@ class Responses extends Component {
     }
 }
 
-export default Responses;
+const mapStateToProps = (state) => {
+    return {
+        token: state.auth.token
+    }
+}
+export default connect(mapStateToProps)(Responses);
