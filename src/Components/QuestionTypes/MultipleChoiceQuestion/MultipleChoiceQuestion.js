@@ -1,11 +1,12 @@
 import React,{Component} from "react";
-import classes from './MultipleChoiceQuestion.css';
+import './MultipleChoiceQuestion.css';
 class MultipleChoiceQuestion extends Component{
 
     state = {
         question: this.props.showEditButton?null:this.props.question,
         options: this.props.showEditButton?null:this.props.optionsList,
-        answersArr:this.props.showEditButton||this.props.answer === undefined ?['Not Marked']:this.props.answer
+        answersArr: this.props.showEditButton || this.props.answer === undefined ? ['Not Marked'] : this.props.answer,
+        isHovered: false
     }
 
     setAnswer = (idx) => {
@@ -19,7 +20,6 @@ class MultipleChoiceQuestion extends Component{
             oldAnswerArr.splice(0,1);
         }
         const optionIndex = oldAnswerArr.findIndex((element) => element === option);
-        console.log(optionIndex);
         let newAnswerArr = null;
         if(optionIndex === -1){
             newAnswerArr = [...oldAnswerArr,option];
@@ -40,7 +40,7 @@ class MultipleChoiceQuestion extends Component{
         let options = null;
         options = this.props.optionsList?this.props.optionsList.map(option =>{
             return (
-            <div key={option}>
+            <div key={option} className="Option">
             <input type="checkbox" name={this.props.qkey} onChange={() => this.updateAnswersArrHandler(option)} disabled = {this.props.pageOnWhichRendered !== 'questionPaper'}></input>
             <span>{option}</span>
             </div>
@@ -49,11 +49,10 @@ class MultipleChoiceQuestion extends Component{
 
        
         let answers = null;
-        console.log(this.state.answersArr);
         const n = this.state.answersArr.length;
         if(n){
             answers = this.state.answersArr.map((answer,i) => {
-                return <span key={i}  style={{background: '#CBD2D9',margin: "15px 0"}}>{answer}{n === i+1?' ':', '}</span>
+                return <span key={i}  style={{margin: "15px 0"}}>{answer}{n === i+1?' ':', '}</span>
             })
         }
         let selectedAnswer = null;
@@ -61,11 +60,14 @@ class MultipleChoiceQuestion extends Component{
             selectedAnswer = <p style={{display: "inline-block"}}>Selected Answer(s): {answers}</p>
         }
         return (
-            <div className={classes.Question}>
+            <div className="Question" onMouseEnter={() => this.setState({ isHovered: true })} onMouseLeave={() => this.setState({ isHovered: false })}>
                 <p style={{marginBottom: "5px",display: "inline-block"}}>Ques {this.props.qkey+1}: {this.props.question}</p>
                 {options}
                 {selectedAnswer}
-                <button className={classes.display}  style={{display: this.props.pageOnWhichRendered === 'newPaper'?null:"none"}} onClick={() => this.props.editButtonHandler({idx: this.props.qkey,type: "MultipleChoiceQuestion"})}>Edit</button>
+                {this.props.pageOnWhichRendered === 'newPaper' && <div className={[this.state.isHovered ? "EditButtonContent" : "None"]}>
+                    <button onClick={() => this.props.onEditHandler({ idx: this.props.qkey, type: "SingleChoiceQuestion" })}>Edit</button>
+                    <button onClick={() => this.props.onRemoveHandler(this.props.qkey)}>Remove</button>
+                </div>}
             </div>
         );
     }

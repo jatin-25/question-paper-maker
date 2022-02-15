@@ -1,17 +1,15 @@
-import React from 'react'
-import classes from './Input.css';
+import React from 'react';
+import './Input.css';
 
 const input = props => {
 
     let inputElement = null;
-    let inputClasses = [classes.InputElement,props.isInvalid && props.isTouched?classes.Invalid:null].join(" ");
-    // inputClasses.push(classes.Invalid)
+    let inputClasses = ["InputElement",props.isInvalid && props.isTouched?"Invalid":null].join(" ");
     switch(props.elementType){
         case 'type':
             inputElement = <input 
             className={inputClasses} 
             {...props.elementConfig}
-            onfocus={console.log("Hello")}
             value = {props.value}
             onChange={(event) => props.changed(event,props.identifier)}
             />

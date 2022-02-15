@@ -1,79 +1,90 @@
 import React,{Component} from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink,withRouter } from "react-router-dom";
 import axios from '../../axios';
-import classes from './YourPapers.css';
+import './YourPapers.css';
 import { connect } from "react-redux";
+import * as actions from '../../Store/Actions/index';
+import BackDrop from "../hoc/BackDrop/BackDrop";
 
 class YourPapers extends Component {
     state = {
         questionData: [],
-        questionKeyArr: []
+        questionKeyArr: [],
+        noPapers: false
     }
-        componentDidMount(){
-            console.log("Hello");
-            const queryParams = `?auth=${this.props.token}`;
-            axios.get("/users/"+localStorage.getItem("userKey")+"/createdPapers.json"+queryParams).then(response => {
 
-                response.data && this.setState({questionData: Object.values(response.data),questionKeyArr: Object.keys(response.data)})
-                // console.log(Object.values(response.data))
-                // const queryParams = `?auth=${this.props.token}&orderBy="paperId"&equalTo=""`
-                // axios.get("/questionPapers.json").then(response => response.data?this.setState({questionData: Object.values(response.data),questionKeyArr: Object.keys(response.data)}):null);
-            })
-        }
-
-        showData = () => {
-            console.log(this.state.questionData);
-        }
+    componentDidMount() {
+        this.props.setLoading(true);
+        const queryParams = `?auth=${this.props.token}`;
+        
+        axios.get("/users/" + this.props.userKey + "/createdPapers.json" + queryParams).then(response => {
+            if (response.data) {
+                this.setState({ questionData: Object.values(response.data), questionKeyArr: Object.keys(response.data) })
+            }
+            else {
+                this.setState({ noPapers: true });
+            }
+            this.props.setLoading(false);
+        }).catch(error => {
+            this.props.setLoading(false);
+        })
+    }
 
         showQuestionHandler = (i) => {
-            // console.log(this.props);
-            console.log(this.state.questionData[i].paperId);
             this.props.updateQuestionRouteData({idx: i,id:this.state.questionData[i].paperId});
-            // this.props.history.push('/yourPapers/'+i)
         }
         
         showResponsesHandler = (i) => {
-            console.log("Entered");
             this.props.updateResponsesRouteData({idx: i,id:this.state.questionData[i].paperId})
-            // this.props.history.push('/yourPapers/'+i+'/responses');
         }
     render(){
         let essentialFeildTitles = null;
         if(this.state.questionData[0] !== undefined){
-            essentialFeildTitles = <div className={classes.Title}>
+            essentialFeildTitles = <div className="YourPapersTitle">
                 <span>Title</span>
                 <span>Question Paper</span>
                 <span>Responses</span>
             </div>
         }
         let questions = null;
-        if(this.state.questionData.length > 0){
+        if (this.state.questionData.length > 0) {
             questions = this.state.questionData.map((question,i) => {
                 return (
-                    <div key={i} className={classes.QuestionPapers}>
+                    <div key={i} className="QuestionPapers">
 
                         <span>{question.paperTitle}</span>
 
-                        <NavLink to = {'/yourPapers/'+i} className={classes.Button} onClick={() => this.showQuestionHandler(i)}>View Question Paper</NavLink>
+                        <NavLink to={{
+                            pathname: '/papers/' + this.state.questionData[i].paperId,
+                        }} className="YourPapersButton" onClick={() => this.showQuestionHandler(i)}>View Question Paper</NavLink>
 
-                        <NavLink to = {'/yourPapers/'+i+'/responses'} className={classes.Button} onClick={() => this.showResponsesHandler(i)}>View Responses</NavLink>
+                        <NavLink to={'/yourPapers/' + i + '/responses'} className="YourPapersButton" onClick={() => this.showResponsesHandler(i)}>View Responses</NavLink>
                     </div>
                 );
             })
         }
         
-        return(
-            <div className={classes.Content}>
-                {essentialFeildTitles}
-                {questions}
-                {console.log(this.state.questionData)}
-            </div>  
+        return (
+            <BackDrop isLoading={this.props.loading}>
+                {this.state.noPapers ? <div className="noPapers"><p>You haven't created any papers yet.</p></div> :
+                    <div className="YourPapersContent">
+                        {essentialFeildTitles}
+                        {questions}
+                    </div>}
+            </BackDrop>    
         );
     }
 }
 const mapStateToProps = (state) => {
     return {
-        token: state.auth.token
+        token: state.auth.token,
+        userKey: state.auth.userKey,
+        loading: state.auth.loading
     }
 }
-export default connect(mapStateToProps)(YourPapers);
+const mapDispatchToProps = dispatch => {
+    return {
+        setLoading: (isLoading) => dispatch(actions.setLoading(isLoading))
+    }
+}
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(YourPapers));

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import NewPaper from './Components/NewPaper/NewPaper';
-import {Route,BrowserRouter as Routers,Switch,Redirect} from 'react-router-dom';
+import { Route, Switch,withRouter } from 'react-router-dom';
+// import { browserHistory } from 'react-router';
+// import { hashHistory } from 'react-router';
 import Responses from './Components/Responses/Responses';
 import Toolbar from './Components/Navigation/Toolbar/Toolbar';
 import YourPapers from './Components/YourPapers/YourPapers';
@@ -11,8 +13,9 @@ import {connect} from 'react-redux';
 import Profile from './Components/Profile/Profile';
 import SubmittedResponses from './Components/Responses/SubmittedResponses/SubmittedResponses';
 import AuthForm from './Components/Authentication/AuthForm';
+import NotFound from './Components/NotFound/NotFound';
 
-
+// import { createBrowserHistory } from 'history';
 class App extends Component {
 
   state = {
@@ -24,7 +27,7 @@ class App extends Component {
       isRouteClicked: false,
       id: null
     }
-  } 
+  }
 
   updateQuestionRouteDataHandler = (questionRouteData) => {
     if(questionRouteData){
@@ -57,56 +60,53 @@ class App extends Component {
   render() {
 
     let routes = null;
-    console.log(this.props.isAuthenticated);
     if(this.props.isAuthenticated){
       routes = <Switch>
         <Route path='/' exact >
-            <NewPaper />
+          <NewPaper {...this.props} />
           </Route>
-          <Route path='/newPaper' exact component={NewPaper}/>
-          <Route path='/response' exact component={Responses}/>
+        <Route path='/newPaper' exact component={NewPaper} {...this.props}/>
+        <Route path='/response' exact component={Responses}/>
           <Route path='/yourPapers' exact>
-            <YourPapers updateQuestionRouteData = {this.updateQuestionRouteDataHandler} updateResponsesRouteData = {this.updateResponsesRouteDataHandler}/>
+          <YourPapers updateQuestionRouteData={this.updateQuestionRouteDataHandler} updateResponsesRouteData={this.updateResponsesRouteDataHandler} {...this.props}/>
           </Route>
-          <Route path='/submittedResponses' component={SubmittedResponses}/>
-          {this.state.questionRouteData.isRouteClicked?<Route exact path={'/yourPapers/'+this.state.questionRouteData.idx}>
-          <QuestionPaper qkey = {this.state.questionRouteData.id}/>
-          </Route>:null}
+        <Route path='/submittedResponses' component={SubmittedResponses}/>
+          {<Route exact path={'/papers/:qid'}>
+          <QuestionPaper {...this.props} />
+          </Route>}
           {this.state.responsesRouteData.isRouteClicked?<Route exact path={'/yourPapers/'+this.state.responsesRouteData.idx+'/responses'}>
           <Responses qkey = {this.state.responsesRouteData.id}/>
           </Route>:null}
-          <Route path='/profile' component={Profile}/>
-          <Redirect to='/newPaper'/>
+          <Route path='/profile' exact component={Profile}/>
+          <Route path='*' component={NotFound} />
       </Switch>
     }
     else{
       routes = <Switch>
-        <Route path='/auth' exact component={AuthForm}/>
-        <Redirect to='/auth' />
+        <Route path='/' exact >
+          <AuthForm {...this.props} />
+        </Route>
+        
+        <Route path='*' exact >
+          <AuthForm {...this.props} />
+        </Route>
+
       </Switch>
     }
     return (
-      <Routers>
       <div>
-          {this.props.isAuthenticated?<Toolbar initialToolbar = {true}/>:null}
-
-          {/* <Switch>
-
-          
-          {this.props.isAuthenticated?<Redirect to='/'/>:<Route path='/auth' exact component={AuthForm}/>}
-
-          </Switch> */}
+        {this.props.isAuthenticated ? <Toolbar initialToolbar={true} {...this.props}/>:null}
+        
           {routes}
-          {/* <AuthForm /> */}
+      
       </div>
-      </Routers>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-      isAuthenticated: state.auth.token != null
+    isAuthenticated: state.auth.token != null,
   }
 }
 
@@ -115,4 +115,4 @@ const mapDispatchToProps = (dispatch) => {
     isAuthValid: () => dispatch(actions.checkAuthState())
   }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(App));

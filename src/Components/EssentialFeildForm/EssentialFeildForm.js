@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import classes from './EssentialFeildForm.css';
-
+import './EssentialFeildForm.css';
+import { connect } from "react-redux";
 class EssentialFeildForm extends Component{
 
     state = {
@@ -10,9 +10,10 @@ class EssentialFeildForm extends Component{
 
 
     onAnswerChangeHandler = (object) => {
+      
         let answerArr = [...this.state.answers];
         answerArr[object.idx] = object.e.target.value;
-        this.setState({answers: answerArr},() => this.props.updateAnswer(answerArr));
+        this.setState({ answers: answerArr }, () => this.props.updateAnswer(answerArr));
     }
 
     render(){
@@ -21,17 +22,22 @@ class EssentialFeildForm extends Component{
             return (
                 <div key={i}>
                     <p>{feildTitle}</p>
-                    <input type='text' onChange={(e) => this.onAnswerChangeHandler({e: e,idx: i})} minLength={1}></input>
+                    {i === 2 ? <input type='text' minLength={1} defaultValue={this.props.email} readOnly></input> :
+                        <input type='text' onChange={(e) => this.onAnswerChangeHandler({ e: e, idx: i })} minLength={1}></input>}
                 </div>
             );
         })
         return(
-            <div className={classes.EssentialFeildForm}>
-                {console.log(this.state.essentialFeilds,this.props.essentialFeilds)}
+            <div className="EssentialFeildForm">
                 {essentialFeildForm}
             </div>
         );
     }
 }
 
-export default EssentialFeildForm;
+const mapStateToProps = (state) => {
+    return {
+        email: state.auth.email
+    }
+}
+export default connect(mapStateToProps)(EssentialFeildForm);

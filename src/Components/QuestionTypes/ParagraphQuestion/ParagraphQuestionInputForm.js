@@ -1,6 +1,5 @@
 import React,{Component} from 'react';
-import classes from './ParagraphQuestion.css';
-
+import swal from 'sweetalert';
 class ParagraphQuestionForm extends Component {
    
     constructor(props){
@@ -15,8 +14,8 @@ class ParagraphQuestionForm extends Component {
     }
 
     sendData = () => {
-        if(this.state.questionData.question === ""){
-            alert("Question can't be Empty.");
+        if (this.state.questionData.question === "") {
+            swal("Warning", "Question can't be Empty!", "warning");
         }
         else if(this.props.edit){
             this.props.updatePQOnEdit({question: this.state.questionData,index:this.props.qkey})
@@ -44,7 +43,6 @@ class ParagraphQuestionForm extends Component {
     submitQuestionHandler = () => {
         this.setState({submit:true});
         this.props.questionData(this.state.questionData);
-        console.log(this.state.questionData);
     }
     render(){
         
@@ -58,12 +56,12 @@ class ParagraphQuestionForm extends Component {
             </div>
         }
         return (
-            <div className={classes.Text}>
+            <div className="Text">
                 {inputForm}
                 <p>Preview</p>
                 <p>{this.state.questionData.question}</p>
-                <button onClick={() => this.sendData()} className={classes.Button}>Submit</button>
-                <button onClick={this.cancelButtonHandler} className={classes.Button}>Cancel</button>
+                <button onClick={() => this.sendData()} className="Button">Submit</button>
+                <button onClick={this.cancelButtonHandler} className="Button">Cancel</button>
             </div>
         );
     }

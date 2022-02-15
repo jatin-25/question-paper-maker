@@ -1,5 +1,6 @@
 export {
     auth,
     checkAuthState,
-    setExpirationTime
+    setExpirationTime,
+    setLoading
 } from './auth';

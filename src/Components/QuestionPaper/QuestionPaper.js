@@ -3,36 +3,79 @@ import SingleChoiceQuestion from "../QuestionTypes/SingleChoiceQuestion/SingleCh
 import MultipleChoiceQuestion from "../QuestionTypes/MultipleChoiceQuestion/MultipleChoiceQuestion";
 import ParagraphQuestion from "../QuestionTypes/ParagraphQuestion/ParagraphQuestion";
 import axios from '../../axios';
-import classes from './QuestionPaper.css';
+import './QuestionPaper.css';
 import EssentialFeildForm from "../EssentialFeildForm/EssentialFeildForm";
 import { connect } from "react-redux";
 import {v4 as uuid} from 'uuid';
-
-
+import * as actions from '../../Store/Actions/index';
+import BackDrop from "../hoc/BackDrop/BackDrop";
+import swal from "sweetalert";
 class QuestionPaper extends Component{
     
     state = {
         title: "",
+        qkey: this.props.location.pathname.slice(8),
+        isSubmitted: "Not Known",
         essentialFeilds:{
             answer:[]
         },
         questionArr: []
     }
     componentDidMount(){
-        // console.log("Hello");
-        const queryParams = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${this.props.qkey}"`
-        axios.get("/questionPapers.json"+queryParams).then(response => {
+        this.props.setLoading(true);
+        const qkey = this.props.location.pathname.slice(8);
+        const queryParams = `?auth=${this.props.token}`;
+        axios.get("/users/" + this.props.userKey + "/submittedResponses.json"+queryParams ).then(
+            response => {
+                if (response.data) {
+                    const queryParams3 = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${qkey}"`;
+                    axios.get("/users/" + this.props.userKey + "/submittedResponses.json" + queryParams3).then(response => {
+                        if (Object.values(response.data).length === 0) {
+                            const queryParams2 = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${qkey}"`
+                            axios.get("/questionPapers.json" + queryParams2).then(response => {
 
-            const questionPaper = Object.values(response.data);
-            console.log(questionPaper);
+                                const questionPaper = Object.values(response.data);
 
-            response.data&&this.setState({
-                title: questionPaper[0].title,
-                essentialFeilds: questionPaper[0].essentialFeilds,
-                questionArr: questionPaper[0].questionArr
-        })
-    })
-        // axios.get("/questionPapers/"+this.props.qkey+'.json?auth='+this.props.token).then(response => response.data?console.log(response.data):null);
+                                response.data && this.setState({
+                                    title: questionPaper[0].title,
+                                    essentialFeilds: questionPaper[0].essentialFeilds,
+                                    questionArr: questionPaper[0].questionArr,
+                                    isSubmitted: false
+                                })
+
+                                this.props.setLoading(false);
+                            }).catch(error => {
+                                this.props.setLoading(false);
+                            })
+                        }
+                        else {
+                            this.setState({ isSubmitted: true });
+                            this.props.setLoading(false);
+                        }
+                    }).catch(error => {
+                        this.props.setLoading(false);
+                    })
+                }
+                else {
+                    const queryParams2 = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${qkey}"`
+                    axios.get("/questionPapers.json" + queryParams2).then(response => {
+
+                        const questionPaper = Object.values(response.data);
+                        response.data && this.setState({
+                            title: questionPaper[0].title,
+                            essentialFeilds: questionPaper[0].essentialFeilds,
+                            questionArr: questionPaper[0].questionArr,
+                            isSubmitted: false
+                        })
+
+                        this.props.setLoading(false);
+                    }).catch(error => {
+                        this.props.setLoading(false);
+                    })
+                }
+                
+                
+            }).catch(error => this.props.setLoading(false));
 
     }
 
@@ -42,42 +85,53 @@ class QuestionPaper extends Component{
         let newQuestionArr = [...this.state.questionArr];
         newQuestionArr.splice(answerObject.index,1,oldQuestionData);
         this.setState({questionArr:newQuestionArr});
-        console.log(newQuestionArr);
     }
     
     updateEssentialFeildAnswerHandler = (answer) => {
         if(answer !== undefined && answer){
             let essentialFeild = {...this.state.essentialFeilds,answer:[]}
             essentialFeild.answer = answer;
-            console.log(this.state.essentialFeilds)
             this.setState({essentialFeilds: essentialFeild});
         }
     }
 
     submitQuestionPaperHandler = () => {
-        this.onSubmitHandler();
-        if(this.onSubmitHandler()){
-        const questionPaperResponse =  {
-            responseId: uuid(),
-            paperId: this.props.qkey,
-            essentialFeilds: this.state.essentialFeilds,
-            questionArr: this.state.questionArr
-        }
+        if (this.onSubmitHandler()) {
+            swal({
+                title: "Are you sure?",
+                text: "You want to submit your Paper!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willSubmit) => {
+                if (willSubmit) {
+                    const questionPaperResponse = {
+                        responseId: uuid(),
+                        paperId: this.state.qkey,
+                        essentialFeilds: this.state.essentialFeilds,
+                        questionArr: this.state.questionArr
+                    }
 
-        axios.post('/responses.json?auth='+this.props.token,questionPaperResponse).then(
-            response => {
-                console.log(response);
-                const currentResponseId = {
-                    responseId: questionPaperResponse.responseId,
-                    paperTitle: this.state.title
-                };
-                axios.post("/users/"+localStorage.getItem("userKey")+"/submittedResponses.json?auth="+this.props.token,currentResponseId).then(response => {
-                    console.log(response)
-                }).catch(error => console.log(error));
-            }).catch(error => console.log(error));
+                    axios.post('/responses.json?auth=' + this.props.token, questionPaperResponse).then(
+                        response => {
+                            const currentResponseId = {
+                                responseId: questionPaperResponse.responseId,
+                                paperId: this.state.qkey,
+                                paperTitle: this.state.title
+                            };
+                            axios.post("/users/" + this.props.userKey + "/submittedResponses.json?auth=" + this.props.token, currentResponseId).then(response => {
+                            }).catch(error => {
+                            });
+                        }).catch(error => {
+
+                        });
+                    this.setState({isSubmitted: true})
+                }
+            })
+        
         }
-        else{
-            alert("Essential Feilds can't be Empty.");
+        else {
+            swal("Warning", "Essential Feilds can't be Empty!", "warning");
         }
     }
 
@@ -87,7 +141,6 @@ class QuestionPaper extends Component{
             let isFormInvalid = false;
             for(let i = 0;i<answers.length;++i){
                 if(answers[i] === undefined || answers[i] === null || answers[i] === ""){
-                    console.log(i);
                     isFormInvalid = true;
                     break;
                 }
@@ -98,7 +151,6 @@ class QuestionPaper extends Component{
             return true;
         }
         else{
-            console.log("out")
             return false;
         }
        
@@ -106,7 +158,6 @@ class QuestionPaper extends Component{
     render(){
 
         let essentialFeildInputForm = null;
-        console.log(this.state.essentialFeilds);
         if(Object.keys(this.state.essentialFeilds).indexOf('title') !== -1){
             essentialFeildInputForm = <EssentialFeildForm essentialFeilds = {this.state.essentialFeilds.title} updateAnswer = {this.updateEssentialFeildAnswerHandler}/>
         }
@@ -134,17 +185,19 @@ class QuestionPaper extends Component{
 
 
         return (
-            <div className={classes.QuestionArea}>
-                {console.log("Hello there")}
-                {essentialFeildInputForm}
-                <div className={[classes.QuestionPaper,classes.LightBlue].join(" ")}>
-                {questionsComponent}
-                
-                </div>
-                <div className={classes.BtnArea}>
-                    <button onClick={this.submitQuestionPaperHandler} className={classes.Button}>Submit</button>
-                </div>
-            </div>
+            <BackDrop isLoading={this.props.loading}>
+                {this.state.isSubmitted === true ? <div className="noPapers"><p>Your response has been submitted.</p></div> : null}
+                {this.state.isSubmitted !== null && this.state.isSubmitted === false?<div className="QuestionPaperArea">
+                        {essentialFeildInputForm}
+                        <div className={["QuestionPaper", "LightBlue"].join(" ")}>
+                            {questionsComponent}
+
+                        </div>
+                        <div className="BtnArea">
+                            <button onClick={this.submitQuestionPaperHandler} className="Button">Submit</button>
+                        </div>
+                    </div>:null}
+            </BackDrop>
         );
     }
 }
@@ -152,7 +205,13 @@ class QuestionPaper extends Component{
 const mapStateToProps = (state) => {
     return {
         token: state.auth.token,
-        userId: state.auth.userId
+        userKey: state.auth.userKey,
+        loading: state.auth.loading
     }
 }
-export default connect(mapStateToProps)(QuestionPaper);
+const mapDispatchToProps = dispatch => {
+    return {
+        setLoading: (isLoading) => dispatch(actions.setLoading(isLoading))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(QuestionPaper);

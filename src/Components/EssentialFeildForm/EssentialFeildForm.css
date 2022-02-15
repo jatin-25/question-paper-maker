@@ -1,11 +1,13 @@
 .EssentialFeildForm {
-    background-color: #CBD2D9;
+    background-color: #fcfcfc73;
     color: black;
     border-radius: 0.5em;
-    width: 23%;
     height: 100%;
     padding: 1em 1em;
-    margin-top: 5rem;
+    margin-top: 1.5rem;
+    width: 20%;
+    min-width: 350px;
+    margin-bottom: 2rem;
 }
 
 
@@ -16,7 +18,7 @@
     margin-top : 7px;
     margin-bottom: 15px;
     box-sizing: border-box;
-    border-radius: 5px;
+    border-radius: 30px;
     border: 0px solid black;
     background: white;
   }

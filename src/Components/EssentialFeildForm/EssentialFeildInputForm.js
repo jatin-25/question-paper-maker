@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import classes from './SingleChoiceQuestion.css';
+import './SingleChoiceQuestion.css';
 
 class EssentialFeildInputForm extends Component {
     constructor(props){
@@ -24,7 +24,6 @@ class EssentialFeildInputForm extends Component {
     
         this.setState({submit:true});
         this.props.questionData(this.state.questionData);
-        console.log(this.state.questionData);
     }
 
     cancelButtonHandler = () => {
@@ -37,7 +36,7 @@ class EssentialFeildInputForm extends Component {
                 return (
                     <div key={option}>
                         <input type="radio"></input>
-                        <span className={classes.Text}>{option}</span>
+                        <span className="Text">{option}</span>
                     </div>
                 )   
             });
@@ -45,17 +44,17 @@ class EssentialFeildInputForm extends Component {
         
         let inputForm = null;
         if(!this.state.submit){
-            inputForm = <div className={classes.Text}>
+            inputForm = <div className="Text">
             <p>Write Feild Titles here in the form of comma seperated values.</p>
             <input type="text" onChange={(e) => this.onFeildTitleChangeHandler(e)} value={this.state.optionsString}></input>
             <br></br>
             </div>
         }
         return (
-            <div className={classes.Text}>
+            <div className="Text">
                 {inputForm}
-                <button onClick={() => this.sendData()} className={classes.Button}>Submit</button>
-                <button onClick={this.cancelButtonHandler} className={classes.Button}>Cancel</button>
+                <button onClick={() => this.sendData()} className="Button">Submit</button>
+                <button onClick={this.cancelButtonHandler} className="Button">Cancel</button>
             </div>
         );
     }

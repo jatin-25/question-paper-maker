@@ -1,4 +1,4 @@
-.Question > button {
+/* .Question > button {
     display: none;
     }
     
@@ -10,14 +10,14 @@
     padding: 0.5em 1em;
     width: 100%;
     overflow-wrap: anywhere;
-    margin-bottom: 1em;
+    margin-bottom: 0.2em;
 }
 .Question textarea{
     resize: both;
 }
 .Question p, .Question span .Question input{
     margin: 10px 0;
-}
+} */
 .Button {
     cursor: pointer;
     border-radius: 0px;

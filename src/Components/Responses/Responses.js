@@ -1,39 +1,46 @@
 import React,{Component} from "react";
-import classes from './Responses.css';
+import './Responses.css';
 import Response from './Response/Response';
 import Collapse from '@kunukn/react-collapse';
 import axios from '../../axios';
 import {connect} from 'react-redux';
 import Button from '../UI/Button/Button';
-
+import * as actions from '../../Store/Actions/index';
+import BackDrop from "../hoc/BackDrop/BackDrop";
 class Responses extends Component {
     state = {
         responseData: [],
-        isVisible: []
+        isVisible: [],
+        noResponse: false
     }
         
-    componentDidMount(){
-        console.log("Hello");
-        const queryParams = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${this.props.qkey}"`
-        axios.get('/responses.json'+queryParams).then(response => response.data?this.setState({
-            responseData: Object.values(response.data),
-            isVisible: Array(Object.values(response.data).length).fill(false)
-        }):null)
-        axios.get('/responses.json'+queryParams).then(response => response.data?console.log(Object.values(response.data)):null);
+    componentDidMount() {
+        this.props.setLoading(true);
+        const queryParams = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${this.props.qkey}"`;
+        axios.get('/responses.json' + queryParams).then(response => {
+            
+            if (Object.values(response.data).length !==0) {
+                this.setState({
+                    responseData: Object.values(response.data),
+                    isVisible: Array(Object.values(response.data).length).fill(false)
+                })
+            }
+            else {
+                this.setState({ noResponse: true });
+            }
+            this.props.setLoading(false);
+        }).catch(error => {
+            this.props.setLoading(false);
+        })
     }
-        showData = () => {
-            console.log(this.state.responseData);
-        }
 
         showResponseHandler = (i) => {
-            console.log("entered")
            let newIsVisible = [...this.state.isVisible];
            newIsVisible[i] = !newIsVisible[i];
            this.setState({isVisible: newIsVisible});
         }
         
         closeResponseHandler = (i) => {
-            console.log("exit");
             let newIsVisible = [...this.state.isVisible];
            newIsVisible[i] = false;
            this.setState({isVisible: newIsVisible});
@@ -41,7 +48,7 @@ class Responses extends Component {
     render(){
         let essentialFeildTitles = null;
         if(this.state.responseData[0] !== undefined){
-            essentialFeildTitles = <div className={classes.Title}>{this.state.responseData[0].essentialFeilds.title.map((title,i) => {
+            essentialFeildTitles = <div className="ResponsesTitle">{this.state.responseData[0].essentialFeilds.title.map((title,i) => {
                 return (
                     <span key={i}>{title}</span>
                 );
@@ -51,14 +58,14 @@ class Responses extends Component {
         if(this.state.responseData.length > 0){
             responses = this.state.responseData.map((response,i) => {
                 return (
-                    <div key={i} className={classes.Response}>
-                    <div className={classes.Content}>
+                    <div key={i} className="Response">
+                        <div className="ResponsesContent">
                         {response.essentialFeilds.answer?response.essentialFeilds.answer.map((feild,i) => (<span key={i}>{feild}</span>)):null}
-                        <button onClick={() => this.showResponseHandler(i)} className={classes.collapsible}>View Response</button>
+                        <button onClick={() => this.showResponseHandler(i)} className="collapsible">View Response</button>
                     </div>
-                    <div className={classes.Collapsible}>
-                    <Collapse isOpen = {this.state.isVisible[i]} transition="height 0.7s cubic-bezier(.4, 0, .2, 1)" className={classes.CollapsibleContent}>
-                    <div>
+                    <div className="Collapsible">
+                    <Collapse isOpen = {this.state.isVisible[i]} transition="height 0.7s cubic-bezier(.4, 0, .2, 1)" className="CollapsibleContent">
+                    <div className="MainContent">
                         <Response isDataArrived = {true} data = {response.questionArr}/>
                         <Button clicked={() => this.closeResponseHandler(i)}>Close</Button>
                     </div>
@@ -69,18 +76,27 @@ class Responses extends Component {
             })
         }
         
-        return(
-            <div className={classes.Responses} onClick={this.showData}>
-                {essentialFeildTitles}
-                {responses}
-            </div>  
+        return (
+            <BackDrop isLoading={this.props.loading}>
+                {this.state.noResponse ? <div className="noPapers"><p>You haven't got any responses yet.</p></div> :
+                    <div className="Responses">
+                        {essentialFeildTitles}
+                        {responses}
+                    </div>}
+            </BackDrop>
         );
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        token: state.auth.token
+        token: state.auth.token,
+        loading: state.auth.loading
     }
 }
-export default connect(mapStateToProps)(Responses);
+const mapDispatchToProps = dispatch => {
+    return {
+        setLoading: (isLoading) => dispatch(actions.setLoading(isLoading))
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(Responses);

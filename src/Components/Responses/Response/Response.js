@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import SingleChoiceQuestion from "../../QuestionTypes/SingleChoiceQuestion/SingleChoiceQuestion";
 import MultipleChoiceQuestion from "../../QuestionTypes/MultipleChoiceQuestion/MultipleChoiceQuestion";
 import ParagraphQuestion from "../../QuestionTypes/ParagraphQuestion/ParagraphQuestion";
-import classes from './Response.css';
+import './Response.css';
 
 class Response extends Component{
     
@@ -15,10 +15,8 @@ class Response extends Component{
     render(){
 
         let questionsComponent = null;
-        console.log(this.state.questionArr);
         questionsComponent =  this.state.questionArr.map( ( question, i) => {
             let questionComp = null;
-            console.log(question);
             switch(question.type){
                 case "SingleChoiceQuestion":
                 questionComp = <SingleChoiceQuestion optionsList = {this.state.questionArr[i].optionsList} question = {this.state.questionArr[i].question} answer = {this.state.questionArr[i].answer} key={i} qkey = {i} questionNo = {i+1} pageOnWhichRendered = "response"/>
@@ -37,8 +35,7 @@ class Response extends Component{
             return questionComp;
         })
         return(
-            <div className={classes.Response}>
-                {console.log(this.props.data,"Hello")}
+            <div className="IndividualResponse">
                 {questionsComponent}
             </div>
         );

@@ -6,7 +6,8 @@ import {Provider} from 'react-redux';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import authReducer from './Store/Reducers/auth';
-
+import './index.css';
+import { BrowserRouter as Routers} from 'react-router-dom';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const rootReducer = combineReducers({
@@ -19,7 +20,11 @@ const store = createStore(rootReducer, composeEnhancers(
 
 const app = (
     <Provider store={store}>
-        <App />
+        <Routers>
+        {/* <HashRouter> */}
+            <App />
+        {/* </HashRouter> */}
+        </Routers>
     </Provider>
 );
 ReactDOM.render(app, document.getElementById('root'));

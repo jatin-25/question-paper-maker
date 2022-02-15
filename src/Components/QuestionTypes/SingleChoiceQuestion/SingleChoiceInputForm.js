@@ -1,5 +1,7 @@
 import React,{Component} from 'react';
-import classes from './SingleChoiceQuestion.css';
+import './SingleChoiceQuestion.css';
+import swal from 'sweetalert';
+
 
 class SingleChoiceQuestionForm extends Component {
     constructor(props){
@@ -16,11 +18,11 @@ class SingleChoiceQuestionForm extends Component {
     }
 
     sendData = () => {
-        if(this.state.questionData.question === ""){
-            alert("Question can't be Empty.");
+        if (this.state.questionData.question === "") {
+            swal("Warning", "Question can't be Empty!", "warning");
         }
-        else if(this.state.questionData.optionsList.length < 2){
-            alert("There should be atleast two options in the Question.");
+        else if (this.state.questionData.optionsList.length < 2) {
+            swal("Warning", "There should be atleast two options in the Question!", "warning");
         }
         else if(this.props.edit){
             this.props.updateSCQOnEdit({question: this.state.questionData,index:this.props.qkey})
@@ -61,7 +63,6 @@ class SingleChoiceQuestionForm extends Component {
     
         this.setState({submit:true});
         this.props.questionData(this.state.questionData);
-        console.log(this.state.questionData);
     }
 
     cancelButtonHandler = () => {
@@ -78,7 +79,7 @@ class SingleChoiceQuestionForm extends Component {
                 return (
                     <div key={option}>
                         <input type="radio"></input>
-                        <span className={classes.Text}>{option}</span>
+                        <span className="Text">{option}</span>
                     </div>
                 )   
             });
@@ -86,7 +87,7 @@ class SingleChoiceQuestionForm extends Component {
         
         let inputForm = null;
         if(!this.state.submit){
-            inputForm = <div className={classes.Text}><p>Write Question Here</p>
+            inputForm = <div className="Text"><p>Write Question Here</p>
             <input type="text"  onChange={(e) => this.onChangeQuestionHandler(e)} value={this.state.questionData.question}></input>
             <p>Write options here in the form of comma seperated values</p>
             <input type="text" onChange={(e) => this.onChangeOptionsHandler(e)} value={this.state.optionsString}></input>
@@ -94,13 +95,13 @@ class SingleChoiceQuestionForm extends Component {
             </div>
         }
         return (
-            <div className={classes.Text}>
+            <div className="Text">
                 {inputForm}
                 <p>Preview</p>
                 <p>{this.state.questionData.question}</p>
                 {options}
-                <button onClick={() => this.sendData()} className={classes.Button}>Submit</button>
-                <button onClick={this.cancelButtonHandler} className={classes.Button}>Cancel</button>
+                <button onClick={() => this.sendData()} className="Button">Submit</button>
+                <button onClick={this.cancelButtonHandler} className="Button">Cancel</button>
             </div>
         );
     }

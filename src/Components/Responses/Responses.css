@@ -1,34 +1,34 @@
-.Content{
+.ResponsesContent{
   display: grid;
   grid-template-columns: repeat(4,1fr);
   grid-auto-flow: column;
   margin: 0em 0;
 }
-.Content span{
+.ResponsesContent span{
   width: 10rem;
   align-content: center;
 }
-.Title{
+.ResponsesTitle{
   display: grid;
   align-items: center;
   justify-content: center;
   grid-template-columns: repeat(4,1fr);
   grid-auto-flow: column;
 }
-.Title span{
+.ResponsesTitle span{
   width: 10rem;
   align-content: center;
 
 }
 .Response {
-  width: 60%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0.3em 0;
 }
-.Content button{
+.ResponsesContent button{
     display: block;
 }
 .Responses{
@@ -38,24 +38,40 @@
     align-items: center;
     background: transparent;
     align-content: center;
+    margin: 0 auto;
     margin-top: 5rem;
-    width: 100%;
-    color: white;
+    color: black;
+    background: rgba(255, 254, 254, 0.86);
+    min-width: 750px;
+    width: 55%;
+    border-radius: 1em;
 }
-.Response:hover {
+/* .Response:hover {
   border: 2px solid white;
   border-radius: 0.2em;
-}
+} */
 .Responses span {
     margin: 1em 1em;
 }
 .Responses button {
   cursor: pointer;
+  display: flex;
+  align-self: flex-end;
+  justify-self: flex-end;
+  justify-content: flex-end;
+  align-items: flex-end;
   border-radius: 0px;
   text-decoration: none;
-  background: #3E4C59;
+  background: transparent;
   padding: 10px 10px;
-  color: #fff;
+  color: black;
+  box-shadow:
+		0 1px 2px rgba(0,0,0,0.07), 
+		0 2px 4px rgba(0,0,0,0.07), 
+		0 4px 8px rgba(0,0,0,0.07), 
+		0 8px 16px rgba(0,0,0,0.07),
+		0 16px 32px rgba(0,0,0,0.07), 
+		0 32px 64px rgba(0,0,0,0.07);
   border: 2px solid #fff;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -74,7 +90,7 @@
 .Responses button:hover {
   border:solid 2px #fff;
   background: #fff;
-  color: #1f1f1f;
+  /* color: #1f1f1f; */
 }
 .Collapsible {
   width: 90%;
@@ -86,7 +102,9 @@
   border-radius: 0.5rem;
   padding-left: 1.5em;
   margin-bottom: 0.5em;
+  z-index: 10000;
 }
 .CollapsibleContent{
   width: 100%;
+  z-index: 10000;
 }
