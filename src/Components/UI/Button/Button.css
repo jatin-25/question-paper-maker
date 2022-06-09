@@ -1,16 +1,18 @@
-
-.Button:disabled{
-    background: #888c8f;
-    color: #1f1f1f;
+.Button {
+  justify-self: center;
+}
+.Button:disabled {
+  background: #888c8f;
+  color: #1f1f1f;
 }
 .Cancel {
-   background-color: red; 
+  background-color: red;
 }
 .Continue {
-    background-color: green; 
- }
+  background-color: green;
+}
 
 .Disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+  background-color: #ccc;
+  cursor: not-allowed;
 }

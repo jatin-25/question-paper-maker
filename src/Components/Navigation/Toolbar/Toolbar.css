@@ -1,139 +1,214 @@
 .Toolbar {
-    height: 56px;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    /* background-color: #fcfaf9; */
-    background-color: aliceblue;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 20px;
-    box-sizing: border-box;
-    z-index: 900;
-    box-shadow:
-		0 1px 2px rgba(0,0,0,0.07), 
-		0 2px 4px rgba(0,0,0,0.07), 
-		0 4px 8px rgba(0,0,0,0.07), 
-		0 8px 16px rgba(0,0,0,0.07),
-		0 16px 32px rgba(0,0,0,0.07), 
-		0 32px 64px rgba(0,0,0,0.07);
-    color: black;
+  height: 56px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* background-color: #fcfaf9; */
+  background-color: aliceblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+  z-index: 900;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.07),
+    0 4px 8px rgba(0, 0, 0, 0.07), 0 8px 16px rgba(0, 0, 0, 0.07),
+    0 16px 32px rgba(0, 0, 0, 0.07), 0 32px 64px rgba(0, 0, 0, 0.07);
+  color: black;
 }
 .Toolbar img {
-    /* background-color: #323F4B; */
-    justify-self: flex-start;
+  /* background-color: #323F4B; */
+  justify-self: flex-start;
 }
 .Toolbar nav {
-    display: flex;
-    height: 100%;
-    /* background-color: #323F4B; */
-    justify-content: space-between;
-    width: 100%;
-    align-items: center;
-    /* padding: 0; */
-}
-.NavItems{
-    /* background-color: #323F4B; */
-    margin-right: 8em;
-}
-.NavItems a{
-    text-decoration: none;
-    list-style-type: none;
-    width: 100%;
-    padding: 15px 0;
-    margin: 0;
-}
-.NavItems a:hover{
-    border-bottom: 2px solid rgb(7, 78, 102);
+  display: flex;
+  height: 100%;
+  /* background-color: #323F4B; */
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  /* padding: 0; */
 }
 
+.MenuBars {
+  display: none;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-right: 12px;
+}
+
+.Sidebar {
+  display: flex;
+  position: fixed;
+  transition: 850ms;
+  width: 250px;
+  top: 0;
+  left: -100%;
+  flex-direction: column;
+  height: 100vh;
+  background-color: aliceblue;
+  padding: 0;
+  margin: 0;
+  z-index: 1000;
+}
+
+.SideBarMenu {
+  margin-top: 2em;
+}
+.SideBarMenu .MenuItems a {
+  padding: 1em 0em;
+  padding-left: 0.7em;
+  padding-right: 0.5em;
+  margin-left: 0;
+  border-radius: 5px;
+  width: 100%;
+}
+.Active {
+  left: 0;
+  transition: 350ms;
+}
+.CloseSidebar {
+  margin-left: 1em;
+  margin-bottom: 1em;
+  cursor: pointer;
+}
+.MenuItems {
+  display: flex;
+  flex-direction: column;
+  /* row-gap: 2em; */
+}
+.MenuItems a:hover {
+  background-color: #d2e7fa;
+}
+.NavItems {
+  /* background-color: #323F4B; */
+  margin-right: 8em;
+}
+.NavItems a {
+  text-decoration: none;
+  list-style-type: none;
+  width: 100%;
+  padding: 15px 0;
+  margin: 0;
+}
+.NavItems a:hover {
+  border-bottom: 2px solid rgb(7, 78, 102);
+}
 
 .None {
-    display: none;
-    transition: all 0.4s ease-in;
-    transform: translateY(0);
+  display: none;
+  transition: all 0.4s ease-in;
+  transform: translateY(0);
 }
-
 
 @media (max-width: 499px) {
-    .DesktopOnly {
-        display: none;
-    }
+  .DesktopOnly {
+    display: none;
+  }
 }
 
-.Toolbar nav a{
-    text-decoration: none;
-    list-style-type: none;
-    margin: 0 1em;
-    white-space: nowrap;
-    color: black;
-    cursor: pointer;
+.Toolbar nav a {
+  text-decoration: none;
+  list-style-type: none;
+  margin: 0 1em;
+  white-space: nowrap;
+  color: black;
+  cursor: pointer;
 }
-.Toolbar span{
-    cursor: pointer;
+.Toolbar span {
+  cursor: pointer;
 }
-.CornerItems{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
+.CornerItems {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
 }
-.Icon{
-    height: 28px;
-    width: 40px;
+.Icon {
+  height: 28px;
+  width: 40px;
 }
-.Logo{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+.Logo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
-.Logo img{
-    margin-right: 0.5em;
-    height: 30px;
-    width: 30px;
+.Logo img {
+  margin-right: 0.5em;
+  height: 30px;
+  width: 30px;
 }
-.Logo span{
-    font-size: large;
-    font-weight: 500;
-}
-
-.CollapContent{
-    position: absolute;
-    top: 56px;
-    right: 0.5vw;
-    overflow: visible;
-}
-.MenuItems{
-    padding: 10px 10px;
-    width: 90%;
-    letter-spacing: 2px;
-    
-    -webkit-transition: all .4s ease-in-out;
-        -moz-transition: all .4s ease-in-out;
-        -ms-transition: all .4s ease-in-out;
-        -o-transition: all .4s ease-in-out;
-            transition: all .4s ease-in-out;
-}
-.MenuContent{
-    padding: 0.2em;
-    background-color: aliceblue;
-    border-radius: 2px;
-    color: black;
-    font-size: 1rem;
-    /* padding-bottom: 1.5em; */
-    padding-top: 0.5em;
+.Logo span {
+  font-size: large;
+  font-weight: 500;
 }
 
-.CollapContent .MenuContent p,.CollapContent .MenuContent a{
-    display: flex;
-    justify-content: center;
-    justify-self: center;
-    white-space: nowrap;
-    cursor: pointer;
-    margin-left: 0.5em;
-    margin-bottom: 0.2em;
-    color: black;
+.CollapContent {
+  position: absolute;
+  top: 56px;
+  right: 0.5vw;
+  overflow: visible;
+}
+.MenuItems {
+  padding: 10px 10px;
+  width: 100%;
+  letter-spacing: 2px;
+
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -ms-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+.MenuContent {
+  padding: 0.2em;
+  background-color: aliceblue;
+  border-radius: 2px;
+  color: black;
+  font-size: 1rem;
+  /* padding-bottom: 1.5em; */
+  padding-top: 0.5em;
+}
+
+.CollapContent .MenuContent p,
+.CollapContent .MenuContent a {
+  display: flex;
+  justify-content: center;
+  justify-self: center;
+  white-space: nowrap;
+  cursor: pointer;
+  margin-left: 0.5em;
+  margin-bottom: 0.2em;
+  color: black;
+}
+
+@media screen and (max-width: 1080px) {
+  .Toolbar {
+    padding: 10px;
+  }
+  .NavItems {
+    margin-right: 3em;
+  }
+}
+@media screen and (max-width: 960px) {
+  .Toolbar nav {
+    justify-content: flex-start;
+  }
+  .Toolbar img {
+    width: 25px;
+    height: 25px;
+  }
+  .Logo {
+    justify-content: flex-start;
+    width: inherit;
+  }
+  .MenuBars {
+    display: block;
+  }
+  .NavItems {
+    display: none;
+  }
 }

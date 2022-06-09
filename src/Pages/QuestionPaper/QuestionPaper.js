@@ -1,31 +1,31 @@
-import React,{Component} from "react";
-import SingleChoiceQuestion from "../QuestionTypes/SingleChoiceQuestion/SingleChoiceQuestion";
-import MultipleChoiceQuestion from "../QuestionTypes/MultipleChoiceQuestion/MultipleChoiceQuestion";
-import ParagraphQuestion from "../QuestionTypes/ParagraphQuestion/ParagraphQuestion";
+import React, { Component } from "react";
+import SingleChoiceQuestion from "../../Components/QuestionTypes/SingleChoiceQuestion/SingleChoiceQuestion";
+import MultipleChoiceQuestion from "../../Components/QuestionTypes/MultipleChoiceQuestion/MultipleChoiceQuestion";
+import ParagraphQuestion from "../../Components/QuestionTypes/ParagraphQuestion/ParagraphQuestion";
 import axios from '../../axios';
 import './QuestionPaper.css';
-import EssentialFeildForm from "../EssentialFeildForm/EssentialFeildForm";
+import EssentialFeildForm from "../../Components/EssentialFeildForm/EssentialFeildForm";
 import { connect } from "react-redux";
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 import * as actions from '../../Store/Actions/index';
-import BackDrop from "../hoc/BackDrop/BackDrop";
+import BackDrop from "../../Components/hoc/BackDrop/BackDrop";
 import swal from "sweetalert";
-class QuestionPaper extends Component{
-    
+class QuestionPaper extends Component {
+
     state = {
         title: "",
         qkey: this.props.location.pathname.slice(8),
         isSubmitted: "Not Known",
-        essentialFeilds:{
-            answer:[]
+        essentialFeilds: {
+            answer: []
         },
         questionArr: []
     }
-    componentDidMount(){
+    componentDidMount() {
         this.props.setLoading(true);
         const qkey = this.props.location.pathname.slice(8);
         const queryParams = `?auth=${this.props.token}`;
-        axios.get("/users/" + this.props.userKey + "/submittedResponses.json"+queryParams ).then(
+        axios.get("/users/" + this.props.userKey + "/submittedResponses.json" + queryParams).then(
             response => {
                 if (response.data) {
                     const queryParams3 = `?auth=${this.props.token}&orderBy="paperId"&equalTo="${qkey}"`;
@@ -73,8 +73,8 @@ class QuestionPaper extends Component{
                         this.props.setLoading(false);
                     })
                 }
-                
-                
+
+
             }).catch(error => this.props.setLoading(false));
 
     }
@@ -83,15 +83,15 @@ class QuestionPaper extends Component{
         let oldQuestionData = this.state.questionArr[answerObject.index];
         oldQuestionData.answer = answerObject.answer;
         let newQuestionArr = [...this.state.questionArr];
-        newQuestionArr.splice(answerObject.index,1,oldQuestionData);
-        this.setState({questionArr:newQuestionArr});
+        newQuestionArr.splice(answerObject.index, 1, oldQuestionData);
+        this.setState({ questionArr: newQuestionArr });
     }
-    
+
     updateEssentialFeildAnswerHandler = (answer) => {
-        if(answer !== undefined && answer){
-            let essentialFeild = {...this.state.essentialFeilds,answer:[]}
+        if (answer !== undefined && answer) {
+            let essentialFeild = { ...this.state.essentialFeilds, answer: [] }
             essentialFeild.answer = answer;
-            this.setState({essentialFeilds: essentialFeild});
+            this.setState({ essentialFeilds: essentialFeild });
         }
     }
 
@@ -125,10 +125,10 @@ class QuestionPaper extends Component{
                         }).catch(error => {
 
                         });
-                    this.setState({isSubmitted: true})
+                    this.setState({ isSubmitted: true })
                 }
             })
-        
+
         }
         else {
             swal("Warning", "Essential Feilds can't be Empty!", "warning");
@@ -136,46 +136,46 @@ class QuestionPaper extends Component{
     }
 
     onSubmitHandler = () => {
-        if(this.state.essentialFeilds.answer){
+        if (this.state.essentialFeilds.answer) {
             const answers = this.state.essentialFeilds.answer;
             let isFormInvalid = false;
-            for(let i = 0;i<answers.length;++i){
-                if(answers[i] === undefined || answers[i] === null || answers[i] === ""){
+            for (let i = 0; i < answers.length; ++i) {
+                if (answers[i] === undefined || answers[i] === null || answers[i] === "") {
                     isFormInvalid = true;
                     break;
                 }
             }
-            if(isFormInvalid){
+            if (isFormInvalid) {
                 return false;
             }
             return true;
         }
-        else{
+        else {
             return false;
         }
-       
+
     }
-    render(){
+    render() {
 
         let essentialFeildInputForm = null;
-        if(Object.keys(this.state.essentialFeilds).indexOf('title') !== -1){
-            essentialFeildInputForm = <EssentialFeildForm essentialFeilds = {this.state.essentialFeilds.title} updateAnswer = {this.updateEssentialFeildAnswerHandler}/>
+        if (Object.keys(this.state.essentialFeilds).indexOf('title') !== -1) {
+            essentialFeildInputForm = <EssentialFeildForm essentialFeilds={this.state.essentialFeilds.title} updateAnswer={this.updateEssentialFeildAnswerHandler} />
         }
 
         let questionsComponent = null;
-        questionsComponent =  this.state.questionArr.map( ( question, i) => {
+        questionsComponent = this.state.questionArr.map((question, i) => {
             let questionComp = null;
-            switch(question.type){
+            switch (question.type) {
                 case "SingleChoiceQuestion":
-                questionComp = <SingleChoiceQuestion optionsList = {this.state.questionArr[i].optionsList} question = {this.state.questionArr[i].question} key={i} qkey = {i} updateAnswer = {this.updateAnswerHandler} questionNo = {i+1} pageOnWhichRendered = "questionPaper"/>
-                break;
+                    questionComp = <SingleChoiceQuestion optionsList={this.state.questionArr[i].optionsList} question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateAnswerHandler} questionNo={i + 1} pageOnWhichRendered="questionPaper" />
+                    break;
 
                 case "MultipleChoiceQuestion":
-                    questionComp = <MultipleChoiceQuestion optionsList = {this.state.questionArr[i].optionsList} question = {this.state.questionArr[i].question} key={i} qkey = {i} updateAnswer = {this.updateAnswerHandler} questionNo = {i+1} pageOnWhichRendered = "questionPaper"/>
+                    questionComp = <MultipleChoiceQuestion optionsList={this.state.questionArr[i].optionsList} question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateAnswerHandler} questionNo={i + 1} pageOnWhichRendered="questionPaper" />
                     break;
 
                 case "ParagraphQuestion":
-                    questionComp = <ParagraphQuestion question = {this.state.questionArr[i].question} key={i} qkey = {i}  updateAnswer = {this.updateAnswerHandler} questionNo = {i+1} pageOnWhichRendered = "questionPaper"/>
+                    questionComp = <ParagraphQuestion question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateAnswerHandler} questionNo={i + 1} pageOnWhichRendered="questionPaper" />
                     break;
                 default:
                     break;
@@ -187,16 +187,15 @@ class QuestionPaper extends Component{
         return (
             <BackDrop isLoading={this.props.loading}>
                 {this.state.isSubmitted === true ? <div className="noPapers"><p>Your response has been submitted.</p></div> : null}
-                {this.state.isSubmitted !== null && this.state.isSubmitted === false?<div className="QuestionPaperArea">
-                        {essentialFeildInputForm}
-                        <div className={["QuestionPaper", "LightBlue"].join(" ")}>
-                            {questionsComponent}
-
-                        </div>
-                        <div className="BtnArea">
-                            <button onClick={this.submitQuestionPaperHandler} className="Button">Submit</button>
-                        </div>
-                    </div>:null}
+                {this.state.isSubmitted !== null && this.state.isSubmitted === false ? <div className="QuestionPaperArea">
+                    {essentialFeildInputForm}
+                    <div className={["QuestionPaper", "LightBlue"].join(" ")}>
+                        {questionsComponent}
+                    </div>
+                    <div className="BtnArea">
+                        <button onClick={this.submitQuestionPaperHandler} className="Button">Submit</button>
+                    </div>
+                </div> : null}
             </BackDrop>
         );
     }
@@ -214,4 +213,4 @@ const mapDispatchToProps = dispatch => {
         setLoading: (isLoading) => dispatch(actions.setLoading(isLoading))
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(QuestionPaper);
+export default connect(mapStateToProps, mapDispatchToProps)(QuestionPaper);

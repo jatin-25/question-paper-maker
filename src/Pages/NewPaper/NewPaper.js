@@ -1,37 +1,37 @@
-import React,{Component} from "react";
-import SingleChoiceQuestionForm from "../QuestionTypes/SingleChoiceQuestion/SingleChoiceInputForm";
-import SingleChoiceQuestion from "../QuestionTypes/SingleChoiceQuestion/SingleChoiceQuestion";
-import MultipleChoiceQuestion from "../QuestionTypes/MultipleChoiceQuestion/MultipleChoiceQuestion";
-import ParagraphQuestion from "../QuestionTypes/ParagraphQuestion/ParagraphQuestion";
-import MultipleChoiceQuestionForm from "../QuestionTypes/MultipleChoiceQuestion/MultipleChoiceInputForm";
-import ParagraphQuestionForm from "../QuestionTypes/ParagraphQuestion/ParagraphQuestionInputForm";
+import React, { Component } from "react";
+import SingleChoiceQuestionForm from "../../Components/QuestionTypes/SingleChoiceQuestion/SingleChoiceInputForm";
+import SingleChoiceQuestion from "../../Components/QuestionTypes/SingleChoiceQuestion/SingleChoiceQuestion";
+import MultipleChoiceQuestion from "../../Components/QuestionTypes/MultipleChoiceQuestion/MultipleChoiceQuestion";
+import ParagraphQuestion from "../../Components/QuestionTypes/ParagraphQuestion/ParagraphQuestion";
+import MultipleChoiceQuestionForm from "../../Components/QuestionTypes/MultipleChoiceQuestion/MultipleChoiceInputForm";
+import ParagraphQuestionForm from "../../Components/QuestionTypes/ParagraphQuestion/ParagraphQuestionInputForm";
 import './NewPaper.css';
-import Modal from "../hoc/QuestionPopUp/Modal";
+import Modal from "../../Components/hoc/QuestionPopUp/Modal";
 import axios from '../../axios';
 import { connect } from "react-redux";
-import {v4 as uuid} from 'uuid';
-import {withRouter} from "react-router-dom";
+import { v4 as uuid } from 'uuid';
+import { withRouter } from "react-router-dom";
 import Collapse from '@kunukn/react-collapse';
 import swal from 'sweetalert';
 import * as actions from '../../Store/Actions/index';
 
 
-class NewPaper extends Component{
+class NewPaper extends Component {
 
     state = {
         title: "",
         essentialFeilds: {
-            title: ['Name','Roll No.','Email Id'],
+            title: ['Name', 'Roll No.', 'Email Id'],
             answer: []
         },
         questionArr: [],
-        singleChoiceClicked:false,
-        multipleChoiceClicked:false,
-        paragraphClicked:false,
+        singleChoiceClicked: false,
+        multipleChoiceClicked: false,
+        paragraphClicked: false,
         editData: {
             type: "",
             clicked: false,
-            idx:null
+            idx: null
         },
         isToggleShown: false,
         isPaperReady: false,
@@ -40,41 +40,41 @@ class NewPaper extends Component{
     }
 
     updateQuestionArr = (questionObject) => {
-        if(questionObject){
-            let newQuestionsList = [...this.state.questionArr,questionObject];
+        if (questionObject) {
+            let newQuestionsList = [...this.state.questionArr, questionObject];
             this.setState({ questionArr: newQuestionsList });
-            if(this.state.questionArr.length === 0){
-                this.setState({isPaperReady: true});
+            if (this.state.questionArr.length === 0) {
+                this.setState({ isPaperReady: true });
             }
         }
 
-        this.setState({singleChoiceClicked: false,multipleChoiceClicked: false,paragraphClicked: false})
+        this.setState({ singleChoiceClicked: false, multipleChoiceClicked: false, paragraphClicked: false })
     }
 
     showSingleChoiceInputForm = () => {
-        if(this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked){
+        if (this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked) {
             swal("Warning", "There is already one question form opened!", "warning");
         }
         else
-        this.setState({singleChoiceClicked:true});
+            this.setState({ singleChoiceClicked: true });
     }
 
 
     showMultipleChoiceInputForm = () => {
-        if(this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked){
+        if (this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked) {
             swal("Warning", "There is already one question form opened!", "warning");
         }
         else
-        this.setState({multipleChoiceClicked:true});
+            this.setState({ multipleChoiceClicked: true });
     }
 
 
     showParagraphInputForm = () => {
-        if(this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked){
+        if (this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked) {
             swal("Warning", "There is already one question form opened!", "warning");
         }
         else
-        this.setState({paragraphClicked:true});
+            this.setState({ paragraphClicked: true });
     }
 
     submitQuestionPaperHandler = () => {
@@ -120,9 +120,9 @@ class NewPaper extends Component{
                                 text: "Move to Your Papers",
                                 value: "move"
                             }
-                            }
+                        }
                     }).then(value => {
-                        switch(value) {
+                        switch (value) {
                             case "stay":
                                 break;
                             case "move":
@@ -142,21 +142,21 @@ class NewPaper extends Component{
         if (this.state.editData.clicked) {
             swal("Warning", "There is already one question form opened!", "warning");
         }
-        else{
+        else {
             const newEditData = {
                 type: editDataObject.type,
                 clicked: true,
                 idx: editDataObject.idx
             }
-            this.setState({editData: newEditData});
+            this.setState({ editData: newEditData });
         }
     }
-    
+
     onRemoveButtonClickedHandler = (index) => {
         let questionArr = [...this.state.questionArr];
         questionArr.splice(index, 1);
         if (questionArr.length === 0) {
-            this.setState({isPaperReady: false})
+            this.setState({ isPaperReady: false })
         }
         this.setState({ questionArr: questionArr });
     }
@@ -165,37 +165,37 @@ class NewPaper extends Component{
             clicked: false,
             idx: null
         }
-        if(questionObject){
+        if (questionObject) {
             let newQuestionArr = [...this.state.questionArr];
-            newQuestionArr.splice(questionObject.index,1,questionObject.question);
-            this.setState({questionArr:newQuestionArr});
+            newQuestionArr.splice(questionObject.index, 1, questionObject.question);
+            this.setState({ questionArr: newQuestionArr });
         }
-        this.setState({editData: newEditData});
+        this.setState({ editData: newEditData });
     }
-    
+
     invertToggle = () => {
-        this.setState({isToggleShown: !this.state.isToggleShown});
+        this.setState({ isToggleShown: !this.state.isToggleShown });
     }
 
     onChangeTitleHandler = (e) => {
-        this.setState({title: e.target.value});
+        this.setState({ title: e.target.value });
     }
 
-    render(){
+    render() {
         let questionsComponent = null;
-        questionsComponent =  this.state.questionArr.map( ( question, i) => {
+        questionsComponent = this.state.questionArr.map((question, i) => {
             let questionComp = null;
-            switch(question.type){
+            switch (question.type) {
                 case "SingleChoiceQuestion":
-                    questionComp = <SingleChoiceQuestion optionsList={this.state.questionArr[i].optionsList} question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateSingleChoiceAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler = {this.onRemoveButtonClickedHandler} pageOnWhichRendered = "newPaper"/>
-                break;
+                    questionComp = <SingleChoiceQuestion optionsList={this.state.questionArr[i].optionsList} question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateSingleChoiceAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler={this.onRemoveButtonClickedHandler} pageOnWhichRendered="newPaper" />
+                    break;
 
                 case "MultipleChoiceQuestion":
-                    questionComp = <MultipleChoiceQuestion optionsList={this.state.questionArr[i].optionsList} question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateMultipleChoiceAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler={this.onRemoveButtonClickedHandler} pageOnWhichRendered = "newPaper"/>
+                    questionComp = <MultipleChoiceQuestion optionsList={this.state.questionArr[i].optionsList} question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateMultipleChoiceAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler={this.onRemoveButtonClickedHandler} pageOnWhichRendered="newPaper" />
                     break;
 
                 case "ParagraphQuestion":
-                    questionComp = <ParagraphQuestion question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateParagraphAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler={this.onRemoveButtonClickedHandler} pageOnWhichRendered = "newPaper"/>
+                    questionComp = <ParagraphQuestion question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateParagraphAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler={this.onRemoveButtonClickedHandler} pageOnWhichRendered="newPaper" />
                     break;
                 default:
                     break;
@@ -205,47 +205,46 @@ class NewPaper extends Component{
 
 
         let singleChoiceQuestionForm = null;
-        if(this.state.singleChoiceClicked){
-            singleChoiceQuestionForm = <SingleChoiceQuestionForm questionDataPass = {this.updateQuestionArr} edit = {false}/>;
+        if (this.state.singleChoiceClicked) {
+            singleChoiceQuestionForm = <SingleChoiceQuestionForm questionDataPass={this.updateQuestionArr} edit={false} />;
         }
 
         let multipleChoiceQuestionForm = null;
-        if(this.state.multipleChoiceClicked){
-            multipleChoiceQuestionForm = <MultipleChoiceQuestionForm questionDataPass = {this.updateQuestionArr} edit = {false}/>;
+        if (this.state.multipleChoiceClicked) {
+            multipleChoiceQuestionForm = <MultipleChoiceQuestionForm questionDataPass={this.updateQuestionArr} edit={false} />;
         }
 
         let paragraphQuestionForm = null;
-        if(this.state.paragraphClicked){
-            paragraphQuestionForm = <ParagraphQuestionForm questionDataPass = {this.updateQuestionArr} edit = {false}/>;
+        if (this.state.paragraphClicked) {
+            paragraphQuestionForm = <ParagraphQuestionForm questionDataPass={this.updateQuestionArr} edit={false} />;
         }
 
         let singleChoiceEditForm = null;
-
-        if(this.state.editData.clicked && this.state.editData.type === "SingleChoiceQuestion"){
+        if (this.state.editData.clicked && this.state.editData.type === "SingleChoiceQuestion") {
             let optionsString = null;
             let tempOptionsString = this.state.questionArr[this.state.editData.idx].optionsList.join(",");
-            optionsString = tempOptionsString.substring(0,tempOptionsString.length);
-            singleChoiceEditForm = <SingleChoiceQuestionForm optionsList = {this.state.questionArr[this.state.editData.idx].optionsList} question = {this.state.questionArr[this.state.editData.idx].question} edit = {this.state.editData.clicked} updateSCQOnEdit = {this.updateQuestionOnEdit} qkey = {this.state.editData.idx} optionsStr = {optionsString}/>
+            optionsString = tempOptionsString.substring(0, tempOptionsString.length);
+            singleChoiceEditForm = <SingleChoiceQuestionForm optionsList={this.state.questionArr[this.state.editData.idx].optionsList} question={this.state.questionArr[this.state.editData.idx].question} edit={this.state.editData.clicked} updateSCQOnEdit={this.updateQuestionOnEdit} qkey={this.state.editData.idx} optionsStr={optionsString} />
         }
         let multipleChoiceEditForm = null;
-        if(this.state.editData.clicked && this.state.editData.type === "MultipleChoiceQuestion"){
+        if (this.state.editData.clicked && this.state.editData.type === "MultipleChoiceQuestion") {
             let optionsString = null;
             let tempOptionsString = this.state.questionArr[this.state.editData.idx].optionsList.join(",");
-            optionsString = tempOptionsString.substring(0,tempOptionsString.length);
-            multipleChoiceEditForm = <MultipleChoiceQuestionForm optionsList = {this.state.questionArr[this.state.editData.idx].optionsList} question = {this.state.questionArr[this.state.editData.idx].question} edit = {this.state.editData.clicked} updateMCQOnEdit = {this.updateQuestionOnEdit} qkey = {this.state.editData.idx} optionsStr = {optionsString}/>
+            optionsString = tempOptionsString.substring(0, tempOptionsString.length);
+            multipleChoiceEditForm = <MultipleChoiceQuestionForm optionsList={this.state.questionArr[this.state.editData.idx].optionsList} question={this.state.questionArr[this.state.editData.idx].question} edit={this.state.editData.clicked} updateMCQOnEdit={this.updateQuestionOnEdit} qkey={this.state.editData.idx} optionsStr={optionsString} />
         }
         let paragraphEditForm = null;
-        if(this.state.editData.clicked && this.state.editData.type === "ParagraphQuestion"){
-            paragraphEditForm = <ParagraphQuestionForm question = {this.state.questionArr[this.state.editData.idx].question} edit = {this.state.editData.clicked}  updatePQOnEdit = {this.updateQuestionOnEdit} qkey = {this.state.editData.idx}/>
+        if (this.state.editData.clicked && this.state.editData.type === "ParagraphQuestion") {
+            paragraphEditForm = <ParagraphQuestionForm question={this.state.questionArr[this.state.editData.idx].question} edit={this.state.editData.clicked} updatePQOnEdit={this.updateQuestionOnEdit} qkey={this.state.editData.idx} />
         }
-       
-        let paperTitle = this.state.isPaperReady?<div className="PaperTitle">
+
+        let paperTitle = this.state.isPaperReady ? <div className="PaperTitle">
             <p>Paper Title</p>
             <input type='text' onChange={(e) => this.onChangeTitleHandler(e)}></input>
         </div> : null;
-        
+
         let addQuestionTypes = null;
-        addQuestionTypes = <div className="AddButton" onClick={() => this.setState({addQuestion: !this.state.addQuestion})}>
+        addQuestionTypes = <div className="AddButton" onClick={() => this.setState({ addQuestion: !this.state.addQuestion })}>
             {/* <img src={add} alt="Add Question"/> */}
             <span>Add Question</span>
             <Collapse isOpen={this.state.addQuestion} transition="height 0.7s cubic-bezier(.4, 0, .2, 1)" className="AddQuestionContent">
@@ -280,13 +279,13 @@ class NewPaper extends Component{
                     {paragraphEditForm}
                 </Modal>
 
-                {this.state.isPaperReady?<div className={["NewQuestionPaper"].join(" ")}>
-                {questionsComponent}
-                </div>:null}
+                {this.state.isPaperReady ? <div className="NewQuestionPaper">
+                    {questionsComponent}
+                </div> : null}
                 {addQuestionTypes}
                 <div className="BtnAreaPaper">
-                <button onClick={() => this.submitQuestionPaperHandler()} className="Button" style={{display: this.state.isPaperReady?"inline": "none"}}>Submit</button>
-            </div>
+                    <button onClick={() => this.submitQuestionPaperHandler()} className="Button" style={{ display: this.state.isPaperReady ? "inline" : "none" }}>Submit</button>
+                </div>
             </div>
         );
     }
@@ -303,4 +302,4 @@ const mapDispatchToProps = dispatch => {
         setLoading: (isLoading) => dispatch(actions.setLoading(isLoading))
     }
 }
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(NewPaper));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NewPaper));

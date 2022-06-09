@@ -11,9 +11,9 @@ import emailIcon from '../../assets/envelope-solid.svg';
 import passwordIcon from '../../assets/lock-solid.svg';
 import * as actions from '../../Store/Actions/index';
 import { connect } from 'react-redux';
-import BackDrop from "../hoc/BackDrop/BackDrop";
+import BackDrop from "../../Components/hoc/BackDrop/BackDrop";
 
-class AuthForm extends Component{
+class AuthForm extends Component {
 
     state = {
         loginForm: {
@@ -107,22 +107,22 @@ class AuthForm extends Component{
     }
 
 
-    checkValidation = (value, rules,elementIdentifier) => {
+    checkValidation = (value, rules, elementIdentifier) => {
         let isValid = true;
         let error = "";
-        
+
         if (rules.maxLength) {
             const valid = (value.length <= rules.maxLength);
             isValid = isValid && valid;
             if (!valid) {
-                error = "The Maximum Length of "+elementIdentifier + " is "+rules.maxLength+".";
+                error = "The Maximum Length of " + elementIdentifier + " is " + rules.maxLength + ".";
             }
         }
         if (rules.minLength) {
             const valid = (value.length >= rules.minLength);
             isValid = isValid && valid
             if (!valid) {
-                error = elementIdentifier + " must be atleast "+rules.minLength+" characters long.";
+                error = elementIdentifier + " must be atleast " + rules.minLength + " characters long.";
             }
         }
         if (rules.isEmail) {
@@ -130,11 +130,11 @@ class AuthForm extends Component{
             const valid = pattern.test(value);
             isValid = valid && isValid;
 
-            if(!valid) {
+            if (!valid) {
                 error = elementIdentifier + " is Invalid.";
             }
         }
-        
+
         if (rules.isNumeric) {
             const pattern = /^\d+$/;
             isValid = pattern.test(value) && isValid
@@ -160,7 +160,7 @@ class AuthForm extends Component{
         const updatedFormElement = { ...newForm[elementIdentifier] }
         updatedFormElement.value = event.target.value;
 
-        const errorObject = this.checkValidation(updatedFormElement.value, updatedFormElement.validation,elementIdentifier);
+        const errorObject = this.checkValidation(updatedFormElement.value, updatedFormElement.validation, elementIdentifier);
         updatedFormElement.valid = errorObject.valid;
 
         updatedFormElement.touched = true;
@@ -176,10 +176,10 @@ class AuthForm extends Component{
         }
         newForm.formIsValid = isFormValid;
         if (this.state.isSignUp) {
-            this.setState({ signUpForm: newForm});
+            this.setState({ signUpForm: newForm });
         }
         else {
-            this.setState({ loginForm: newForm});
+            this.setState({ loginForm: newForm });
         }
     }
 
@@ -229,31 +229,31 @@ class AuthForm extends Component{
     }
 
     changeToSignUp = () => {
-       
-        this.setState({ isSignUp:true});
-       
+
+        this.setState({ isSignUp: true });
+
     }
 
     changeToSignIn = () => {
-       
+
         this.setState({ isSignUp: false })
     }
 
     render() {
 
         const loginKeyArr = Object.keys(this.state.loginForm);
-        const loginFormObject = Object.values(this.state.loginForm).slice(0,2);
+        const loginFormObject = Object.values(this.state.loginForm).slice(0, 2);
         const signUpKeyArr = Object.keys(this.state.signUpForm);
-        const signUpFormObject = Object.values(this.state.signUpForm).slice(0,3);
+        const signUpFormObject = Object.values(this.state.signUpForm).slice(0, 3);
 
         const loginFormElements = loginFormObject.map((elementData, i) => {
             return <div key={i} className={["inputField", (elementData.touched && !(elementData.valid)) ? "invalidElement" : null].join(" ")}>
-                <img src={elementData.imageSrc} className="icon" alt={loginKeyArr[i]}/>
+                <img src={elementData.imageSrc} className="icon" alt={loginKeyArr[i]} />
                 <input
                     {...elementData.elementConfig}
                     value={elementData.value}
                     onChange={(event) => this.onInputChangeHandler(event, loginKeyArr[i])}
-                    className={!elementData.valid && elementData.touched ? "invalid":null}
+                    className={!elementData.valid && elementData.touched ? "invalid" : null}
                 />
             </div>
         })
@@ -266,7 +266,7 @@ class AuthForm extends Component{
                     value={elementData.value}
                     onChange={(event) => this.onInputChangeHandler(event, signUpKeyArr[i])}
                     className={!elementData.valid && elementData.touched ? "invalid" : null}
-                />  
+                />
             </div>
         })
 
@@ -287,7 +287,7 @@ class AuthForm extends Component{
                 })
             }
         }
-        
+
         if (this.props.error) {
             let errorMessage = this.props.error.message;
             let em = errorMessage.split("_");
@@ -297,39 +297,43 @@ class AuthForm extends Component{
             if (this.state.isSignUp && this.state.signUpForm.formIsValid) {
                 signUpErrorMessage = <p>{errorMessage}</p>
             }
-            else if (this.state.loginForm.formIsValid){
+            else if (this.state.loginForm.formIsValid) {
                 signInErrorMessage = <p>{errorMessage}</p>
             }
         }
 
-        
+
         return (
-            <BackDrop isLoading = {this.props.loading}>
+            <BackDrop isLoading={this.props.loading}>
                 <div className={this.state.isSignUp === false ? ["container"].join(" ") : ["container", "signUpMode"].join(" ")}>
-                                <p className="Heading">Question Paper Maker</p>
-                        <div className="formsContainer">
-                            <div className="signinSignup">
+                    <div className="formsContainer">
+                        <div className="signinSignup">
+                            <div className="signInContainer">
+                                <p className="title-heading">Question Paper Maker</p>
                                 <form className="signInForm">
                                     <h2 className="title">Sign in</h2>
                                     {(this.state.loginForm.showErrors && !this.state.loginForm.formIsValid) || this.props.error ? <div className="error">{signInErrorMessage}</div> : null}
                                     {loginFormElements}
-                                    <button className={["btn", this.state.loginForm.formIsValid?"valid":null].join(" ")} onClick={this.submitHandler} >Login</button>
+                                    <button className={["btn", this.state.loginForm.formIsValid ? "valid" : null].join(" ")} onClick={this.submitHandler} >Login</button>
                                     <p className="socialText">Sign in with social platforms</p>
                                     <div className="socialMedia">
                                         <a className="socialIcon">
-                                            <img src={googleIcon} className="icon" alt="Google"/>
+                                            <img src={googleIcon} className="icon" alt="Google" />
                                         </a>
                                         <a className="socialIcon">
-                                            <img src={appleIcon} alt = "Apple"/>
+                                            <img src={appleIcon} alt="Apple" />
                                         </a>
                                         <a className="socialIcon">
-                                            <img src={facebookIcon} alt = "Facebook"/>
+                                            <img src={facebookIcon} alt="Facebook" />
                                         </a>
                                         <a className="socialIcon">
                                             <img src={twitterIcon} alt="Twitter" />
                                         </a>
                                     </div>
                                 </form>
+                            </div>
+                            <div className="signUpContainer">
+                                <p className="title-heading">Question Paper Maker</p>
                                 <form className="signUpForm">
                                     <h2 className="title">Sign Up</h2>
                                     {(this.state.signUpForm.showErrors && !this.state.signUpForm.formIsValid) ? <div className="error">{signUpErrorMessage}</div> : null}
@@ -353,35 +357,36 @@ class AuthForm extends Component{
                                 </form>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="panelsContainer">
-                            <div className={["panel","leftPanel"].join(" ")}>
-                                <div className="content">
-                                    <h3>New here ?</h3>
-                                    <p>
-                                        Join Now and start your journey of creating your own papers.
-                                    </p>
-                                    <button className={["btn", "transparent","valid"].join(" ")}  onClick={this.changeToSignUp}>
-                                        Sign up
-                                    </button>
-                                </div>
-                                <img src={log} className="image" alt="" />
+                    <div className="panelsContainer">
+                        <div className={["panel", "leftPanel"].join(" ")}>
+                            <div className="content">
+                                <h3>New here ?</h3>
+                                <p>
+                                    Join Now and start your journey of creating your own papers.
+                                </p>
+                                <button className={["btn", "transparent", "valid"].join(" ")} onClick={this.changeToSignUp}>
+                                    Sign up
+                                </button>
                             </div>
-                            <div className={["panel", "rightPanel"].join(" ")}>
-                                <div className="content">
-                                    <h3>One of us ?</h3>
-                                    <p>
-                                        Then start creating your own papers.
-                                    </p>
-                                    <button className={["btn","transparent","valid"].join(" ")} onClick={this.changeToSignIn}>
-                                        Sign in
-                                    </button>
-                                </div>
-                                <img src={register} className="image" alt="" />
+                            <img src={log} className="image" alt="" />
+                        </div>
+                        <div className={["panel", "rightPanel"].join(" ")}>
+                            <div className="content">
+                                <h3>One of us ?</h3>
+                                <p>
+                                    Then start creating your own papers.
+                                </p>
+                                <button className={["btn", "transparent", "valid"].join(" ")} onClick={this.changeToSignIn}>
+                                    Sign in
+                                </button>
                             </div>
+                            <img src={register} className="image" alt="" />
                         </div>
                     </div>
-            </BackDrop>
+                </div>
+            </BackDrop >
         );
     }
 }

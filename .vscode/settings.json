@@ -5,5 +5,8 @@
     "editor.formatOnType": true,
     "[javascript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }

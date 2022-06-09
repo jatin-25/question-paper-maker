@@ -37,3 +37,21 @@
     justify-content: flex-start;
     margin: 0.5em 0;
 }
+.EditIcon{
+    cursor: pointer;
+    width: 26px;
+    height: 40px;
+}
+
+.DeleteIcon{
+    cursor: pointer;
+    width: 29px;
+    height: 40px;
+    margin-left: 0.3em;
+}
+
+@media screen and (max-width:650px){
+    .DeleteIcon{
+        margin-left: 0.1em;
+    }
+}

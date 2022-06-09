@@ -1,10 +1,10 @@
-import React,{Component} from "react";
-import { NavLink,withRouter } from "react-router-dom";
+import React, { Component } from "react";
+import { NavLink, withRouter } from "react-router-dom";
 import axios from '../../axios';
 import './YourPapers.css';
 import { connect } from "react-redux";
 import * as actions from '../../Store/Actions/index';
-import BackDrop from "../hoc/BackDrop/BackDrop";
+import BackDrop from "../../Components/hoc/BackDrop/BackDrop";
 
 class YourPapers extends Component {
     state = {
@@ -16,7 +16,7 @@ class YourPapers extends Component {
     componentDidMount() {
         this.props.setLoading(true);
         const queryParams = `?auth=${this.props.token}`;
-        
+
         axios.get("/users/" + this.props.userKey + "/createdPapers.json" + queryParams).then(response => {
             if (response.data) {
                 this.setState({ questionData: Object.values(response.data), questionKeyArr: Object.keys(response.data) })
@@ -30,16 +30,16 @@ class YourPapers extends Component {
         })
     }
 
-        showQuestionHandler = (i) => {
-            this.props.updateQuestionRouteData({idx: i,id:this.state.questionData[i].paperId});
-        }
-        
-        showResponsesHandler = (i) => {
-            this.props.updateResponsesRouteData({idx: i,id:this.state.questionData[i].paperId})
-        }
-    render(){
+    showQuestionHandler = (i) => {
+        this.props.updateQuestionRouteData({ idx: i, id: this.state.questionData[i].paperId });
+    }
+
+    showResponsesHandler = (i) => {
+        this.props.updateResponsesRouteData({ idx: i, id: this.state.questionData[i].paperId })
+    }
+    render() {
         let essentialFeildTitles = null;
-        if(this.state.questionData[0] !== undefined){
+        if (this.state.questionData[0] !== undefined) {
             essentialFeildTitles = <div className="YourPapersTitle">
                 <span>Title</span>
                 <span>Question Paper</span>
@@ -48,22 +48,31 @@ class YourPapers extends Component {
         }
         let questions = null;
         if (this.state.questionData.length > 0) {
-            questions = this.state.questionData.map((question,i) => {
+            questions = this.state.questionData.map((question, i) => {
                 return (
                     <div key={i} className="QuestionPapers">
 
-                        <span>{question.paperTitle}</span>
+                        <div className="SmallScreenPaperOptions">
+                            <span>{question.paperTitle}</span>
+                            <NavLink to={{
+                                pathname: '/papers/' + this.state.questionData[i].paperId,
+                            }} className="YourPapersButton" onClick={() => this.showQuestionHandler(i)}>View</NavLink>
 
-                        <NavLink to={{
-                            pathname: '/papers/' + this.state.questionData[i].paperId,
-                        }} className="YourPapersButton" onClick={() => this.showQuestionHandler(i)}>View Question Paper</NavLink>
+                            <NavLink to={'/yourPapers/' + i + '/responses'} className="YourPapersButton" onClick={() => this.showResponsesHandler(i)}>View</NavLink>
+                        </div>
+                        <div className="TabDesktopPaperOptions">
+                            <span>{question.paperTitle}</span>
+                            <NavLink to={{
+                                pathname: '/papers/' + this.state.questionData[i].paperId,
+                            }} className="YourPapersButton" onClick={() => this.showQuestionHandler(i)}>View Paper</NavLink>
 
-                        <NavLink to={'/yourPapers/' + i + '/responses'} className="YourPapersButton" onClick={() => this.showResponsesHandler(i)}>View Responses</NavLink>
+                            <NavLink to={'/yourPapers/' + i + '/responses'} className="YourPapersButton" onClick={() => this.showResponsesHandler(i)}>View Responses</NavLink>
+                        </div>
                     </div>
                 );
             })
         }
-        
+
         return (
             <BackDrop isLoading={this.props.loading}>
                 {this.state.noPapers ? <div className="noPapers"><p>You haven't created any papers yet.</p></div> :
@@ -71,7 +80,7 @@ class YourPapers extends Component {
                         {essentialFeildTitles}
                         {questions}
                     </div>}
-            </BackDrop>    
+            </BackDrop>
         );
     }
 }
@@ -87,4 +96,4 @@ const mapDispatchToProps = dispatch => {
         setLoading: (isLoading) => dispatch(actions.setLoading(isLoading))
     }
 }
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(YourPapers));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(YourPapers));

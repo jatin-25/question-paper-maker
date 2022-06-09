@@ -1,24 +1,26 @@
 import React, { Component } from "react";
 import './EssentialFeildForm.css';
 import { connect } from "react-redux";
-class EssentialFeildForm extends Component{
+class EssentialFeildForm extends Component {
 
     state = {
-        essentialFeilds : (this.props.essentialFeilds !== undefined)?this.props.essentialFeilds:[],
-        answers: (this.props.essentialFeilds !== undefined)?Array(this.props.essentialFeilds.length):[]
+        essentialFeilds: (this.props.essentialFeilds !== undefined) ? this.props.essentialFeilds : [],
+        answers: (this.props.essentialFeilds !== undefined) ? Array(this.props.essentialFeilds.length) : []
     }
 
 
     onAnswerChangeHandler = (object) => {
-      
         let answerArr = [...this.state.answers];
+        if (answerArr.indexOf(this.props.email) === -1) {
+            answerArr[2] = this.props.email;
+        }
         answerArr[object.idx] = object.e.target.value;
         this.setState({ answers: answerArr }, () => this.props.updateAnswer(answerArr));
     }
 
-    render(){
+    render() {
 
-        let essentialFeildForm = this.state.essentialFeilds.map((feildTitle,i) => {
+        let essentialFeildForm = this.state.essentialFeilds.map((feildTitle, i) => {
             return (
                 <div key={i}>
                     <p>{feildTitle}</p>
@@ -27,7 +29,7 @@ class EssentialFeildForm extends Component{
                 </div>
             );
         })
-        return(
+        return (
             <div className="EssentialFeildForm">
                 {essentialFeildForm}
             </div>

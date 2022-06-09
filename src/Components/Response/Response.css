@@ -1,0 +1,9 @@
+.IndividualResponse {
+  color: black;
+  background: #cbd2d9;
+  width: 100%;
+  height: 100%;
+}
+.IndividualResponse span {
+  margin: 0;
+}

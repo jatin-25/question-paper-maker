@@ -50,25 +50,37 @@ input[type=checkbox],input[type=radio]{
   z-index: 5;
   justify-items: center;
 }
-
-.Heading{
+.signInContainer{
   position: absolute;
-  top: 10%;
-  left: 77%;
-  transform: translateX(-50%);
-  z-index: 10000;
-  color: #f2f2f2; 
-  /* background: #ff4a4a; */
-  margin-top: 2em;
-  font-size: 3.5em;
-  line-height: 74px;
-  font-weight: 700; 
-  margin: 0 5px 24px; 
-  float: left; 
-  padding: 10px; 
-  margin: 0 5px 24px; 
-  font-family: 'Libre Baskerville', serif;
-  width: 40%;
+  z-index: 2;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+  transition: all 0.2s 0.7s;
+  justify-content: center;
+  align-items: center;
+}
+.signUpContainer{
+  opacity: 0;
+  z-index: 1;
+  width: 70%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s 0.7s;
+  justify-content: center;
+  align-items: center;
+}
+.title-heading{
+  font-size: 2.2rem;
+  color: #fcfcfc;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  width: 100%;
+  text-align: center;
+  margin-top: -2em;
+  margin-bottom: 1em;
 }
 
 form {
@@ -84,23 +96,23 @@ form {
 }
 
 form.signUpForm {
-  opacity: 0;
-  z-index: 1;
+  
   background: rgba(241, 239, 239, 0.8);
   backdrop-filter: saturate(180%) blur(10px);
   border-radius: 1em;
   width: 100%;
   max-width: 450px;
-  padding: 2em 0;
+  padding: 1.5em 1.2em;
 }
 
 form.signInForm {
-  z-index: 2;
+  
   background: rgba(241, 239, 239, 0.8);
   backdrop-filter: saturate(180%) blur(10px);
   max-width: 450px;
   border-radius: 1em;
   width: 100%;
+  padding: 1.5em 1.2em;
 }
 
 .title {
@@ -308,12 +320,12 @@ form.signInForm {
   left: 25%;
 }
 
-.container.signUpMode form.signUpForm {
+.container.signUpMode .signUpContainer {
   opacity: 1;
   z-index: 2;
 }
 
-.container.signUpMode form.signInForm {
+.container.signUpMode .signInContainer {
   opacity: 0;
   z-index: 1;
 }
@@ -331,10 +343,18 @@ form.signInForm {
   pointer-events: all;
 }
 
+@media screen and (max-width: 950px){
+  .title-heading{
+    font-size: 2rem;
+  }
+}
 @media (max-width: 870px) {
   .container {
     min-height: 800px;
     height: 100vh;
+  }
+  .inputField{
+    height: 52px;
   }
   .signin-signup {
     width: 100%;
@@ -342,7 +362,20 @@ form.signInForm {
     transform: translate(-50%, -100%);
     transition: 1s 0.8s ease-in-out;
   }
-
+  .signinSignup{
+    width: 100%;
+  }
+  .signInContainer,.signUpContainer{
+    width: 90%;
+  }
+  form.signInForm, form.signUpForm{
+    min-width: 350px;
+    max-width: 420px;
+  }
+  
+  .signInContainer{
+    top: 22%;
+  }
   .signinSignup,
   .container.signUpMode .signinSignup {
     left: 50%;
@@ -401,7 +434,7 @@ form.signInForm {
     height: 1500px;
     transform: translateX(-50%);
     left: 30%;
-    bottom: 68%;
+    bottom: 73%;
     right: initial;
     top: initial;
     transition: 2s ease-in-out;
@@ -409,7 +442,7 @@ form.signInForm {
 
   .container.signUpMode:before {
     transform: translate(-50%, 100%);
-    bottom: 32%;
+    bottom: 25%;
     right: initial;
   }
 
@@ -429,7 +462,7 @@ form.signInForm {
   }
 
   .container.signUpMode .signinSignup {
-    top: 5%;
+    top: 16%;
     transform: translate(-50%, 0);
   }
 }
@@ -439,6 +472,9 @@ form.signInForm {
     padding: 0 1.5rem;
   }
 
+  .inputField{
+    height: 45px;
+  }
   .image {
     display: none;
   }
@@ -458,7 +494,19 @@ form.signInForm {
     bottom: 28%;
     left: 50%;
   }
+  .title-heading{
+  font-size: 1.7rem;
 }
+.title{
+  font-size: 1.7rem;
+}
+  form.signInForm, form.signUpForm{
+    min-width: 320px;
+    max-width: 390px;
+    padding: 1.3em 1.5em;
+  }
+}
+
 .error{
   display: flex;
   margin: 0 0.5em;

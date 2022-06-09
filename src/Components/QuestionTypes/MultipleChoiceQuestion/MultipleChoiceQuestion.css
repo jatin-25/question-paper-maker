@@ -1,18 +1,26 @@
 .Question > button {
-    display: none;
-    }
-    
+  display: none;
+}
+
 .Question:hover > button {
-    display: block;
+  display: block;
 }
-.Question{
-    border-radius: 0.5em;
-    padding: 0.5em 1em;
-    padding-bottom: 0.2em;
-    width: 100%;
-    overflow-wrap: anywhere;
+.Question {
+  border-radius: 8px;
+  padding: 0.5em 1em;
+  padding-bottom: 0.2em;
+  width: 100%;
+  overflow-wrap: anywhere;
 }
-.Question p, .Question span .Question input{
-    margin-top: 5px;
-    margin-bottom: 5px;
+.Question p,
+.Question span .Question input {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+@media screen and (max-width: 500px) {
+  .Question {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+  }
 }

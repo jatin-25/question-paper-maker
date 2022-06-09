@@ -1,49 +1,47 @@
-import React,{Component} from "react";
+import React, { Component } from "react";
 import './SingleChoiceQuestion.css';
+import * as BiIcons from 'react-icons/bi';
+import * as MdIcons from 'react-icons/md';
 
-class SingleChoiceQuestion extends Component{
+class SingleChoiceQuestion extends Component {
 
     state = {
-        question:this.props.showEditButton?null:this.props.question,
-        options: this.props.showEditButton?null:this.props.optionsList,
+        question: this.props.showEditButton ? null : this.props.question,
+        options: this.props.showEditButton ? null : this.props.optionsList,
         answer: this.props.showEditButton || this.props.answer === undefined ? 'Not Marked' : this.props.answer,
-        isHovered: false
     }
 
     setAnswer = (idx) => {
-        
-        this.props.updateAnswer({answer:this.state.answer,index:idx});
+
+        this.props.updateAnswer({ answer: this.state.answer, index: idx });
     }
     markAnswerHandler = (markedOption) => {
-        this.setState({answer:markedOption},() => this.setAnswer(this.props.qkey));
+        this.setState({ answer: markedOption }, () => this.setAnswer(this.props.qkey));
     }
 
-    onMouseEnterHandler = () => {
-        this.setState({isHovered: true})
-    }
-    render(){
+    render() {
         let options = null;
-        options = this.props.optionsList?this.props.optionsList.map(option =>{
+        options = this.props.optionsList ? this.props.optionsList.map((option, index) => {
             return (
-            <div key={option} className="Option">
-            <input type="radio" name={this.props.qkey} onChange={() => this.markAnswerHandler(option)} disabled = {this.props.pageOnWhichRendered !== 'questionPaper'}></input>
-            <span >{option}</span>
-            </div>
+                <div key={index} className="Option">
+                    <input type="radio" name={this.props.qkey} onChange={() => this.markAnswerHandler(option)} disabled={this.props.pageOnWhichRendered !== 'questionPaper'}></input>
+                    <span >{option}</span>
+                </div>
             )
-        }):null;
+        }) : null;
 
         let answer = null
-        if(this.props.pageOnWhichRendered !== 'newPaper'){
-            answer = this.props.question?<p  style={{display: "inline-block"}}>Selected Answer: {this.state.answer}</p>:null;
+        if (this.props.pageOnWhichRendered !== 'newPaper') {
+            answer = this.props.question ? <p style={{ display: "inline-block" }}>Selected Answer: {this.state.answer}</p> : null;
         }
         return (
-            <div className="Question" onMouseEnter={() => this.setState({ isHovered: true })} onMouseLeave={() => this.setState({ isHovered: false })}>
-                <p style={{display: "inline-block"}}>Ques. {this.props.qkey+1}: {this.props.question}</p>
+            <div className="Question">
+                <p style={{ display: "inline-block" }}>Ques. {this.props.qkey + 1}: {this.props.question}</p>
                 {options}
                 {answer}
-                {this.props.pageOnWhichRendered === 'newPaper' && <div className={[this.state.isHovered ? "EditButtonContent" : "None"]}>
-                    <button onClick={() => this.props.onEditHandler({ idx: this.props.qkey, type: "SingleChoiceQuestion" })}>Edit</button>
-                    <button onClick={() => this.props.onRemoveHandler(this.props.qkey)}>Remove</button>
+                {this.props.pageOnWhichRendered === 'newPaper' && <div className="EditButtonContent">
+                    <BiIcons.BiEdit onClick={() => this.props.onEditHandler({ idx: this.props.qkey, type: "SingleChoiceQuestion" })} className="EditIcon" />
+                    <MdIcons.MdOutlineDelete onClick={() => this.props.onRemoveHandler(this.props.qkey)} className="DeleteIcon" />
                 </div>}
             </div>
         );
