@@ -104,7 +104,6 @@ class NewPaper extends Component {
                             paperTitle: this.state.title
                         };
                         axios.post("/users/" + this.props.userKey + "/createdPapers.json?auth=" + this.props.token, currentPaperId).then(response => {
-                            console.log(response)
                             this.setState({ isPaperSubmitted: true })
                             this.props.setLoading(false);
                         }).catch(error => {
