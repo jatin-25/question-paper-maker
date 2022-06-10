@@ -13,6 +13,7 @@ import * as actions from '../../Store/Actions/index';
 import { connect } from 'react-redux';
 import BackDrop from "../../Components/hoc/BackDrop/BackDrop";
 
+
 class AuthForm extends Component {
 
     state = {
@@ -175,6 +176,7 @@ class AuthForm extends Component {
             isFormValid = isFormValid && newForm[element].valid;
         }
         newForm.formIsValid = isFormValid;
+        newForm.showErrors = false;
         if (this.state.isSignUp) {
             this.setState({ signUpForm: newForm });
         }
@@ -312,9 +314,9 @@ class AuthForm extends Component {
                                 <p className="title-heading">Question Paper Maker</p>
                                 <form className="signInForm">
                                     <h2 className="title">Sign in</h2>
-                                    {(this.state.loginForm.showErrors && !this.state.loginForm.formIsValid) || this.props.error ? <div className="error">{signInErrorMessage}</div> : null}
+                                    <div className={(this.state.loginForm.showErrors === true && !this.state.loginForm.formIsValid === true) || this.props.error ? "error" : "none"}>{signInErrorMessage}</div>
                                     {loginFormElements}
-                                    <button className={["btn", this.state.loginForm.formIsValid ? "valid" : null].join(" ")} onClick={this.submitHandler} >Login</button>
+                                    <button className={["btn", this.state.loginForm.formIsValid ? "valid" : null].join(" ")} onClick={this.submitHandler}>Login</button>
                                     <p className="socialText">Sign in with social platforms</p>
                                     <div className="socialMedia">
                                         <a className="socialIcon">
@@ -357,9 +359,7 @@ class AuthForm extends Component {
                                 </form>
                             </div>
                         </div>
-                    </div>
-
-                    <div className="panelsContainer">
+                    </div><div className="panelsContainer">
                         <div className={["panel", "leftPanel"].join(" ")}>
                             <div className="content">
                                 <h3>New here ?</h3>

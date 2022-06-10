@@ -112,6 +112,18 @@
   align-items: center;
   width: 95%;
 }
+
+.TitleContainer {
+  cursor: pointer;
+  display: flex;
+  justify-self: center;
+  flex-direction: row;
+  align-items: center;
+}
+.TitleContainer svg {
+  margin: auto 0.4em;
+}
+
 .noPapers {
   background: rgba(255, 254, 254, 0.86);
   margin: 0 auto;

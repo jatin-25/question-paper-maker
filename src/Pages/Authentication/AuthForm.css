@@ -1,15 +1,16 @@
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body,input {
+body,
+input {
   font-family: "Poppins", sans-serif;
   font-size: initial;
 }
-input[type=checkbox],input[type=radio]{
+input[type="checkbox"],
+input[type="radio"] {
   margin-right: 0.5em;
   height: 20px;
   width: 20px;
@@ -45,12 +46,12 @@ input[type=checkbox],input[type=radio]{
   min-width: 380px;
   max-height: 50vh;
   width: 60%;
-  
+
   grid-template-columns: 1fr;
   z-index: 5;
   justify-items: center;
 }
-.signInContainer{
+.signInContainer {
   position: absolute;
   z-index: 2;
   width: 70%;
@@ -61,7 +62,7 @@ input[type=checkbox],input[type=radio]{
   justify-content: center;
   align-items: center;
 }
-.signUpContainer{
+.signUpContainer {
   opacity: 0;
   z-index: 1;
   width: 70%;
@@ -72,7 +73,7 @@ input[type=checkbox],input[type=radio]{
   justify-content: center;
   align-items: center;
 }
-.title-heading{
+.title-heading {
   font-size: 2.2rem;
   color: #fcfcfc;
   font-weight: 600;
@@ -96,7 +97,6 @@ form {
 }
 
 form.signUpForm {
-  
   background: rgba(241, 239, 239, 0.8);
   backdrop-filter: saturate(180%) blur(10px);
   border-radius: 1em;
@@ -106,7 +106,6 @@ form.signUpForm {
 }
 
 form.signInForm {
-  
   background: rgba(241, 239, 239, 0.8);
   backdrop-filter: saturate(180%) blur(10px);
   max-width: 450px;
@@ -134,7 +133,7 @@ form.signInForm {
   position: relative;
 }
 
-.invalidElement{
+.invalidElement {
   box-shadow: 0 0 3px 3px red;
 }
 
@@ -158,14 +157,14 @@ form.signInForm {
 }
 
 .invalid {
-    border: 1px solid red;
-    background-color: white;
-    color: red;
+  border: 1px solid red;
+  background-color: white;
+  color: red;
 }
-.valid{
-   background-color: #5995fd;
-   color: #fff;
-   border: none;
+.valid {
+  background-color: #5995fd;
+  color: #fff;
+  border: none;
 }
 .inputField input::placeholder {
   color: #aaa;
@@ -194,7 +193,7 @@ form.signInForm {
   font-size: 1.1rem;
   transition: 0.3s;
 }
-.icon{
+.icon {
   display: flex;
   align-self: center;
   justify-self: center;
@@ -240,7 +239,7 @@ form.signInForm {
   right: 48%;
   transform: translateY(-50%);
   background-color: #fce055;
-  background-image: linear-gradient(to top,#95aee0 30%,#46237a 60%);
+  background-image: linear-gradient(to top, #95aee0 30%, #46237a 60%);
   transition: 1.8s ease-in-out;
   border-radius: 50%;
   z-index: 6;
@@ -343,8 +342,8 @@ form.signInForm {
   pointer-events: all;
 }
 
-@media screen and (max-width: 950px){
-  .title-heading{
+@media screen and (max-width: 950px) {
+  .title-heading {
     font-size: 2rem;
   }
 }
@@ -353,7 +352,7 @@ form.signInForm {
     min-height: 800px;
     height: 100vh;
   }
-  .inputField{
+  .inputField {
     height: 52px;
   }
   .signin-signup {
@@ -362,18 +361,20 @@ form.signInForm {
     transform: translate(-50%, -100%);
     transition: 1s 0.8s ease-in-out;
   }
-  .signinSignup{
+  .signinSignup {
     width: 100%;
   }
-  .signInContainer,.signUpContainer{
+  .signInContainer,
+  .signUpContainer {
     width: 90%;
   }
-  form.signInForm, form.signUpForm{
+  form.signInForm,
+  form.signUpForm {
     min-width: 350px;
     max-width: 420px;
   }
-  
-  .signInContainer{
+
+  .signInContainer {
     top: 22%;
   }
   .signinSignup,
@@ -472,7 +473,7 @@ form.signInForm {
     padding: 0 1.5rem;
   }
 
-  .inputField{
+  .inputField {
     height: 45px;
   }
   .image {
@@ -494,36 +495,40 @@ form.signInForm {
     bottom: 28%;
     left: 50%;
   }
-  .title-heading{
-  font-size: 1.7rem;
-}
-.title{
-  font-size: 1.7rem;
-}
-  form.signInForm, form.signUpForm{
+  .title-heading {
+    font-size: 1.7rem;
+  }
+  .title {
+    font-size: 1.7rem;
+  }
+  form.signInForm,
+  form.signUpForm {
     min-width: 320px;
     max-width: 390px;
     padding: 1.3em 1.5em;
   }
 }
 
-.error{
+.error {
   display: flex;
   margin: 0 0.5em;
+  font-size: 14px;
   max-width: 380px;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   background-color: rgba(247, 65, 65, 0.767);
   color: white;
-  padding: 1em;
+  padding: 0.7em;
   margin-bottom: 0.5em;
   border-radius: 0.5em;
 }
-.errorElement{
+.none {
+  display: none;
+}
+.errorElement {
   /* display: flex;
   flex-direction: column;
   justify-self: flex-start; */
   width: 100%;
 }
-

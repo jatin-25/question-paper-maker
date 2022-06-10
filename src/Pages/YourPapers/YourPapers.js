@@ -5,6 +5,9 @@ import './YourPapers.css';
 import { connect } from "react-redux";
 import * as actions from '../../Store/Actions/index';
 import BackDrop from "../../Components/hoc/BackDrop/BackDrop";
+import * as BiIcons from 'react-icons/bi';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import swal from 'sweetalert';
 
 class YourPapers extends Component {
     state = {
@@ -37,6 +40,14 @@ class YourPapers extends Component {
     showResponsesHandler = (i) => {
         this.props.updateResponsesRouteData({ idx: i, id: this.state.questionData[i].paperId })
     }
+    linkCopied = () => {
+        swal({
+            title: "Congratulations!",
+            text: "The link of your paper has been copied!",
+            icon: "success",
+            button: "Okay!",
+        });
+    }
     render() {
         let essentialFeildTitles = null;
         if (this.state.questionData[0] !== undefined) {
@@ -53,7 +64,13 @@ class YourPapers extends Component {
                     <div key={i} className="QuestionPapers">
 
                         <div className="SmallScreenPaperOptions">
-                            <span>{question.paperTitle}</span>
+                            <CopyToClipboard text={window.location.origin + "/papers/" + question.paperId}
+                                onCopy={() => this.linkCopied()}>
+                                <div className="TitleContainer">
+                                    <span>{question.paperTitle}</span>
+                                    <BiIcons.BiShareAlt />
+                                </div>
+                            </CopyToClipboard>
                             <NavLink to={{
                                 pathname: '/papers/' + this.state.questionData[i].paperId,
                             }} className="YourPapersButton" onClick={() => this.showQuestionHandler(i)}>View</NavLink>
@@ -61,7 +78,13 @@ class YourPapers extends Component {
                             <NavLink to={'/yourPapers/' + i + '/responses'} className="YourPapersButton" onClick={() => this.showResponsesHandler(i)}>View</NavLink>
                         </div>
                         <div className="TabDesktopPaperOptions">
-                            <span>{question.paperTitle}</span>
+                            <CopyToClipboard text={window.location.origin + "/papers/" + question.paperId}
+                                onCopy={() => this.linkCopied()}>
+                                <div className="TitleContainer">
+                                    <span>{question.paperTitle}</span>
+                                    <BiIcons.BiShareAlt />
+                                </div>
+                            </CopyToClipboard>
                             <NavLink to={{
                                 pathname: '/papers/' + this.state.questionData[i].paperId,
                             }} className="YourPapersButton" onClick={() => this.showQuestionHandler(i)}>View Paper</NavLink>

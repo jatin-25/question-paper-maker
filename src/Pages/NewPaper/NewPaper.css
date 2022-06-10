@@ -128,9 +128,9 @@
 }
 .PaperTitle p {
   display: flex;
-  /* width: 7rem; */
   justify-content: flex-end;
   align-items: flex-end;
+  text-align: center;
 }
 .PaperTitle input[type="text"] {
   width: 70%;
@@ -209,6 +209,7 @@ input[type="text"]:hover {
     width: 92%;
     min-width: 280px;
     max-width: 400px;
+    padding-left: 0;
   }
   .NewQuestionPaper {
     width: 92%;
