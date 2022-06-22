@@ -185,7 +185,6 @@ class AuthForm extends Component {
         }
     }
 
-
     submitHandler = (event) => {
         event.preventDefault();
         let formData = null;

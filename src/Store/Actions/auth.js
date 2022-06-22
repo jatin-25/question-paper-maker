@@ -1,13 +1,12 @@
 import * as actions from './actionTypes';
 import axios from '../../axios';
-
 export const authStart = () => {
     return {
-        type:  actions.AUTH_START
+        type: actions.AUTH_START
     };
 };
 
-export const authSuccess = (idToken,localId,userKey,email) => {
+export const authSuccess = (idToken, localId, userKey, email) => {
     return {
         type: actions.AUTH_SUCCESS,
         idToken: idToken,
@@ -31,7 +30,7 @@ export const setExpirationTime = (expirationTime) => {
     return dispatch => {
         setTimeout(() => {
             dispatch(logout())
-        }, expirationTime*1000);
+        }, expirationTime * 1000);
     }
 }
 
@@ -57,27 +56,27 @@ export const authFail = (errorObject) => {
 export const checkAuthState = () => {
     return dispatch => {
         const token = localStorage.getItem("token");
-        if(!token){
+        if (!token) {
             dispatch(logout());
         }
-        else{
+        else {
             const userId = localStorage.getItem("userId");
             const userKey = localStorage.getItem("userKey");
             const email = localStorage.getItem("email");
             const expirationDate = new Date(localStorage.getItem("expirationDate"));
-            if(expirationDate < new Date()){
+            if (expirationDate < new Date()) {
                 dispatch(logout());
             }
-            else{
-                dispatch(authSuccess(token,userId,userKey,email));
-                dispatch(setExpirationTime((expirationDate.getTime()-new Date().getTime())/1000))
+            else {
+                dispatch(authSuccess(token, userId, userKey, email));
+                dispatch(setExpirationTime((expirationDate.getTime() - new Date().getTime()) / 1000))
             }
-            
+
         }
     }
 }
 
-export const auth = (formData,isSignIn) => {
+export const auth = (formData, isSignIn) => {
     return dispatch => {
         dispatch(authStart());
         const authData = {
@@ -88,13 +87,13 @@ export const auth = (formData,isSignIn) => {
 
         let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDQbp0YYgwBRV4aPY23XalonWrvI0OGKNo';
 
-        if(isSignIn){
+        if (isSignIn) {
             url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDQbp0YYgwBRV4aPY23XalonWrvI0OGKNo';
         }
-        axios.post(url,authData).then(response => {
-            const expirationDate = new Date(new Date().getTime()+response.data.expiresIn*1000);
-            
-            if(!isSignIn){
+        axios.post(url, authData).then(response => {
+            const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
+
+            if (!isSignIn) {
                 const userObject = {
                     userId: response.data.localId,
                     name: formData.username,
@@ -103,7 +102,7 @@ export const auth = (formData,isSignIn) => {
                     createdPapers: []
                 }
                 axios.post("/users.json?auth=" + response.data.idToken, userObject).then(userResponse => {
-                    dispatch(authSuccess(response.data.idToken, response.data.localId,userResponse.data.name,response.data.email));
+                    dispatch(authSuccess(response.data.idToken, response.data.localId, userResponse.data.name, response.data.email));
                     dispatch(setExpirationTime(response.data.expiresIn));
                     localStorage.setItem("token", response.data.idToken);
                     localStorage.setItem("expirationDate", expirationDate);
@@ -117,7 +116,7 @@ export const auth = (formData,isSignIn) => {
             else {
                 const queryParams = `?auth=${response.data.idToken}&orderBy="userId"&equalTo="${response.data.localId}"`;
                 axios.get("/users.json" + queryParams).then(userResponse => {
-                    dispatch(authSuccess(response.data.idToken, response.data.localId, Object.keys(userResponse.data)[0],response.data.email));
+                    dispatch(authSuccess(response.data.idToken, response.data.localId, Object.keys(userResponse.data)[0], response.data.email));
                     dispatch(setExpirationTime(response.data.expiresIn));
                     localStorage.setItem("token", response.data.idToken);
                     localStorage.setItem("expirationDate", expirationDate);
@@ -125,10 +124,10 @@ export const auth = (formData,isSignIn) => {
                     localStorage.setItem("userKey", Object.keys(userResponse.data)[0]);
                     localStorage.setItem("email", response.data.email);
                 }).catch(error => {
-                    
+
                 });
             }
-            
+
         }).catch(error => {
             dispatch(authFail(error.response.data.error))
         })

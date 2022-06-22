@@ -47,7 +47,7 @@ class Toolbar extends Component {
 
     onLogoutClickedHandler = () => {
         this.state.toggleSidebar && this.toggleSidebarHandler()
-        this.props.history.push("/");
+        this.props.history.push("/login");
         this.props.onLogoutClicked(0);
     }
 
