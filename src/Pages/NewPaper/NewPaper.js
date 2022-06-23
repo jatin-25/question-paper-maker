@@ -1,305 +1,378 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import SingleChoiceQuestionForm from "../../Components/QuestionTypes/SingleChoiceQuestion/SingleChoiceInputForm";
 import SingleChoiceQuestion from "../../Components/QuestionTypes/SingleChoiceQuestion/SingleChoiceQuestion";
 import MultipleChoiceQuestion from "../../Components/QuestionTypes/MultipleChoiceQuestion/MultipleChoiceQuestion";
 import ParagraphQuestion from "../../Components/QuestionTypes/ParagraphQuestion/ParagraphQuestion";
 import MultipleChoiceQuestionForm from "../../Components/QuestionTypes/MultipleChoiceQuestion/MultipleChoiceInputForm";
 import ParagraphQuestionForm from "../../Components/QuestionTypes/ParagraphQuestion/ParagraphQuestionInputForm";
-import './NewPaper.css';
+import "./NewPaper.css";
 import Modal from "../../Components/hoc/QuestionPopUp/Modal";
-import axios from '../../axios';
-import { connect } from "react-redux";
-import { v4 as uuid } from 'uuid';
-import { withRouter } from "react-router-dom";
-import Collapse from '@kunukn/react-collapse';
-import swal from 'sweetalert';
-import * as actions from '../../Store/Actions/index';
+import axios from "../../axios";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuid } from "uuid";
+import Collapse from "@kunukn/react-collapse";
+import swal from "sweetalert";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoading } from "../../Store/Actions/index";
 
+const NewPaper = (props) => {
+  const [title, setTitle] = useState("");
+  const [essentialFeilds, setEssentialFeilds] = useState({
+    title: ["Name", "Roll No.", "Email Id"],
+    answer: [],
+  });
+  const [questionArr, setQuestionArr] = useState([]);
+  const [singleChoiceClicked, setSingleChoiceClicked] = useState(false);
+  const [multipleChoiceClicked, setMultipleChoiceClicked] = useState(false);
+  const [paragraphClicked, setParagraphClicked] = useState(false);
+  const [editData, setEditData] = useState({
+    type: "",
+    clicked: false,
+    idx: null,
+  });
 
-class NewPaper extends Component {
+  const [isToggleShown, setIisToggleShown] = useState(false);
+  const [isPaperReady, setIsPaperReady] = useState(false);
+  const [isPaperSubmitted, setIsPaperSubmitted] = useState(false);
+  const [addQuestion, setAddQuestion] = useState(false);
 
-    state = {
-        title: "",
-        essentialFeilds: {
-            title: ['Name', 'Roll No.', 'Email Id'],
-            answer: []
-        },
-        questionArr: [],
-        singleChoiceClicked: false,
-        multipleChoiceClicked: false,
-        paragraphClicked: false,
-        editData: {
-            type: "",
-            clicked: false,
-            idx: null
-        },
-        isToggleShown: false,
-        isPaperReady: false,
-        isPaperSubmitted: false,
-        addQuestion: false
+  const navigate = useNavigate();
+  const authState = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  const updateQuestionArr = (questionObject) => {
+    if (questionObject) {
+      let newQuestionsList = [...questionArr, questionObject];
+      setQuestionArr(newQuestionsList);
+      if (questionArr.length === 0) {
+        setIsPaperReady(true);
+      }
     }
 
-    updateQuestionArr = (questionObject) => {
-        if (questionObject) {
-            let newQuestionsList = [...this.state.questionArr, questionObject];
-            this.setState({ questionArr: newQuestionsList });
-            if (this.state.questionArr.length === 0) {
-                this.setState({ isPaperReady: true });
-            }
-        }
+    setSingleChoiceClicked(false);
+    setMultipleChoiceClicked(false);
+    setParagraphClicked(false);
+  };
 
-        this.setState({ singleChoiceClicked: false, multipleChoiceClicked: false, paragraphClicked: false })
-    }
+  const showSingleChoiceInputForm = () => {
+    if (singleChoiceClicked || multipleChoiceClicked || paragraphClicked) {
+      swal("Warning", "There is already one question form opened!", "warning");
+    } else setSingleChoiceClicked(true);
+  };
 
-    showSingleChoiceInputForm = () => {
-        if (this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked) {
-            swal("Warning", "There is already one question form opened!", "warning");
-        }
-        else
-            this.setState({ singleChoiceClicked: true });
-    }
+  const showMultipleChoiceInputForm = () => {
+    if (singleChoiceClicked || multipleChoiceClicked || paragraphClicked) {
+      swal("Warning", "There is already one question form opened!", "warning");
+    } else setMultipleChoiceClicked(true);
+  };
 
+  const showParagraphInputForm = () => {
+    if (singleChoiceClicked || multipleChoiceClicked || paragraphClicked) {
+      swal("Warning", "There is already one question form opened!", "warning");
+    } else setParagraphClicked(true);
+  };
 
-    showMultipleChoiceInputForm = () => {
-        if (this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked) {
-            swal("Warning", "There is already one question form opened!", "warning");
-        }
-        else
-            this.setState({ multipleChoiceClicked: true });
-    }
+  const submitQuestionPaperHandler = () => {
+    if (title === "") {
+      swal("Warning", "Title can't be Empty!", "warning");
+    } else {
+      swal({
+        title: "Are you sure?",
+        text: "You want to create your Paper!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willCreate) => {
+        if (willCreate) {
+          dispatch(setLoading(true));
+          const questionPaper = {
+            paperId: uuid(),
+            title: title,
+            essentialFeilds: essentialFeilds,
+            questionArr: questionArr,
+          };
 
-
-    showParagraphInputForm = () => {
-        if (this.state.singleChoiceClicked || this.state.multipleChoiceClicked || this.state.paragraphClicked) {
-            swal("Warning", "There is already one question form opened!", "warning");
-        }
-        else
-            this.setState({ paragraphClicked: true });
-    }
-
-    submitQuestionPaperHandler = () => {
-        if (this.state.title === "") {
-            swal("Warning", "Title can't be Empty!", "warning");
-        }
-        else {
-            swal({
-                title: "Are you sure?",
-                text: "You want to create your Paper!",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            }).then((willCreate) => {
-                if (willCreate) {
-                    this.props.setLoading(true);
-                    const questionPaper = {
-                        paperId: uuid(),
-                        title: this.state.title,
-                        essentialFeilds: this.state.essentialFeilds,
-                        questionArr: this.state.questionArr
-                    }
-
-                    axios.post('/questionPapers.json?auth=' + this.props.token, questionPaper).then(response => {
-                        const currentPaperId = {
-                            paperId: questionPaper.paperId,
-                            paperTitle: this.state.title
-                        };
-                        axios.post("/users/" + this.props.userKey + "/createdPapers.json?auth=" + this.props.token, currentPaperId).then(response => {
-                            this.setState({ isPaperSubmitted: true })
-                            this.props.setLoading(false);
-                        }).catch(error => {
-                            this.props.setLoading(false);
-                        })
-                    }).catch(error => {
-                        this.props.setLoading(false);
-                    });
-                    swal("Congratulations, Your Paper has been created.", {
-                        icon: "success",
-                        buttons: {
-                            stay: "Stay Here",
-                            catch: {
-                                text: "Move to Your Papers",
-                                value: "move"
-                            }
-                        }
-                    }).then(value => {
-                        switch (value) {
-                            case "stay":
-                                break;
-                            case "move":
-                                this.props.history.push("/yourPapers");
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-                }
+          axios
+            .post("/questionPapers.json?auth=" + authState.token, questionPaper)
+            .then((response) => {
+              const currentPaperId = {
+                paperId: questionPaper.paperId,
+                paperTitle: title,
+              };
+              axios
+                .post(
+                  "/users/" +
+                    authState.userKey +
+                    "/createdPapers.json?auth=" +
+                    authState.token,
+                  currentPaperId
+                )
+                .then((response) => {
+                  setIsPaperSubmitted(true);
+                  dispatch(setLoading(false));
+                })
+                .catch((error) => {
+                  dispatch(setLoading(false));
+                });
+            })
+            .catch((error) => {
+              dispatch(setLoading(false));
             });
-        }
-    }
-
-
-    onEditButtonClickedHandler = (editDataObject) => {
-        if (this.state.editData.clicked) {
-            swal("Warning", "There is already one question form opened!", "warning");
-        }
-        else {
-            const newEditData = {
-                type: editDataObject.type,
-                clicked: true,
-                idx: editDataObject.idx
+          swal("Congratulations, Your Paper has been created.", {
+            icon: "success",
+            buttons: {
+              stay: "Stay Here",
+              catch: {
+                text: "Move to Your Papers",
+                value: "move",
+              },
+            },
+          }).then((value) => {
+            switch (value) {
+              case "stay":
+                break;
+              case "move":
+                navigate("/yourPapers");
+                break;
+              default:
+                break;
             }
-            this.setState({ editData: newEditData });
+          });
         }
+      });
     }
+  };
 
-    onRemoveButtonClickedHandler = (index) => {
-        let questionArr = [...this.state.questionArr];
-        questionArr.splice(index, 1);
-        if (questionArr.length === 0) {
-            this.setState({ isPaperReady: false })
-        }
-        this.setState({ questionArr: questionArr });
+  const onEditButtonClickedHandler = (editDataObject) => {
+    if (editData.clicked) {
+      swal("Warning", "There is already one question form opened!", "warning");
+    } else {
+      const newEditData = {
+        type: editDataObject.type,
+        clicked: true,
+        idx: editDataObject.idx,
+      };
+      setEditData(newEditData);
     }
-    updateQuestionOnEdit = (questionObject) => {
-        const newEditData = {
-            clicked: false,
-            idx: null
-        }
-        if (questionObject) {
-            let newQuestionArr = [...this.state.questionArr];
-            newQuestionArr.splice(questionObject.index, 1, questionObject.question);
-            this.setState({ questionArr: newQuestionArr });
-        }
-        this.setState({ editData: newEditData });
+  };
+
+  const onRemoveButtonClickedHandler = (index) => {
+    let newQuestionArr = [...questionArr];
+    newQuestionArr.splice(index, 1);
+    if (newQuestionArr.length === 0) {
+      setIsPaperReady(false);
     }
+    setQuestionArr(newQuestionArr);
+  };
 
-    invertToggle = () => {
-        this.setState({ isToggleShown: !this.state.isToggleShown });
+  const updateQuestionOnEdit = (questionObject) => {
+    const newEditData = {
+      clicked: false,
+      idx: null,
+    };
+    if (questionObject) {
+      let newQuestionArr = [...questionArr];
+      newQuestionArr.splice(questionObject.index, 1, questionObject.question);
+      setQuestionArr(newQuestionArr);
     }
+    setEditData(newEditData);
+  };
 
-    onChangeTitleHandler = (e) => {
-        this.setState({ title: e.target.value });
-    }
+  //   const invertToggle = () => {
+  //     setState({ ...state, isToggleShown: !isToggleShown });
+  //   };
 
-    render() {
-        let questionsComponent = null;
-        questionsComponent = this.state.questionArr.map((question, i) => {
-            let questionComp = null;
-            switch (question.type) {
-                case "SingleChoiceQuestion":
-                    questionComp = <SingleChoiceQuestion optionsList={this.state.questionArr[i].optionsList} question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateSingleChoiceAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler={this.onRemoveButtonClickedHandler} pageOnWhichRendered="newPaper" />
-                    break;
-
-                case "MultipleChoiceQuestion":
-                    questionComp = <MultipleChoiceQuestion optionsList={this.state.questionArr[i].optionsList} question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateMultipleChoiceAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler={this.onRemoveButtonClickedHandler} pageOnWhichRendered="newPaper" />
-                    break;
-
-                case "ParagraphQuestion":
-                    questionComp = <ParagraphQuestion question={this.state.questionArr[i].question} key={i} qkey={i} updateAnswer={this.updateParagraphAnswerHandler} onEditHandler={this.onEditButtonClickedHandler} onRemoveHandler={this.onRemoveButtonClickedHandler} pageOnWhichRendered="newPaper" />
-                    break;
-                default:
-                    break;
-            }
-            return questionComp;
-        })
-
-
-        let singleChoiceQuestionForm = null;
-        if (this.state.singleChoiceClicked) {
-            singleChoiceQuestionForm = <SingleChoiceQuestionForm questionDataPass={this.updateQuestionArr} edit={false} />;
-        }
-
-        let multipleChoiceQuestionForm = null;
-        if (this.state.multipleChoiceClicked) {
-            multipleChoiceQuestionForm = <MultipleChoiceQuestionForm questionDataPass={this.updateQuestionArr} edit={false} />;
-        }
-
-        let paragraphQuestionForm = null;
-        if (this.state.paragraphClicked) {
-            paragraphQuestionForm = <ParagraphQuestionForm questionDataPass={this.updateQuestionArr} edit={false} />;
-        }
-
-        let singleChoiceEditForm = null;
-        if (this.state.editData.clicked && this.state.editData.type === "SingleChoiceQuestion") {
-            let optionsString = null;
-            let tempOptionsString = this.state.questionArr[this.state.editData.idx].optionsList.join(",");
-            optionsString = tempOptionsString.substring(0, tempOptionsString.length);
-            singleChoiceEditForm = <SingleChoiceQuestionForm optionsList={this.state.questionArr[this.state.editData.idx].optionsList} question={this.state.questionArr[this.state.editData.idx].question} edit={this.state.editData.clicked} updateSCQOnEdit={this.updateQuestionOnEdit} qkey={this.state.editData.idx} optionsStr={optionsString} />
-        }
-        let multipleChoiceEditForm = null;
-        if (this.state.editData.clicked && this.state.editData.type === "MultipleChoiceQuestion") {
-            let optionsString = null;
-            let tempOptionsString = this.state.questionArr[this.state.editData.idx].optionsList.join(",");
-            optionsString = tempOptionsString.substring(0, tempOptionsString.length);
-            multipleChoiceEditForm = <MultipleChoiceQuestionForm optionsList={this.state.questionArr[this.state.editData.idx].optionsList} question={this.state.questionArr[this.state.editData.idx].question} edit={this.state.editData.clicked} updateMCQOnEdit={this.updateQuestionOnEdit} qkey={this.state.editData.idx} optionsStr={optionsString} />
-        }
-        let paragraphEditForm = null;
-        if (this.state.editData.clicked && this.state.editData.type === "ParagraphQuestion") {
-            paragraphEditForm = <ParagraphQuestionForm question={this.state.questionArr[this.state.editData.idx].question} edit={this.state.editData.clicked} updatePQOnEdit={this.updateQuestionOnEdit} qkey={this.state.editData.idx} />
-        }
-
-        let paperTitle = this.state.isPaperReady ? <div className="PaperTitle">
-            <p>Paper Title</p>
-            <input type='text' onChange={(e) => this.onChangeTitleHandler(e)}></input>
-        </div> : null;
-
-        let addQuestionTypes = null;
-        addQuestionTypes = <div className="AddButton" onClick={() => this.setState({ addQuestion: !this.state.addQuestion })}>
-            {/* <img src={add} alt="Add Question"/> */}
-            <span>Add Question</span>
-            <Collapse isOpen={this.state.addQuestion} transition="height 0.7s cubic-bezier(.4, 0, .2, 1)" className="AddQuestionContent">
-                <div className="QuestionTypesContent">
-                    <ul>
-                        <li onClick={this.showSingleChoiceInputForm}>Single Choice Question</li>
-                        <li onClick={this.showMultipleChoiceInputForm}>Multiple Choice Question</li>
-                        <li onClick={this.showParagraphInputForm}>Paragraph Question</li>
-                    </ul>
-                </div>
-            </Collapse>
-        </div>
-        return (
-            <div className="QuestionArea">
-                {paperTitle}
-                <Modal show={this.state.singleChoiceClicked}>
-                    {singleChoiceQuestionForm}
-                </Modal>
-                <Modal show={this.state.multipleChoiceClicked}>
-                    {multipleChoiceQuestionForm}
-                </Modal>
-                <Modal show={this.state.paragraphClicked}>
-                    {paragraphQuestionForm}
-                </Modal>
-                <Modal show={this.state.editData.clicked && this.state.editData.type === "SingleChoiceQuestion"}>
-                    {singleChoiceEditForm}
-                </Modal>
-                <Modal show={this.state.editData.clicked && this.state.editData.type === "MultipleChoiceQuestion"}>
-                    {multipleChoiceEditForm}
-                </Modal>
-                <Modal show={this.state.editData.clicked && this.state.editData.type === "ParagraphQuestion"}>
-                    {paragraphEditForm}
-                </Modal>
-
-                {this.state.isPaperReady ? <div className="NewQuestionPaper">
-                    {questionsComponent}
-                </div> : null}
-                {addQuestionTypes}
-                <div className="BtnAreaPaper">
-                    <button onClick={() => this.submitQuestionPaperHandler()} className="Button" style={{ display: this.state.isPaperReady ? "inline" : "none" }}>Submit</button>
-                </div>
-            </div>
+  const onChangeTitleHandler = (e) => {
+    setTitle(e.target.value);
+  };
+  let questionsComponent = null;
+  questionsComponent = questionArr.map((question, i) => {
+    let questionComp = null;
+    switch (question.type) {
+      case "SingleChoiceQuestion":
+        questionComp = (
+          <SingleChoiceQuestion
+            optionsList={questionArr[i].optionsList}
+            question={questionArr[i].question}
+            key={i}
+            qkey={i}
+            onEditHandler={onEditButtonClickedHandler}
+            onRemoveHandler={onRemoveButtonClickedHandler}
+            pageOnWhichRendered="newPaper"
+          />
         );
+        break;
+
+      case "MultipleChoiceQuestion":
+        questionComp = (
+          <MultipleChoiceQuestion
+            optionsList={questionArr[i].optionsList}
+            question={questionArr[i].question}
+            key={i}
+            qkey={i}
+            onEditHandler={onEditButtonClickedHandler}
+            onRemoveHandler={onRemoveButtonClickedHandler}
+            pageOnWhichRendered="newPaper"
+          />
+        );
+        break;
+
+      case "ParagraphQuestion":
+        questionComp = (
+          <ParagraphQuestion
+            question={questionArr[i].question}
+            key={i}
+            qkey={i}
+            onEditHandler={onEditButtonClickedHandler}
+            onRemoveHandler={onRemoveButtonClickedHandler}
+            pageOnWhichRendered="newPaper"
+          />
+        );
+        break;
+      default:
+        break;
     }
-}
-const mapStateToProps = (state) => {
-    return {
-        token: state.auth.token,
-        userKey: state.auth.userKey,
-        loading: state.auth.loading
-    }
-}
-const mapDispatchToProps = dispatch => {
-    return {
-        setLoading: (isLoading) => dispatch(actions.setLoading(isLoading))
-    }
-}
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NewPaper));
+    return questionComp;
+  });
+
+  let singleChoiceQuestionForm = null;
+  if (singleChoiceClicked) {
+    singleChoiceQuestionForm = (
+      <SingleChoiceQuestionForm
+        questionDataPass={updateQuestionArr}
+        edit={false}
+      />
+    );
+  }
+
+  let multipleChoiceQuestionForm = null;
+  if (multipleChoiceClicked) {
+    multipleChoiceQuestionForm = (
+      <MultipleChoiceQuestionForm
+        questionDataPass={updateQuestionArr}
+        edit={false}
+      />
+    );
+  }
+
+  let paragraphQuestionForm = null;
+  if (paragraphClicked) {
+    paragraphQuestionForm = (
+      <ParagraphQuestionForm
+        questionDataPass={updateQuestionArr}
+        edit={false}
+      />
+    );
+  }
+
+  let singleChoiceEditForm = null;
+  if (editData.clicked && editData.type === "SingleChoiceQuestion") {
+    let optionsString = null;
+    let tempOptionsString = questionArr[editData.idx].optionsList.join(",");
+    optionsString = tempOptionsString.substring(0, tempOptionsString.length);
+    singleChoiceEditForm = (
+      <SingleChoiceQuestionForm
+        optionsList={questionArr[editData.idx].optionsList}
+        question={questionArr[editData.idx].question}
+        edit={editData.clicked}
+        updateSCQOnEdit={updateQuestionOnEdit}
+        qkey={editData.idx}
+        optionsStr={optionsString}
+      />
+    );
+  }
+  let multipleChoiceEditForm = null;
+  if (editData.clicked && editData.type === "MultipleChoiceQuestion") {
+    let optionsString = null;
+    let tempOptionsString = questionArr[editData.idx].optionsList.join(",");
+    optionsString = tempOptionsString.substring(0, tempOptionsString.length);
+    multipleChoiceEditForm = (
+      <MultipleChoiceQuestionForm
+        optionsList={questionArr[editData.idx].optionsList}
+        question={questionArr[editData.idx].question}
+        edit={editData.clicked}
+        updateMCQOnEdit={updateQuestionOnEdit}
+        qkey={editData.idx}
+        optionsStr={optionsString}
+      />
+    );
+  }
+  let paragraphEditForm = null;
+  if (editData.clicked && editData.type === "ParagraphQuestion") {
+    paragraphEditForm = (
+      <ParagraphQuestionForm
+        question={questionArr[editData.idx].question}
+        edit={editData.clicked}
+        updatePQOnEdit={updateQuestionOnEdit}
+        qkey={editData.idx}
+      />
+    );
+  }
+
+  let paperTitle = isPaperReady ? (
+    <div className="PaperTitle">
+      <p>Paper Title</p>
+      <input type="text" onChange={(e) => onChangeTitleHandler(e)}></input>
+    </div>
+  ) : null;
+
+  let addQuestionTypes = null;
+  addQuestionTypes = (
+    <div className="AddButton" onClick={() => setAddQuestion(!addQuestion)}>
+      {/* <img src={add} alt="Add Question"/> */}
+      <span>Add Question</span>
+      <Collapse
+        isOpen={addQuestion}
+        transition="height 0.7s cubic-bezier(.4, 0, .2, 1)"
+        className="AddQuestionContent"
+      >
+        <div className="QuestionTypesContent">
+          <ul>
+            <li onClick={showSingleChoiceInputForm}>Single Choice Question</li>
+            <li onClick={showMultipleChoiceInputForm}>
+              Multiple Choice Question
+            </li>
+            <li onClick={showParagraphInputForm}>Paragraph Question</li>
+          </ul>
+        </div>
+      </Collapse>
+    </div>
+  );
+  return (
+    <div className="QuestionArea">
+      {paperTitle}
+      <Modal show={singleChoiceClicked}>{singleChoiceQuestionForm}</Modal>
+      <Modal show={multipleChoiceClicked}>{multipleChoiceQuestionForm}</Modal>
+      <Modal show={paragraphClicked}>{paragraphQuestionForm}</Modal>
+      <Modal
+        show={editData.clicked && editData.type === "SingleChoiceQuestion"}
+      >
+        {singleChoiceEditForm}
+      </Modal>
+      <Modal
+        show={editData.clicked && editData.type === "MultipleChoiceQuestion"}
+      >
+        {multipleChoiceEditForm}
+      </Modal>
+      <Modal show={editData.clicked && editData.type === "ParagraphQuestion"}>
+        {paragraphEditForm}
+      </Modal>
+
+      {isPaperReady ? (
+        <div className="NewQuestionPaper">{questionsComponent}</div>
+      ) : null}
+      {addQuestionTypes}
+      <div className="BtnAreaPaper">
+        <button
+          onClick={() => submitQuestionPaperHandler()}
+          className="Button"
+          style={{ display: isPaperReady ? "inline" : "none" }}
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default NewPaper;

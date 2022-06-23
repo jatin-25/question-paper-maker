@@ -1,9 +1,9 @@
-.spinner{
+.spinner {
   position: absolute;
   top: 45%;
   left: 50%;
-  transform: translate(-50%,-50%);
-  z-index: 100001;
+  transform: translate(-50%, -50%);
+  z-index: 10000001;
 }
 .background {
   filter: blur(2px);
@@ -12,8 +12,20 @@
   width: 100%;
   height: 100%;
 }
-.backDrop{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.backdrop {
+  filter: blur(0);
+}
+
+.loading {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  /* background-color: rgba(215, 227, 243, 0.215); */
+  /* filter: blur(2px); */
+  z-index: 999999;
 }

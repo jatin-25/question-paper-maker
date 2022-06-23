@@ -1,31 +1,27 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
 import {Provider} from 'react-redux';
-import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
+import { configureStore} from '@reduxjs/toolkit';
 import authReducer from './Store/Reducers/auth';
-import './index.css';
-import { BrowserRouter as Routers} from 'react-router-dom';
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+import { BrowserRouter as Routers } from 'react-router-dom';
+import reportWebVitals from './reportWebVitals';
 
-const rootReducer = combineReducers({
-    auth: authReducer
-});
+const store = configureStore({
+    reducer: {
+      auth: authReducer
+  },
+})
 
-const store = createStore(rootReducer, composeEnhancers(
-    applyMiddleware(thunk)
-));
-
-const app = (
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
     <Provider store={store}>
         <Routers>
-        {/* <HashRouter> */}
             <App />
-        {/* </HashRouter> */}
         </Routers>
     </Provider>
+  </React.StrictMode>
 );
-ReactDOM.render(app, document.getElementById('root'));
-registerServiceWorker();
+reportWebVitals();
+
