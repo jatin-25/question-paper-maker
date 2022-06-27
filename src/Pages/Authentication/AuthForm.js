@@ -4,13 +4,10 @@ import "./AuthForm.css";
 import { useNavigate } from "react-router-dom";
 import log from "../../assets/log.svg";
 import register from "../../assets/register.svg";
-import googleIcon from "../../assets/google-logo.png";
-import facebookIcon from "../../assets/facebook-brands.svg";
-import twitterIcon from "../../assets/twitter-brands.svg";
 import userIcon from "../../assets/user-solid.svg";
-import appleIcon from "../../assets/apple-brands.svg";
 import emailIcon from "../../assets/envelope-solid.svg";
 import passwordIcon from "../../assets/lock-solid.svg";
+import { BiErrorCircle } from 'react-icons/bi'
 import * as actions from "../../Store/Actions/index";
 import BackDrop from "../../Components/hoc/BackDrop/BackDrop";
 
@@ -29,8 +26,7 @@ const AuthForm = (props) => {
           isEmail: true,
         },
         valid: false,
-        touched: false,
-        error: "Email can't be Empty.",
+        error: "",
         imageSrc: emailIcon,
       },
       Password: {
@@ -45,8 +41,7 @@ const AuthForm = (props) => {
           minLength: 8,
         },
         valid: false,
-        touched: false,
-        error: "Password can't be Empty.",
+        error: "",
         imageSrc: passwordIcon,
       },
       formIsValid: false,
@@ -64,8 +59,7 @@ const AuthForm = (props) => {
           required: true,
         },
         valid: false,
-        touched: false,
-        error: "Username can't be Empty.",
+        error: "",
         imageSrc: userIcon,
       },
       Email: {
@@ -80,8 +74,7 @@ const AuthForm = (props) => {
           isEmail: true,
         },
         valid: false,
-        touched: false,
-        error: "Email can't be Empty.",
+        error: "",
         imageSrc: emailIcon,
       },
       Password: {
@@ -96,8 +89,7 @@ const AuthForm = (props) => {
           minLength: 8,
         },
         valid: false,
-        touched: false,
-        error: "Password can't be Empty.",
+        error: "",
         imageSrc: passwordIcon,
       },
       formIsValid: false,
@@ -105,6 +97,11 @@ const AuthForm = (props) => {
     },
     isSignUp: false,
   });
+
+  const [showLoginAuthError, setShowLoginAuthError] = useState(false);
+  const [showSignupAuthError, setShowSignupAuthError] = useState(false);
+  const [signInErrorMessage, setSignInErrorMessage] = useState("");
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState("");
 
   const authState = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -165,34 +162,35 @@ const AuthForm = (props) => {
     };
   };
 
+  const cleanError = (newForm) => {
+    for (let element in newForm) {
+      let updatedFormElement = { ...newForm[element] }
+      updatedFormElement.error = ""
+      newForm[element] = updatedFormElement
+    }
+    if (state.isSignUp) {
+      setState({ ...state, signUpForm: newForm });
+      setShowSignupAuthError(false);
+    } else {
+      setShowLoginAuthError(false);
+      setState({ ...state, loginForm: newForm });
+    }
+  }
+
   const onInputChangeHandler = (event, elementIdentifier) => {
     let newForm = { ...state.loginForm };
     if (state.isSignUp) {
       newForm = { ...state.signUpForm };
     }
+    if (newForm.showErrors) {
+      cleanError(newForm);
+    }
     const updatedFormElement = { ...newForm[elementIdentifier] };
     updatedFormElement.value = event.target.value;
-
-    const errorObject = checkValidation(
-      updatedFormElement.value,
-      updatedFormElement.validation,
-      elementIdentifier
-    );
-    updatedFormElement.valid = errorObject.valid;
-
-    updatedFormElement.touched = true;
-    updatedFormElement.error = errorObject.error;
+    updatedFormElement.valid = false;
     newForm[elementIdentifier] = updatedFormElement;
-
-    let isFormValid = true;
-    for (let element in newForm) {
-      if (element === "formIsValid" || element === "showErrors") {
-        continue;
-      }
-      isFormValid = isFormValid && newForm[element].valid;
-    }
-    newForm.formIsValid = isFormValid;
     newForm.showErrors = false;
+
     if (state.isSignUp) {
       setState({ ...state, signUpForm: newForm });
     } else {
@@ -204,47 +202,80 @@ const AuthForm = (props) => {
     navigate(path);
   };
 
+  const onAuthFail = (error) => {
+    if (error) {
+      let errorMessage = error.message;
+      let em = errorMessage.split("_");
+      let lowerCase = em.map((word) => word.toLowerCase());
+      let ans = lowerCase.map(
+        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+      );
+      errorMessage = ans.join(" ");
+
+      if (state.isSignUp) {
+        setShowSignupAuthError(true);
+        setSignUpErrorMessage(errorMessage);
+      } else {
+
+        setShowLoginAuthError(true);
+        setSignInErrorMessage(errorMessage)
+      }
+    }
+
+  }
+  const checkFormValidation = () => {
+    let newForm = { ...state.loginForm };
+    if (state.isSignUp) {
+      newForm = { ...state.signUpForm };
+    }
+
+    let isFormValid = true;
+    for (let elementIdentifier in newForm) {
+      if (elementIdentifier !== "formIsValid" && elementIdentifier !== "showErrors" && elementIdentifier !== "showAuthError") {
+        const updatedFormElement = { ...newForm[elementIdentifier] };
+        const errorObject = checkValidation(
+          updatedFormElement.value,
+          updatedFormElement.validation,
+          elementIdentifier
+        );
+        updatedFormElement.valid = errorObject.valid;
+        updatedFormElement.error = errorObject.error;
+        newForm[elementIdentifier] = updatedFormElement;
+        isFormValid = isFormValid && newForm[elementIdentifier].valid;
+      }
+    }
+    newForm.formIsValid = isFormValid;
+    newForm.showErrors = !isFormValid;
+    if (state.isSignUp) {
+      setState({ ...state, signUpForm: newForm });
+    } else {
+      setState({ ...state, loginForm: newForm });
+    }
+    return isFormValid;
+  }
+
   const submitHandler = (event) => {
     event.preventDefault();
+    const isFormValid = checkFormValidation()
     let formData = null;
-    let isValid = true;
-    if (state.isSignUp) {
-      if (!state.signUpForm.formIsValid) {
-        let signUpForm = { ...state.signUpForm };
-        signUpForm.showErrors = true;
-        isValid = isValid && false;
-        setState({ ...state, signUpForm: signUpForm });
-      } else {
+    if (isFormValid) {
+      if (state.isSignUp) {
         formData = {
           username: state.signUpForm.Username.value,
           email: state.signUpForm.Email.value,
           password: state.signUpForm.Password.value,
         };
-      }
-    } else {
-      if (!state.loginForm.formIsValid) {
-        let loginForm = { ...state.loginForm };
-        loginForm.showErrors = true;
-        isValid = isValid && false;
-        setState({ ...state, loginForm: loginForm });
       } else {
         formData = {
           email: state.loginForm.Email.value,
           password: state.loginForm.Password.value,
         };
       }
-    }
-    if (isValid) {
-      dispatch(actions.auth(formData, !state.isSignUp, onAuthSuccess));
+      dispatch(actions.auth(formData, !state.isSignUp, onAuthSuccess, onAuthFail));
     }
   };
 
-  //   const switchSignUpHandler = (event) => {
-  //     event.preventDefault();
-  //     const newState = { ...state };
-  //     newState.isSignUp = !state.isSignUp;
-  //     setState(newState);
-  //   };
+
 
   const changeToSignUp = () => {
     setState({ ...state, isSignUp: true });
@@ -254,8 +285,9 @@ const AuthForm = (props) => {
     setState({ ...state, isSignUp: false });
   };
 
+
   const loginKeyArr = Object.keys(state.loginForm);
-  const loginFormObject = Object.values(state.loginForm).slice(0, 2);
+  let loginFormObject = Object.values(state.loginForm).slice(0, 2);
   const signUpKeyArr = Object.keys(state.signUpForm);
   const signUpFormObject = Object.values(state.signUpForm).slice(0, 3);
 
@@ -263,89 +295,51 @@ const AuthForm = (props) => {
     return (
       <div
         key={i}
-        className={[
-          "inputField",
-          elementData.touched && !elementData.valid ? "invalidElement" : null,
-        ].join(" ")}
-      >
-        <img src={elementData.imageSrc} className="icon" alt={loginKeyArr[i]} />
-        <input
-          {...elementData.elementConfig}
-          value={elementData.value}
-          onChange={(event) => onInputChangeHandler(event, loginKeyArr[i])}
-          className={
-            !elementData.valid && elementData.touched ? "invalid" : null
-          }
-        />
+        className="inputContainer">
+        <div className="inputField">
+          <img src={elementData.imageSrc} className="icon" alt={loginKeyArr[i]} />
+          <input
+            {...elementData.elementConfig}
+            value={elementData.value}
+            onChange={(event) => onInputChangeHandler(event, loginKeyArr[i])}
+          />
+        </div>
+        <div className={state.loginForm.showErrors === true && !elementData.valid ? "errorContainer showError" : "errorContainer"}>
+          <BiErrorCircle color="#E33535" />
+          <p>{elementData.error}</p>
+        </div>
       </div>
     );
-  });
+  })
 
   const signUpFormElements = signUpFormObject.map((elementData, i) => {
     return (
       <div
         key={i}
-        className={[
-          "inputField",
-          elementData.touched && !elementData.valid ? "invalidElement" : null,
-        ].join(" ")}
+        className="inputContainer"
       >
-        <img
-          src={elementData.imageSrc}
-          className="icon"
-          alt={signUpKeyArr[i]}
-        />
-        <input
-          {...elementData.elementConfig}
-          value={elementData.value}
-          onChange={(event) => onInputChangeHandler(event, signUpKeyArr[i])}
-          className={
-            !elementData.valid && elementData.touched ? "invalid" : null
-          }
-        />
-      </div>
+        <div className=
+          "inputField">
+          <img
+            src={elementData.imageSrc}
+            className="icon"
+            alt={signUpKeyArr[i]}
+          />
+          <input
+            {...elementData.elementConfig}
+            value={elementData.value}
+            onChange={(event) => onInputChangeHandler(event, signUpKeyArr[i])}
+          />
+        </div>
+        <div className={state.signUpForm.showErrors === true && !elementData.valid ? "errorContainer showError" : "errorContainer"}>
+          <BiErrorCircle color="#E33535" />
+          <p>{elementData.error}</p>
+        </div>
+      </div >
     );
   });
 
-  let signUpErrorMessage = null;
-  let signInErrorMessage = null;
 
-  if (state.isSignUp) {
-    if (!state.signUpForm.formIsValid) {
-      signUpErrorMessage = signUpFormObject.map((elementData, i) => {
-        return (
-          <p key={i} className="errorElement">
-            {elementData.error}
-          </p>
-        );
-      });
-    }
-  } else {
-    if (!state.loginForm.formIsValid) {
-      signInErrorMessage = loginFormObject.map((elementData, i) => {
-        return (
-          <p key={i} className="errorElement">
-            {elementData.error}
-          </p>
-        );
-      });
-    }
-  }
-
-  if (authState.error) {
-    let errorMessage = authState.error.message;
-    let em = errorMessage.split("_");
-    let lowerCase = em.map((word) => word.toLowerCase());
-    let ans = lowerCase.map(
-      (word) => word.charAt(0).toUpperCase() + word.slice(1)
-    );
-    errorMessage = ans.join(" ");
-    if (state.isSignUp && state.signUpForm.formIsValid) {
-      signUpErrorMessage = <p>{errorMessage}</p>;
-    } else if (state.loginForm.formIsValid) {
-      signInErrorMessage = <p>{errorMessage}</p>;
-    }
-  }
 
   return (
     <BackDrop isLoading={authState.loading}>
@@ -364,75 +358,46 @@ const AuthForm = (props) => {
                 <h2 className="title">Sign in</h2>
                 <div
                   className={
-                    (state.loginForm.showErrors === true &&
-                      !state.loginForm.formIsValid === true) ||
-                    authState.error
-                      ? "error"
-                      : "none"
+                    (showLoginAuthError === true &&
+                      signInErrorMessage)
+                      ? "error showMainError"
+                      : "error"
                   }
                 >
-                  {signInErrorMessage}
+                  <BiErrorCircle color="#fff" />
+                  <p>{signInErrorMessage}</p>
                 </div>
                 {loginFormElements}
                 <button
-                  className={[
-                    "btn",
-                    state.loginForm.formIsValid ? "valid" : null,
-                  ].join(" ")}
+                  className={"btn aliceBlue"}
                   onClick={submitHandler}
                 >
                   Login
                 </button>
-                <p className="socialText">Sign in with social platforms</p>
-                <div className="socialMedia">
-                  <div className="socialIcon">
-                    <img src={googleIcon} className="icon" alt="Google" />
-                  </div>
-                  <div className="socialIcon">
-                    <img src={appleIcon} alt="Apple" />
-                  </div>
-                  <div className="socialIcon">
-                    <img src={facebookIcon} alt="Facebook" />
-                  </div>
-                  <div className="socialIcon">
-                    <img src={twitterIcon} alt="Twitter" />
-                  </div>
-                </div>
               </form>
             </div>
             <div className="signUpContainer">
               <p className="title-heading">Question Paper Maker</p>
               <form className="signUpForm">
                 <h2 className="title">Sign Up</h2>
-                {state.signUpForm.showErrors &&
-                !state.signUpForm.formIsValid ? (
-                  <div className="error">{signUpErrorMessage}</div>
-                ) : null}
+                <div
+                  className={
+                    (showSignupAuthError === true &&
+                      signUpErrorMessage)
+                      ? "error showMainError"
+                      : "error"
+                  }
+                >
+                  <BiErrorCircle color="#fff" />
+                  <p>{signUpErrorMessage}</p>
+                </div>
                 {signUpFormElements}
                 <button
-                  className={[
-                    "btn",
-                    state.signUpForm.formIsValid ? "valid" : null,
-                  ].join(" ")}
+                  className={"btn aliceBlue"}
                   onClick={submitHandler}
                 >
-                  Sign Up
+                  Sign up
                 </button>
-                <p className="socialText">Sign Up with social platforms</p>
-                <div className="socialMedia">
-                  <div className="socialIcon">
-                    <img src={googleIcon} className="icon" alt="Google" />
-                  </div>
-                  <div className="socialIcon">
-                    <img src={appleIcon} alt="Apple" />
-                  </div>
-                  <div className="socialIcon">
-                    <img src={facebookIcon} alt="Facebook" />
-                  </div>
-                  <div className="socialIcon">
-                    <img src={twitterIcon} alt="Twitter" />
-                  </div>
-                </div>
               </form>
             </div>
           </div>
@@ -445,7 +410,7 @@ const AuthForm = (props) => {
                 Join Now and start your journey of creating your own papers.
               </p>
               <button
-                className={["btn", "transparent", "valid"].join(" ")}
+                className={["btn", "transparent", "valid", "light"].join(" ")}
                 onClick={changeToSignUp}
               >
                 Sign up
@@ -458,7 +423,7 @@ const AuthForm = (props) => {
               <h3>One of us ?</h3>
               <p>Then start creating your own papers.</p>
               <button
-                className={["btn", "transparent", "valid"].join(" ")}
+                className={["btn", "transparent", "valid", "light"].join(" ")}
                 onClick={changeToSignIn}
               >
                 Sign in
@@ -470,6 +435,6 @@ const AuthForm = (props) => {
       </div>
     </BackDrop>
   );
-};
+}
 
 export default AuthForm;

@@ -21,7 +21,7 @@ class ParagraphQuestion extends Component {
         let questionArea = null;
         if (this.props.question !== null) {
             questionArea = <div>
-                <textarea className="ParaAnswer" rows='12' cols='70' onChange={(e) => this.onAnswerChangeHandler(e)} value={this.state.answer} disabled={this.props.pageOnWhichRendered !== 'questionPaper'}></textarea></div>
+                <textarea className="ParaAnswer" rows='8' cols='70' onChange={(e) => this.onAnswerChangeHandler(e)} value={this.state.answer} disabled={this.props.pageOnWhichRendered !== 'questionPaper'}></textarea></div>
         }
         return (
             <div className="Question">

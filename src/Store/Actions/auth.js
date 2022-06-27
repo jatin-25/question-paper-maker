@@ -79,7 +79,7 @@ export const checkAuthState = () => {
   };
 };
 
-export const auth = (formData, isSignIn, navigate) => {
+export const auth = (formData, isSignIn, navigate, onAuthFail) => {
   return (dispatch) => {
     dispatch(authStart());
     const authData = {
@@ -129,7 +129,10 @@ export const auth = (formData, isSignIn, navigate) => {
               localStorage.setItem("email", response.data.email);
               navigate("/newPaper");
             })
-            .catch((error) => {});
+            .catch((error) => {
+              onAuthFail(error?.response?.data?.error);
+              dispatch(authFail(error?.response?.data?.error));
+            });
         } else {
           const queryParams = `?auth=${response.data.idToken}&orderBy="userId"&equalTo="${response.data.localId}"`;
           axios
@@ -154,11 +157,15 @@ export const auth = (formData, isSignIn, navigate) => {
               localStorage.setItem("email", response.data.email);
               navigate("/newPaper");
             })
-            .catch((error) => {});
+            .catch((error) => {
+              onAuthFail(error?.response?.data?.error);
+              dispatch(authFail(error?.response?.data?.error))
+            });
         }
       })
       .catch((error) => {
-        dispatch(authFail(error.response.data.error));
+        onAuthFail(error?.response?.data?.error)
+        dispatch(authFail(error?.response?.data?.error));
       });
   };
 };
