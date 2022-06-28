@@ -18,12 +18,14 @@ const Toolbar = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (toggleSidebar === false) return
+
     function handleClickOutsideSideBar(event) {
       if (
         sidebarWrapperRef &&
         !sidebarWrapperRef.current.contains(event.target)
       ) {
-        toggleSidebar && toggleSidebarHandler();
+        toggleSidebarHandler();
       }
     }
 
@@ -35,12 +37,14 @@ const Toolbar = (props) => {
   }, [toggleSidebar]);
 
   useEffect(() => {
+    if (isMenuClicked === false) return
+
     function handleClickOutsideMenuBar(event) {
       if (
         menubarWrapperRef &&
         !menubarWrapperRef.current.contains(event.target)
       ) {
-        isMenuClicked && toggleMenuBarHandler();
+        toggleMenuBarHandler();
       }
     }
 
