@@ -1,9 +1,9 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "QPM - Question Paper Maker",
+  "name": "QPM - Question Paper Maker",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "Q.svg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     }

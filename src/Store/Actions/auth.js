@@ -22,7 +22,6 @@ export const logout = () => {
   localStorage.removeItem("userId");
   localStorage.removeItem("userKey");
   localStorage.removeItem("email");
-
   return {
     type: actions.AUTH_LOGOUT,
   };
