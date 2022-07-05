@@ -176,7 +176,7 @@ const QuestionPaper = (props) => {
   };
 
   let responderInfoInputForm = null;
-  if (Object.keys(responderInfoFeilds).indexOf("title") !== -1) {
+  if (Object.keys(responderInfoFeilds || {})?.indexOf("title") !== -1) {
     responderInfoInputForm = (
       <ResponderInfoForm
         feilds={responderInfoFeilds.title}
