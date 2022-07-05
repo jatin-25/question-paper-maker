@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./App.css";
+import "./app.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import NewPaper from "./pages/new_paper";
 import PaperResponses from "./pages/paper_responses";
