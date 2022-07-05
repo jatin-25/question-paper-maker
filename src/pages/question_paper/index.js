@@ -188,12 +188,12 @@ const QuestionPaper = (props) => {
   let questionsComponent = null;
   questionsComponent = questionArr.map((question, i) => {
     let questionComp = null;
-    switch (question.type) {
+    switch (question?.type) {
       case "SingleChoiceQuestion":
         questionComp = (
           <SCQuestion
-            optionsList={questionArr[i].optionsList}
-            question={questionArr[i].question}
+            optionsList={questionArr[i]?.optionsList}
+            question={questionArr[i]?.question}
             key={i}
             qkey={i}
             updateAnswer={updateAnswerHandler}
@@ -206,8 +206,8 @@ const QuestionPaper = (props) => {
       case "MultipleChoiceQuestion":
         questionComp = (
           <MCQuestion
-            optionsList={questionArr[i].optionsList}
-            question={questionArr[i].question}
+            optionsList={questionArr[i]?.optionsList}
+            question={questionArr[i]?.question}
             key={i}
             qkey={i}
             updateAnswer={updateAnswerHandler}
@@ -220,7 +220,7 @@ const QuestionPaper = (props) => {
       case "ParagraphQuestion":
         questionComp = (
           <PGQuestion
-            question={questionArr[i].question}
+            question={questionArr[i]?.question}
             key={i}
             qkey={i}
             updateAnswer={updateAnswerHandler}
