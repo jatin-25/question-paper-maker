@@ -18,7 +18,7 @@ $ cd question-paper-maker
 $ yarn install
 
 # Run the app
-$ yarn dev
+$ yarn start
 
 ```
 
