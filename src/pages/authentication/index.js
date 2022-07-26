@@ -19,6 +19,7 @@ const AuthForm = (props) => {
         elementConfig: {
           type: "email",
           placeholder: " Email ID",
+          autoComplete: "username"
         },
         value: "",
         validation: {
@@ -34,6 +35,7 @@ const AuthForm = (props) => {
         elementConfig: {
           type: "password",
           placeholder: " Password",
+          autoComplete: "current-password"
         },
         value: "",
         validation: {
@@ -53,6 +55,7 @@ const AuthForm = (props) => {
         elementConfig: {
           type: "input",
           placeholder: " Full Name",
+          autoComplete: "on"
         },
         value: "",
         validation: {
@@ -67,6 +70,7 @@ const AuthForm = (props) => {
         elementConfig: {
           type: "email",
           placeholder: " Email ID",
+          autoComplete: "username"
         },
         value: "",
         validation: {
@@ -82,6 +86,7 @@ const AuthForm = (props) => {
         elementConfig: {
           type: "password",
           placeholder: " Password",
+          autoComplete: "new-password"
         },
         value: "",
         validation: {
