@@ -1,25 +1,28 @@
-.Question > button {
-  display: none;
-}
 
-.Question:hover > button {
-  display: block;
-}
-.Question {
+.question {
   border-radius: 8px;
   padding: 0.5em 1em;
   padding-bottom: 0.2em;
   width: 100%;
   overflow-wrap: anywhere;
 }
-.Question p,
-.Question span .Question input {
+
+.question > button {
+  display: none;
+}
+
+.question:hover > button {
+  display: block;
+}
+
+.question p,
+.question span .question input {
   margin-top: 5px;
   margin-bottom: 5px;
 }
 
 @media screen and (max-width: 500px) {
-  .Question {
+  .question {
     padding-left: 0.5em;
     padding-right: 0.5em;
   }

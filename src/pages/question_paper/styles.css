@@ -1,53 +1,25 @@
-.QuestionPaperArea {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 4rem;
-  padding-bottom: 1.2rem;
-  min-width: 600px;
-  border-radius: 1.5em;
-  padding: 1em;
-}
-.QuestionPaper {
-  margin-bottom: 0;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background-color: rgba(255, 254, 254, 0.658);
-  backdrop-filter: blur(20px);
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  border-radius: 0.5em;
-  padding: 1em;
-}
-.QuestionPaper div .QuestionPaper p,
-.QuestionPaper span {
-  color: black;
-}
-.BtnArea {
-  width: 100%;
-  max-width: 800px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  margin: 1rem;
-  margin-right: 0;
-}
-.InputArea {
-  width: 62%;
-  display: flex;
-  align-items: flex-start;
+.paperWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 4rem auto 2rem auto;
+	border-radius: 1.5em;
+	width: 97%;
 }
 
-@media screen and (max-width: 660px) {
-  .QuestionPaperArea {
-    padding: 0.7em;
-    min-width: 300px;
-  }
-  .QuestionPaper {
-    padding: 0.5em;
-  }
+.paper {
+	margin-bottom: 0;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background: rgb(255, 254, 254);
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	width: 95%;
+	max-width: 700px;
+	margin: 0 auto;
+	border-radius: 0.5em;
+	padding: 1em;
 }
+

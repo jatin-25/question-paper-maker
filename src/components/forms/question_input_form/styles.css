@@ -1,0 +1,25 @@
+
+.questionForm p {
+	margin: 10px 0;
+}
+
+.questionForm p:nth-of-type(1),.questionForm p:nth-of-type(2){
+    margin-left: 5px;
+}
+
+.questionForm input[type='text']{
+    margin-bottom: 15px;
+}
+
+.questionForm input[type='radio']{
+    margin: auto 5px auto 0;
+}
+
+.optionsContainer{
+    margin: 1em 0;
+}
+
+.option{
+    display: flex;
+    align-items: center;
+}

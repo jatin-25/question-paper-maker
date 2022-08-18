@@ -1,20 +1,22 @@
 .ParaAnswer {
-  width: 85%;
-  max-width: 900px;
-  outline: none;
-  font-family: "Poppins", sans-serif;
-  padding: 6px 7px;
-  font-size: 16px;
+	width: 85%;
+	max-width: 900px;
+	outline: none;
+	font-family: 'Poppins', sans-serif;
+	padding: 6px 7px;
+	font-size: 16px;
 }
+
 @media screen and (max-width: 650px) {
-  .ParaAnswer {
-    width: 95%;
-    min-width: 280px;
-  }
+	.ParaAnswer {
+		width: 95%;
+		min-width: 280px;
+	}
 }
+
 @media screen and (max-width: 400px) {
-  .ParaAnswer {
-    width: 100%;
-    min-width: 250px;
-  }
+	.ParaAnswer {
+		width: 100%;
+		min-width: 250px;
+	}
 }

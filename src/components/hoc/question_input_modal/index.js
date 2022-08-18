@@ -1,13 +1,8 @@
-import React from "react";
-import './styles.css';
+import React from 'react'
+import './styles.css'
 
-
-const modal = (props) => {
-    return (
-        <div className="Modal" style={{ transform: props.show ? "translate(-50%,0)" : "translate(-50%,-100vh)", opacity: props.show ? "1" : "0" }}>
-            {props.show ? props.children : null}
-        </div>
-    );
+const Modal = ({ children, show }) => {
+	return <div className={['modal', show ? 'show' : null].join(' ')}>{show ? children : null}</div>
 }
 
-export default modal;
+export default Modal

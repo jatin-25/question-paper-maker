@@ -1,42 +1,21 @@
-.ResponderInfoForm {
-  background-color: #fcfcfc73;
-  color: black;
-  border-radius: 8px;
-  height: 100%;
-  padding: 1em 1em;
-  margin-top: 1.5rem;
-  width: 20%;
-  min-width: 320px;
-  margin-bottom: 2rem;
+.responderInfoForm {
+	background: rgb(255, 254, 254);
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	color: black;
+	border-radius: 8px;
+	padding: 1em;
+	margin-top: 1.5rem;
+	margin-bottom: 2rem;
+	width: 320px;
 }
 
-.ResponderInfoForm input[type="text"] {
-  width: 100%;
-  padding: 8px 10px;
-  margin: 10px 0;
-  margin-top: 7px;
-  margin-bottom: 15px;
-  box-sizing: border-box;
-  border-radius: 3px;
-  border: 0px solid black;
-  background: white;
-}
-.ResponderInfoForm input[type="text"]:focus,
-input[type="text"]:hover {
-  transition: all 1s linear;
-  border: none;
-  border-color: transparent;
-  outline: 0px;
-}
-.ResponderInfoForm p,
-.Text span {
-  margin-top: 10px;
-  margin-bottom: 3px;
+.responderInfoForm p {
+	margin-bottom: 10px;
+	margin-top: 5px;
 }
 
-@media screen and (max-width: 400px) {
-  .ResponderInfoForm {
-    width: 100%;
-    max-width: 290px;
-  }
+@media screen and (max-width: 340px) {
+	.responderInfoForm {
+		width: 95%;
+	}
 }

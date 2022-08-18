@@ -1,9 +1,28 @@
-import React from 'react';
-import "./styles.css";
+import React from 'react'
+import './styles.css'
 
+const Button = ({ varient, style, className, onClick, children }) => {
+	if (varient === 'primary')
+		return (
+			<button
+				className={[varient, className].join(' ')}
+				style={style}
+				onClick={(event) => onClick(event)}
+			>
+				{children}
+			</button>
+		)
 
-const button = (props) => (
-    <button className={["Button", [props.btnType], props.disabled ? "Disabled" : null].join(" ")} disabled={props.disabled} onClick={props.clicked}>{props.children}</button>
-);
+	// secondary
+	return (
+		<div
+			className={[varient, className].join(' ')}
+			style={style}
+			onClick={(event) => onClick(event)}
+		>
+			<button>{children}</button>
+		</div>
+	)
+}
 
-export default button;
+export default Button

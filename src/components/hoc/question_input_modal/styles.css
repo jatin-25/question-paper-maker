@@ -1,11 +1,11 @@
-.Modal {
+
+.modal {
     position: fixed;
     z-index: 500;
-    background-color: rgb(222, 235, 247);
-    backdrop-filter: blur(20px);
-    width: 400px;
+    background-color: rgb(253,253,253);
+    width: 380px;
     max-height: 70vh;
-    border: 0px solid #1F2933;
+    border: 0px;
     box-shadow:
 		0 1px 2px rgba(0,0,0,0.07), 
 		0 2px 4px rgba(0,0,0,0.07), 
@@ -15,26 +15,23 @@
 		0 32px 64px rgba(0,0,0,0.07);
     padding: 15px 18px;
     left: 50%;
-    top: 30%;
-    box-sizing: border-box;
-    transition: all 0.3s ease-out;
-    color: white;
+    top: 25%;
     border-radius: 0.5rem;
     overflow-wrap: anywhere;
     overflow: auto;
     scroll-behavior: smooth;
-    transform: translateX(-50%);
+    transform: scale(0,0) translateX(-50%);
+    transform-origin: left center;
+    transition: transform 0.4s ease-in-out;
+}
+
+.show{
+    transform: scale(1,1) translateX(-50%);
 }
 
          
-.Modal div, .Modal p{
-    /* background: rgb(224, 235, 235); */
-    background: transparent;
-    /* backdrop-filter: blur(20px); */
-    color: black;
-}
 @media (max-width: 420px) {
-    .Modal {
+    .modal {
         width: 92%;
     }
 }
