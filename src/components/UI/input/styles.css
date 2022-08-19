@@ -1,23 +1,89 @@
+input[type='checkbox'],
+input[type='radio'] {
+	margin-right: 0.5em;
+	height: 20px;
+	width: 20px;
+}
 
-.InputElement[type=text],.InputElement[type=email],.InputElement[type=password]  {
-    width: 90%;
-    padding: 10px 10px;
-    margin: 0.5rem;
-    box-sizing: border-box;
-    border-radius: 50px;
-    border: 0px solid black;
-    outline: none;
-    background: white;
-  }
-  .InputElement[type=text]:focus,.InputElement[type=email]:focus,.InputElement[type=password]:focus,.InputElement[type=text]:hover,.InputElement[type=email]:hover,.InputElement[type=password]:hover{
-    transition: all 1s linear;
-    border: none;
-    border-color: transparent;
-    outline: 0px;
-  }
+input {
+	font-size: initial;
+	font-family: 'Poppins', sans-serif;
+}
 
+.input{
+	border: 0px;
+	outline: 1px solid #333;
+	width: 100%;
+	padding: 8px 12px;
+	margin: 0 auto;
+	border-radius: 50px;
+}
 
-.Invalid {
-    border: 1px solid red;
-    background-color: rgb(245, 192, 186);
+.inputContainer {
+	display: flex;
+	flex-direction: column;
+	margin-top: 2px;
+	margin-bottom: 8px;
+	width: 100%;
+}
+
+.inputField {
+	display: flex;
+	width: 100%;
+	background-color: #f0f0f0;
+	margin-top: 5px;
+	height: 50px;
+	border-radius: 55px;
+	padding: 0 5px;
+	position: relative;
+}
+
+.inputField img {
+	flex-shrink: 0;
+	margin-left: 12px;
+	margin-right: 10px;
+}
+
+.inputField input {
+	background: none;
+	outline: none;
+	border: none;
+	line-height: 1;
+	font-weight: 600;
+	font-size: 1.1rem;
+	color: #333;
+	width: 100%;
+}
+
+.inputField input::placeholder {
+	color: #aaa;
+	font-weight: 500;
+}
+
+.errorContainer {
+	display: flex;
+	width: 0;
+	min-height: 22px;
+	flex-direction: row;
+	align-items: center;
+	padding-left: 10px;
+	margin-bottom: 5px;
+}
+
+.errorContainer svg {
+	display: none;
+}
+
+.showError svg {
+	display: block;
+}
+
+.errorContainer p {
+	color: rgb(227, 53, 53);
+	font-size: 14px;
+	margin-left: 5px;
+}
+
+.showError {
+	width: inherit;
 }

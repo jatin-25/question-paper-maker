@@ -1,18 +1,36 @@
-.Button {
-  justify-self: center;
-}
-.Button:disabled {
-  background: #888c8f;
-  color: #1f1f1f;
-}
-.Cancel {
-  background-color: red;
-}
-.Continue {
-  background-color: green;
+.primary{
+	cursor: pointer;
+	background: transparent;
+	text-decoration: none;
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	color: #fff;
+	background: linear-gradient(to left, #7b0a08, crimson);
+	padding: 10px 20px;
+	border: 0px;
+	border-radius: 20px;
+	margin-bottom: 0.3em;
+	font-size: 12px;
+	line-height: 19px;
+	text-transform: uppercase;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 600;
+	letter-spacing: 3px;
 }
 
-.Disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.secondary{
+	background: linear-gradient(to right, rgb(226, 15, 57), #c31432,#560011);
+	width: max-content;
+}
+
+.secondary button{
+	background: #fff;
+	cursor: pointer;
+	text-decoration: none;
+	border: 0px;
+	padding: 8px 18px;
+	margin: 2.5px;
+	font-size: 14px;
+	font-family: 'Poppins', sans-serif;
+	letter-spacing: 1px;
+	color: black;
 }
