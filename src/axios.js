@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-	baseURL: 'https://question-paper-maker-d054e-default-rtdb.firebaseio.com/',
+	baseURL: process.env.REACT_APP_FIRESTORE_URL,
 })
 
 export default instance

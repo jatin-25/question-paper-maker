@@ -17,6 +17,10 @@ $ cd question-paper-maker
 # Install dependencies
 $ yarn install
 
+# Create a Firebase Project and setup Firebase Authentication and Firestore in it.
+
+# Create a .env file in root directory and add Firebase API Key and Firestore URL as 'REACT_APP_FIREBASE_API_KEY' and 'REACT_APP_FIRESTORE_URL' without quotes respectively.
+
 # Run the app
 $ yarn start
 
