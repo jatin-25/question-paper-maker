@@ -1,21 +1,8 @@
-.editBtn {
+.iconsWrapper {
 	display: flex;
 	flex-direction: row;
 	align-items: flex-end;
 	justify-content: flex-end;
-}
-
-.none {
-	display: none;
-}
-
-.text p,
-.text span {
-	margin: 10px 0;
-}
-
-.text button {
-	margin-top: 20px;
 }
 
 .option {
@@ -39,8 +26,13 @@
 	margin-left: 0.3em;
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 450px) {
 	.deleteIcon {
 		margin-left: 0.1em;
+		height: 35px;
+	}
+
+	.editIcon{
+		height: 35px;
 	}
 }

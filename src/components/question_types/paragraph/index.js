@@ -18,33 +18,31 @@ const PGQuestion = (props) => {
 	let questionArea = null
 	if (props.question) {
 		questionArea = (
-			<div>
-				<textarea
-					className='ParaAnswer'
-					rows='8'
-					cols='70'
-					onChange={(e) => onAnswerChangeHandler(e)}
-					value={answer}
-					disabled={props.pageOnWhichRendered !== 'questionPaper'}
-				></textarea>
-			</div>
+			<textarea
+				className='paraAnswer'
+				rows='8'
+				cols='70'
+				onChange={(e) => onAnswerChangeHandler(e)}
+				value={answer}
+				disabled={props.pageOnWhichRendered !== 'questionPaper'}
+			></textarea>
 		)
 	}
 	return (
-		<div className='Question'>
+		<div className='question'>
 			<p style={{ display: 'inline-block' }}>
 				Ques. {props.qkey + 1}: {props.question}
 			</p>
 			{questionArea}
 			{props.pageOnWhichRendered === 'newPaper' && (
-				<div className='EditButtonContent'>
+				<div className='iconsWrapper'>
 					<BiIcons.BiEdit
 						onClick={() => props.onEditHandler({ idx: props.qkey, type: 'ParagraphQuestion' })}
-						className='EditIcon'
+						className='editIcon'
 					/>
 					<MdIcons.MdOutlineDelete
 						onClick={() => props.onRemoveHandler(props.qkey)}
-						className='DeleteIcon'
+						className='deleteIcon'
 					/>
 				</div>
 			)}

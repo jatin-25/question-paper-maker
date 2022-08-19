@@ -39,7 +39,7 @@ const MCQuestion = (props) => {
 
 	let optionsComp = props?.optionsList?.map((option, index) => {
 		return (
-			<div key={index} className='Option'>
+			<div key={index} className='option'>
 				<input
 					type='checkbox'
 					name={props.qkey}
@@ -68,23 +68,23 @@ const MCQuestion = (props) => {
 		selectedAnswer = <p style={{ display: 'inline-block' }}>Selected Answer(s): {answers}</p>
 	}
 	return (
-		<div className='Question'>
+		<div className='question'>
 			<p style={{ marginBottom: '5px', display: 'inline-block' }}>
 				Ques {props?.qkey + 1}: {props?.question || ''}
 			</p>
 			{optionsComp}
 			{selectedAnswer}
 			{props?.pageOnWhichRendered === 'newPaper' && (
-				<div className='EditButtonContent'>
+				<div className='iconsWrapper'>
 					<BiIcons.BiEdit
 						onClick={() =>
 							props.onEditHandler({ idx: props?.qkey, type: 'MultipleChoiceQuestion' })
 						}
-						className='EditIcon'
+						className='editIcon'
 					/>
 					<MdIcons.MdOutlineDelete
 						onClick={() => props.onRemoveHandler(props?.qkey)}
-						className='DeleteIcon'
+						className='deleteIcon'
 					/>
 				</div>
 			)}

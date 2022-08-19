@@ -32,20 +32,14 @@ const Profile = () => {
 
 	const userData = (
 		<div className='profileContent'>
-			<p>Name</p>
-			<input
-				type='text'
-				placeholder='Enter Your Full Name'
-				defaultValue={userName}
-				className='input'
-				readOnly
-			></input>
-			<p>Email</p>
-			<input type='text' defaultValue={email} readOnly></input>
-			<p>Total Papers Created</p>
-			<input type='text' value={totalPapers} readOnly></input>
-			<p>Total Responses Submitted</p>
-			<input type='text' value={totalResponses} readOnly></input>
+			<p>Name :</p>
+			<p>{userName}</p>
+			<p>Email :</p>
+			<p>{email}</p>
+			<p>Total Papers Created :</p>
+			<p>{totalPapers}</p>
+			<p>Total Responses Submitted :</p>
+			<p>{totalResponses}</p>
 		</div>
 	)
 	return (

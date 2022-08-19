@@ -2,17 +2,12 @@
 .question {
   border-radius: 8px;
   padding: 0.5em 1em;
-  padding-bottom: 0.2em;
   width: 100%;
   overflow-wrap: anywhere;
 }
 
 .question > button {
   display: none;
-}
-
-.question:hover > button {
-  display: block;
 }
 
 .question p,

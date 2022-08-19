@@ -48,7 +48,7 @@ const SCQuestion = (props) => {
 			{options}
 			{answerComp}
 			{props.pageOnWhichRendered === 'newPaper' && (
-				<div className='editBtn'>
+				<div className='iconsWrapper'>
 					<BiIcons.BiEdit
 						onClick={() => props.onEditHandler({ idx: props.qkey, type: 'SingleChoiceQuestion' })}
 						className='editIcon'

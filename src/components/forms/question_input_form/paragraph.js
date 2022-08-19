@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import swal from 'sweetalert'
+import Button from '../../UI/button'
+import Input from '../../UI/input'
 
 const PGQuestionForm = (props) => {
 	const [questionData, setQuestionData] = useState({
@@ -36,26 +38,30 @@ const PGQuestionForm = (props) => {
 	let inputForm = (
 		<div>
 			<p>Question</p>
-			<input
+			<Input
 				type='text'
 				onChange={(e) => onChangeQuestionHandler(e)}
 				value={questionData.question}
-			></input>
+			></Input>
 			<br></br>
 		</div>
 	)
 
 	return (
-		<div className='Text'>
+		<div className='questionForm'>
 			{inputForm}
 			<p>Preview</p>
 			<p>{questionData.question}</p>
-			<button onClick={() => updateQuestionArr()} className='Button'>
+			<Button
+				onClick={() => updateQuestionArr()}
+				varient='secondary'
+				style={{ display: 'inline-block', marginRight: '1rem' }}
+			>
 				Submit
-			</button>
-			<button onClick={cancelButtonHandler} className='Button'>
+			</Button>
+			<Button varient='secondary' style={{ display: 'inline-block' }} onClick={cancelButtonHandler}>
 				Cancel
-			</button>
+			</Button>
 		</div>
 	)
 }
