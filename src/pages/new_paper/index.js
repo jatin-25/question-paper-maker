@@ -317,7 +317,7 @@ const NewPaper = () => {
 	)
 
 	return (
-		<BackDrop isLoading={true}>
+		<BackDrop isLoading={authState.loading}>
 			<div className='questionArea'>
 				{paperTitle}
 
