@@ -2,36 +2,50 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Response from '../../components/response'
 import Collapse from '@kunukn/react-collapse'
-import axios from '../../axios'
 import Button from '../../components/UI/button'
 import { setLoading } from '../../store/actions'
 import BackDrop from '../../components/hoc/backdrop'
 import './styles.css'
+import { useParams } from 'react-router-dom'
+import axiosCaller from '../../utils/axios'
 
-const Responses = (props) => {
+const Responses = () => {
 	const [responseData, setResponseData] = useState([])
+	const { qkey } = useParams()
 	const [isVisible, setIsVisible] = useState([])
-	const [noResponse, setNoResponse] = useState(false)
+	const [numberOfResponses, setNumberOfResponses] = useState(-1)
 	const authState = useSelector((state) => state.auth)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		dispatch(setLoading(true))
-		const queryParams = `?auth=${authState.token}&orderBy="paperId"&equalTo="${props.qkey}"`
-		axios
-			.get('/responses.json' + queryParams)
-			.then((response) => {
-				if (Object.values(response.data).length !== 0) {
-					setResponseData(Object.values(response.data))
-					setIsVisible(Array(Object.values(response.data).length).fill(false))
-				} else {
-					setNoResponse(true)
+		const getPaperResponses = async () => {
+			try {
+				dispatch(setLoading(true))
+				const queryParams = `?orderBy="paperId"&equalTo="${qkey}"`
+
+				// getting all the responses whose paperId matches with our paparId
+				const response = await axiosCaller({
+					method: 'get',
+					url: '/responses.json' + queryParams,
+				})
+
+				if (response.data == null) {
+					setNumberOfResponses(0)
+					dispatch(setLoading(false))
+					return
 				}
+
+				setResponseData(Object.values(response.data))
+				setNumberOfResponses(Object.values(response.data).length)
+				setIsVisible(Array(Object.values(response.data).length).fill(false))
+
 				dispatch(setLoading(false))
-			})
-			.catch((error) => {
+			} catch (error) {
 				dispatch(setLoading(false))
-			})
+			}
+		}
+
+		getPaperResponses()
 	}, [])
 
 	const showResponseHandler = (i) => {
@@ -109,16 +123,17 @@ const Responses = (props) => {
 
 	return (
 		<BackDrop isLoading={authState.loading}>
-			{noResponse ? (
+			{numberOfResponses === 0 ? (
 				<div className='noPapers'>
 					<p>You haven't got any responses yet.</p>
 				</div>
-			) : (
+			) : null}
+			{numberOfResponses > 0 ? (
 				<div className='responses'>
 					{responderInfoFeildTitles}
 					{responses}
 				</div>
-			)}
+			) : null}
 		</BackDrop>
 	)
 }

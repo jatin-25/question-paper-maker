@@ -1,18 +1,18 @@
-import axios from '../../axios'
 import React, { useEffect, useState } from 'react'
-import Button from '../../components/UI/button'
+import { Button } from '../../components/UI'
 import { useSelector, useDispatch } from 'react-redux'
 import Collapse from '@kunukn/react-collapse'
 import Response from '../../components/response'
 import { setLoading } from '../../store/actions'
 import BackDrop from '../../components/hoc/backdrop'
+import axiosCaller from '../../utils/axios'
 import './styles.css'
 
-const SubmittedResponses = (props) => {
+const SubmittedResponses = () => {
 	const [responses, setResponses] = useState([])
+	const [numberOfResponses, setNumberOfResponses] = useState(-1)
 	const [isVisible, setIsVisible] = useState([])
 	const [currentResponseData, setCurrentResponseData] = useState({})
-	const [noResponse, setNoResponse] = useState(false)
 
 	const authState = useSelector((state) => state.auth)
 	const dispatch = useDispatch()
@@ -22,19 +22,24 @@ const SubmittedResponses = (props) => {
 			let newIsVisible = [...isVisible]
 			newIsVisible[i] = !newIsVisible[i]
 			setIsVisible(newIsVisible)
-		} else {
-			const queryParams = `?auth=${authState.token}&orderBy="responseId"&equalTo="${responseId}"`
-			axios
-				.get('/responses.json' + queryParams)
-				.then((response) => {
-					const currentResponseData = Object.values(response.data)[0]
-					setCurrentResponseData(currentResponseData)
-					let newIsVisible = [...isVisible]
-					newIsVisible[i] = !newIsVisible[i]
-					setIsVisible(newIsVisible)
-				})
-				.catch((error) => {})
+			return
 		}
+
+		const getResponse = async () => {
+			const queryParams = `?orderBy="responseId"&equalTo="${responseId}"`
+			const response = await axiosCaller({
+				method: 'get',
+				url: '/responses.json' + queryParams,
+			})
+
+			const currentResponseData = Object.values(response.data)[0]
+			setCurrentResponseData(currentResponseData)
+			let newIsVisible = [...isVisible]
+			newIsVisible[i] = !newIsVisible[i]
+			setIsVisible(newIsVisible)
+		}
+
+		getResponse()
 	}
 
 	const closeResponseHandler = (i) => {
@@ -44,21 +49,31 @@ const SubmittedResponses = (props) => {
 	}
 
 	useEffect(() => {
-		dispatch(setLoading(true))
-		axios
-			.get('/users/' + authState.userKey + '/submittedResponses.json?auth=' + authState.token)
-			.then((response) => {
-				if (!response.data) {
-					setNoResponse(true)
-				} else {
-					setResponses(Object.values(response.data))
-					setIsVisible(Array(Object.values(response.data).length).fill(false))
+		const getSubmittedResponses = async () => {
+			try {
+				dispatch(setLoading(true))
+				const response = await axiosCaller({
+					method: 'get',
+					url: '/users/' + authState.userKey + '/submittedResponses.json',
+				})
+
+				if (response.data == null) {
+					setNumberOfResponses(0)
+					dispatch(setLoading(false))
+					return
 				}
+
+				setResponses(Object.values(response.data))
+				setNumberOfResponses(Object.values(response.data).length)
+				setIsVisible(Array(Object.values(response.data).length).fill(false))
+
 				dispatch(setLoading(false))
-			})
-			.catch((error) => {
+			} catch (error) {
 				dispatch(setLoading(false))
-			})
+			}
+		}
+
+		getSubmittedResponses()
 	}, [])
 
 	let titles = null
@@ -121,16 +136,17 @@ const SubmittedResponses = (props) => {
 	}
 	return (
 		<BackDrop isLoading={authState.loading}>
-			{noResponse ? (
+			{numberOfResponses === 0 ? (
 				<div className='noPapers'>
 					<p>You haven't submitted any responses yet.</p>
 				</div>
-			) : (
+			) : null}
+			{numberOfResponses > 0 ? (
 				<div className='submittedResponses'>
 					{titles}
 					{responsesComp}
 				</div>
-			)}
+			) : null}
 		</BackDrop>
 	)
 }

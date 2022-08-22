@@ -7,7 +7,7 @@ import * as FaIcons from 'react-icons/fa'
 import * as AiIcons from 'react-icons/ai'
 import './styles.css'
 
-const Toolbar = (props) => {
+const Toolbar = () => {
 	const [menuToggle, setMenuToggle] = useState(false)
 	const [sidebarToggle, setSidebarToggle] = useState(false)
 	const menuRef = useRef(null)

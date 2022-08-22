@@ -8,14 +8,18 @@ const ResponderInfoForm = (props) => {
 
 	const [answers, setAnswers] = useState(props.feilds ? Array(props.feilds.length) : [])
 
-	//changes the form feilds of responder info form except email.
+	// changes the form feilds of responder info form except email.
 	const onAnswerChangeHandler = (object) => {
 		let answerArr = [...answers]
+
+		// prefilling the value of email in the responser form
 		if (answerArr.indexOf(authState.email) === -1) {
 			answerArr[2] = authState.email
 		}
+
 		answerArr[object.idx] = object.e.target.value
 		setAnswers(answerArr)
+
 		props.updateAnswer(answerArr)
 	}
 

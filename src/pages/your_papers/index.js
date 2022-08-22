@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
-import axios from '../../axios'
+import { useNavigate } from 'react-router-dom'
+import axiosCaller from '../../utils/axios'
 import { setLoading } from '../../store/actions/index'
 import { useSelector, useDispatch } from 'react-redux'
 import BackDrop from '../../components/hoc/backdrop'
@@ -8,48 +8,40 @@ import * as BiIcons from 'react-icons/bi'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import swal from 'sweetalert'
 import './styles.css'
-import Button from '../../components/UI/button'
+import { Button } from '../../components/UI'
 
-const YourPapers = (props) => {
+const YourPapers = () => {
 	const [questionData, setQuestionData] = useState([])
-	// const [questionKeyArr, setQuestionKeyArr] = useState([]);
-	const [doPaperExists, setDoPaperExists] = useState(false)
+	const [numberOfPapers, setNumberOfPapers] = useState(-1)
 	const authState = useSelector((state) => state.auth)
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	useEffect(() => {
-		dispatch(setLoading(true))
-		const queryParams = `?auth=${authState.token}`
+		const getCreatedPapers = async () => {
+			try {
+				dispatch(setLoading(true))
+				const response = await axiosCaller({
+					method: 'get',
+					url: '/users/' + authState.userKey + '/createdPapers.json',
+				})
 
-		axios
-			.get('/users/' + authState.userKey + '/createdPapers.json' + queryParams)
-			.then((response) => {
-				if (response.data) {
-					setQuestionData(Object.values(response.data))
-					// setQuestionKeyArr(Object.keys(response.data));
-				} else {
-					setDoPaperExists(true)
+				if (response.data == null) {
+					setNumberOfPapers(0)
+					dispatch(setLoading(false))
+					return
 				}
+
+				setQuestionData(Object.values(response.data))
+				setNumberOfPapers(Object.values(response.data).length)
 				dispatch(setLoading(false))
-			})
-			.catch((error) => {
+			} catch (error) {
 				dispatch(setLoading(false))
-			})
+			}
+		}
+
+		getCreatedPapers()
 	}, [])
-
-	const showQuestionHandler = (i) => {
-		props.updateQuestionRouteData({
-			idx: i,
-			id: questionData[i].paperId,
-		})
-	}
-
-	const showResponsesHandler = (i) => {
-		props.updateResponsesRouteData({
-			idx: i,
-			id: questionData[i].paperId,
-		})
-	}
 
 	const linkCopied = () => {
 		swal({
@@ -87,22 +79,20 @@ const YourPapers = (props) => {
 							</div>
 						</CopyToClipboard>
 
-						<Button varient='secondary' onClick={() => showQuestionHandler(i)} className='btn'>
-							<NavLink
-								to={'/papers/' + questionData[i].paperId}
-								onClick={() => showResponsesHandler(i)}
-							>
-								View
-							</NavLink>
+						<Button
+							varient='secondary'
+							onClick={() => navigate('/papers/' + questionData[i].paperId)}
+							className='btn'
+						>
+							View
 						</Button>
 
-						<Button varient='secondary' onClick={() => showQuestionHandler(i)} className='btn'>
-							<NavLink
-								to={'/yourPapers/' + i + '/responses'}
-								onClick={() => showResponsesHandler(i)}
-							>
-								View
-							</NavLink>
+						<Button
+							varient='secondary'
+							onClick={() => navigate('/papers/' + questionData[i].paperId + '/responses')}
+							className='btn'
+						>
+							View
 						</Button>
 					</div>
 
@@ -117,22 +107,20 @@ const YourPapers = (props) => {
 							</div>
 						</CopyToClipboard>
 
-						<Button varient='secondary' onClick={() => showQuestionHandler(i)} className='btn'>
-							<NavLink
-								to={'/papers/' + questionData[i].paperId}
-								onClick={() => showResponsesHandler(i)}
-							>
-								View Paper
-							</NavLink>
+						<Button
+							varient='secondary'
+							onClick={() => navigate('/papers/' + questionData[i].paperId)}
+							className='btn'
+						>
+							View Paper
 						</Button>
 
-						<Button varient='secondary' onClick={() => showQuestionHandler(i)} className='btn'>
-							<NavLink
-								to={'/yourPapers/' + i + '/responses'}
-								onClick={() => showResponsesHandler(i)}
-							>
-								View Responses
-							</NavLink>
+						<Button
+							varient='secondary'
+							onClick={() => navigate('/papers/' + questionData[i].paperId + '/responses')}
+							className='btn'
+						>
+							View Responses
 						</Button>
 					</div>
 				</div>
@@ -142,16 +130,17 @@ const YourPapers = (props) => {
 
 	return (
 		<BackDrop isLoading={authState.loading}>
-			{doPaperExists ? (
+			{numberOfPapers === 0 ? (
 				<div className='noPapers'>
 					<p>You haven't created any papers yet.</p>
 				</div>
-			) : (
+			) : null}
+			{numberOfPapers > 0 ? (
 				<div className='yourPapersContent'>
 					{responderInfoFeildTitles}
 					{questions}
 				</div>
-			)}
+			) : null}
 		</BackDrop>
 	)
 }

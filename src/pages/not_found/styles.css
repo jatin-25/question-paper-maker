@@ -1,36 +1,21 @@
-.Wrapper {
-  margin-top: 5rem;
-  display: flex;
-  align-items: center;
-  padding: 1em;
+.notFound {
+  margin: 8rem auto 2rem auto;
+  background-color: rgb(255,254,254);
+  width: fit-content;
+  padding: 1.2rem 1.5rem;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 20px 0px;
+  border-radius: 10px;
 }
-.Content {
-  background: #cbd2d9;
-  padding: 4em 5em;
-  margin: 2em auto;
-  border-radius: 8px;
-  align-self: center;
-  justify-self: center;
-}
-.Content h1 {
-  font-size: 2.2rem;
+
+.notFound h1 {
+  font-size: 1.5rem;
   font-weight: 500;
   text-align: center;
 }
 
-@media screen and (max-width: 700px) {
-  .Content {
-    padding: 2em 3em;
-  }
-}
-
 @media screen and (max-width: 430px) {
-  .Content {
+  .notFound {
     width: 95%;
-    padding: 1em;
-  }
-  .Content h1 {
-    font-size: 1.8rem;
-    font-weight: 500;
+    padding: 1rem;
   }
 }

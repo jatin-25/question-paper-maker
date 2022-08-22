@@ -1,0 +1,113 @@
+.title-heading {
+	font-size: 2.2rem;
+	background: -webkit-linear-gradient(to left, #7b0a08, crimson);
+	background: linear-gradient(to left, #7b0a08, crimson);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	font-weight: 600;
+	width: max-content;
+	text-align: center;
+	margin-top: -2em;
+	margin-bottom: 1em;
+}
+
+form {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	transition: all 0.2s 0.7s;
+	overflow: hidden;
+	grid-column: 1 / 2;
+	grid-row: 1 / 2;
+}
+
+.title {
+	font-size: 2.2rem;
+	color: #444;
+}
+
+.icon {
+	display: flex;
+	align-self: center;
+	justify-self: center;
+	height: 25px;
+	width: 25px;
+}
+
+.mainErrorContainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.error {
+	display: flex;
+	align-items: center;
+	margin: 0 0.5em;
+	font-size: 14px;
+	max-width: 380px;
+	color: white;
+	padding: 8px;
+	color: transparent;
+	border-radius: 0.5em;
+	margin: 7.5px;
+}
+
+.error svg {
+	display: none;
+}
+
+.error p {
+	margin-left: 5px;
+}
+
+.showMainError {
+	color: white;
+	background-color: crimson;
+	margin: 0;
+}
+
+.showMainError svg {
+	display: block;
+}
+
+.errorElement {
+	width: 100%;
+}
+
+@media (max-width: 870px) {
+	.title-heading {
+		font-size: 2rem;
+	}
+
+	.btn.transparent {
+		width: 110px;
+		font-size: 0.7rem;
+	}
+}
+
+@media (max-width: 570px) {
+	form {
+		padding: 0 1.5rem;
+	}
+
+	.inputField {
+		height: 45px;
+	}
+
+	.title-heading {
+		font-size: 1.7rem;
+		width: auto;
+	}
+
+	.title {
+		font-size: 1.7rem;
+	}
+
+	form.signInForm,
+	form.signUpForm {
+		padding: 1.5em 1.2em;
+	}
+}
