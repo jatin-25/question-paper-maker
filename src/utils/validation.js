@@ -75,6 +75,5 @@ export const checkFormValidation = (form) => {
 	newForm.isFormValid = isFormValid
 	newForm.showErrors = !isFormValid
 
-	console.log(newForm)
 	return newForm
 }
