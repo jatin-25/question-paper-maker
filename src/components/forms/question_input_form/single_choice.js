@@ -13,21 +13,30 @@ const SCQuestionForm = (props) => {
 
 	const [optionsString, setOptionsString] = useState(props.optionsStr ? props.optionsStr : '')
 
-	//adds new question in new paper's question Array or updates the question if edit button clicked.
+	// adds new question in new paper's question Array or updates the question if edit button clicked.
 	const updateQuestionArr = () => {
 		if (questionData.question === '') {
 			swal('Warning', "Question can't be Empty!", 'warning')
-		} else if (questionData.optionsList.length < 2) {
+			return
+		}
+
+		if (questionData.optionsList.length < 2) {
 			swal('Warning', 'There should be atleast two options in the Question!', 'warning')
-		} else if (props.edit) {
+			return
+		}
+
+		if (props.edit) {
 			props.updateSCQOnEdit({
 				question: questionData,
 				index: props.qkey,
 			})
-		} else props.questionDataPass(questionData)
+			return
+		}
+
+		props.questionDataPass(questionData)
 	}
 
-	//updates question of the question object.
+	// updates question of the question object.
 	const onChangeQuestionHandler = (e) => {
 		const newQuestion = e.target.value
 		const newQuestionData = {
@@ -35,18 +44,21 @@ const SCQuestionForm = (props) => {
 			question: newQuestion,
 			optionsList: questionData.optionsList,
 		}
+
 		setQuestionData(newQuestionData)
 	}
 
-	//updates options of the question object.
+	// updates options of the question object.
 	const onChangeOptionsHandler = (e) => {
 		let optionsListString = e.target.value
 		let options = ''
 		let newOptions = ''
+
 		if (optionsListString) {
 			options = [...optionsListString.split(',')]
 			newOptions = [...options]
 		}
+
 		const newQuestionData = {
 			type: 'SingleChoiceQuestion',
 			question: questionData.question,
@@ -57,11 +69,14 @@ const SCQuestionForm = (props) => {
 		setOptionsString(optionsListString)
 	}
 
-	//closes the modal and doesn't update the array
+	// closes the modal and doesn't update the array
 	const cancelButtonHandler = () => {
 		if (props.edit) {
 			props.updateSCQOnEdit()
-		} else props.questionDataPass()
+			return
+		}
+
+		props.questionDataPass()
 	}
 
 	let options = null

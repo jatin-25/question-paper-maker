@@ -5,13 +5,12 @@ const initialState = {
 	token: null,
 	userId: null,
 	userKey: null,
-	error: null,
 	loading: null,
 	email: null,
 }
 
 const authStart = (state) => {
-	return updateObject(state, { error: null, loading: true })
+	return updateObject(state, { loading: true })
 }
 
 const setLoading = (state, action) => {
@@ -23,19 +22,17 @@ const authSuccess = (state, action) => {
 		userId: action.localId,
 		userKey: action.userKey,
 		loading: false,
-		error: null,
 		email: action.email,
 	})
 }
 
-const authFail = (state, action) => {
+const authFail = (state) => {
 	return updateObject(state, {
 		loading: false,
-		error: action.error,
 	})
 }
 
-const logout = (state, action) => {
+const logout = (state) => {
 	return updateObject(state, {
 		token: null,
 		userId: null,

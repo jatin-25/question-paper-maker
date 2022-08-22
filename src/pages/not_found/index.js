@@ -4,11 +4,8 @@ import './styles.css'
 class NotFound extends Component {
 	render() {
 		return (
-			<div className='Wrapper'>
-				<div className='Content'>
-					<h1>404 Error</h1>
-					<h1>Page Not Found!!</h1>
-				</div>
+			<div className='notFound'>
+				<h1>404 Error | Page Not Found!!</h1>
 			</div>
 		)
 	}

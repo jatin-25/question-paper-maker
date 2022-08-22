@@ -1,1 +1,8 @@
-export { auth, checkAuthState, setExpirationTime, setLoading } from './auth'
+export {
+	checkAuthState,
+	setExpirationTime,
+	setLoading,
+	authStart,
+	authFail,
+	authSuccess,
+} from './auth'

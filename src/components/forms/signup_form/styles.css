@@ -1,0 +1,24 @@
+.signUpContainer {
+	opacity: 0;
+	z-index: 0;
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	transition: all 0.2s 0.7s;
+	justify-content: center;
+	align-items: center;
+}
+
+form.signUpForm {
+	background: rgb(255, 254, 254);
+	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	border-radius: 1em;
+	width: 100%;
+	border-radius: 5px;
+	padding: 1.2em;
+}
+
+.signUpMode .signUpContainer {
+	opacity: 1;
+	z-index: 2;
+}

@@ -8,31 +8,34 @@ const MCQuestion = (props) => {
 		props.showEditButton || !props.answer ? ['Not Marked'] : props.answer
 	)
 
-	//updates the answer object of the parent component
+	// updates the answer object of the parent component
 	const setAnswer = (idx) => {
 		props.updateAnswer({ answer: answersArr, index: idx })
 	}
 
-	//updates the answersArr state and calls function for updating parent component answer array
+	// updates the answersArr state and calls function for updating parent component answer array
 	const updateAnswersArrHandler = (option) => {
-		let oldAnswerArr = answersArr
-		if (oldAnswerArr.length === 1 && oldAnswerArr[0] === 'Not Marked') {
+		let oldAnswerArr = [...answersArr]
+
+		if (oldAnswerArr[0] === 'Not Marked') {
 			oldAnswerArr.splice(0, 1)
 		}
 
 		const optionIndex = oldAnswerArr.findIndex((element) => element === option)
+
 		let newAnswerArr = null
+		// adding option if not already present otherwise deleting it from array
 		if (optionIndex === -1) {
 			newAnswerArr = [...oldAnswerArr, option]
 		} else {
 			oldAnswerArr.splice(optionIndex, 1)
 			newAnswerArr = [...oldAnswerArr]
 		}
-		if (newAnswerArr.length <= 1) {
-			if (newAnswerArr.length === 0) {
-				newAnswerArr = ['Not Marked']
-			}
+
+		if (newAnswerArr.length === 0) {
+			newAnswerArr = ['Not Marked']
 		}
+
 		setAnswersArr(newAnswerArr)
 		setAnswer(props.qkey)
 	}
@@ -63,6 +66,7 @@ const MCQuestion = (props) => {
 			)
 		})
 	}
+
 	let selectedAnswer = null
 	if (props?.pageOnWhichRendered !== 'newPaper') {
 		selectedAnswer = <p style={{ display: 'inline-block' }}>Selected Answer(s): {answers}</p>

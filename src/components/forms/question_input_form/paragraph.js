@@ -9,16 +9,22 @@ const PGQuestionForm = (props) => {
 		question: props.question ? props.question : '',
 	})
 
-	//adds new question in new paper's question Array or updates the question if edit button clicked.
+	// adds new question in new paper's question Array or updates the question if edit button clicked.
 	const updateQuestionArr = () => {
 		if (questionData.question === '') {
 			swal('Warning', "Question can't be Empty!", 'warning')
-		} else if (props.edit) {
+			return
+		}
+
+		if (props.edit) {
 			props.updatePQOnEdit({ question: questionData, index: props.qkey })
-		} else props.questionDataPass(questionData)
+			return
+		}
+
+		props.questionDataPass(questionData)
 	}
 
-	//updates question of the question object.
+	// updates question of the question object.
 	const onChangeQuestionHandler = (e) => {
 		const newQuestion = e.target.value
 		const newQuestionData = {
@@ -28,11 +34,14 @@ const PGQuestionForm = (props) => {
 		setQuestionData(newQuestionData)
 	}
 
-	//closes the modal and doesn't update the array
+	// closes the modal and doesn't update the array
 	const cancelButtonHandler = () => {
 		if (props.edit) {
 			props.updatePQOnEdit()
-		} else props.questionDataPass()
+			return
+		}
+
+		props.questionDataPass()
 	}
 
 	let inputForm = (

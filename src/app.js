@@ -12,21 +12,14 @@ import AuthForm from './pages/authentication'
 import NotFound from './pages/not_found'
 import { checkAuthState } from './store/actions'
 import { useSelector, useDispatch } from 'react-redux'
-import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
-const App = (props) => {
-	const [isViewPaperClicked, setIsViewPaperClicked] = useState(false)
-	const [isViewResponseClicked, setIsViewResponseClicked] = useState(false)
-	const [paperId, setPaperId] = useState(null)
-	const [responseId, setResponseId] = useState(null)
-	const [paperIdx, setPaperIdx] = useState(null)
-	const [responseIdx, setResponseIdx] = useState(null)
-
+const App = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const authState = useSelector((state) => state.auth)
 	const dispatch = useDispatch()
+
 	useEffect(() => {
 		dispatch(checkAuthState())
 	}, [])
@@ -39,22 +32,6 @@ const App = (props) => {
 		}
 	}, [authState.token])
 
-	const updateQuestionRouteDataHandler = (questionRouteData) => {
-		if (questionRouteData) {
-			setIsViewPaperClicked(true)
-			setPaperId(questionRouteData.id)
-			setPaperIdx(questionRouteData.idx)
-		}
-	}
-
-	const updateResponsesRouteDataHandler = (responsesRouteData) => {
-		if (responsesRouteData) {
-			setIsViewResponseClicked(true)
-			setResponseId(responsesRouteData.id)
-			setResponseIdx(responsesRouteData.idx)
-		}
-	}
-
 	return (
 		<div>
 			{authState.token !== null ? <Toolbar initialToolbar={true} /> : null}
@@ -63,25 +40,10 @@ const App = (props) => {
 					<Route path='/' exact element={<NewPaper />} />
 					<Route path='/newPaper' exact element={<NewPaper />} />
 					<Route path='/response' exact element={<PaperResponses />} />
-					<Route
-						path='/yourPapers'
-						exact
-						element={
-							<YourPapers
-								updateQuestionRouteData={updateQuestionRouteDataHandler}
-								updateResponsesRouteData={updateResponsesRouteDataHandler}
-							/>
-						}
-					/>
+					<Route path='/yourPapers' exact element={<YourPapers />} />
 					<Route path='/submittedResponses' exact element={<SubmittedResponses />} />
 					<Route exact path='/papers/:qkey' element={<QuestionPaper />} />
-					{isViewResponseClicked ? (
-						<Route
-							exact
-							path={'/yourPapers/' + responseIdx + '/responses'}
-							element={<PaperResponses qkey={responseId} />}
-						/>
-					) : null}
+					<Route exact path={'/papers/:qkey/responses'} element={<PaperResponses />} />
 					<Route path='/profile' exact element={<Profile />} />
 					<Route path='*' element={<NotFound />} />
 				</Routes>
