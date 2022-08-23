@@ -1,18 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import * as BiIcons from 'react-icons/bi'
 import * as MdIcons from 'react-icons/md'
 import './styles.css'
 
 const PGQuestion = (props) => {
-	const [answer, setAnswer] = useState(props.showEditButton || !props.answer ? '' : props.answer)
-
-	const setAnswerHandler = (idx) => {
-		props.updateAnswer({ answer: answer, index: idx })
-	}
-
 	const onAnswerChangeHandler = (e) => {
-		setAnswer(e.target.value)
-		setAnswerHandler(props.qkey)
+		props.updateAnswer({ answer: e.target.value, index: props.qkey })
 	}
 
 	let questionArea = null
@@ -22,8 +15,8 @@ const PGQuestion = (props) => {
 				className='paraAnswer'
 				rows='8'
 				cols='70'
+				value={props.answer ? props.answer : ''}
 				onChange={(e) => onAnswerChangeHandler(e)}
-				value={answer}
 				disabled={props.pageOnWhichRendered !== 'questionPaper'}
 			></textarea>
 		)

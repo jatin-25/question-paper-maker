@@ -29,13 +29,20 @@ const authSuccess = (state, action) => {
 const authFail = (state) => {
 	return updateObject(state, {
 		loading: false,
+		token: null,
+		userId: null,
+		userKey: null,
+		email: null,
 	})
 }
 
 const logout = (state) => {
 	return updateObject(state, {
+		loading: false,
 		token: null,
 		userId: null,
+		userKey: null,
+		email: null,
 	})
 }
 const reducer = (state = initialState, action) => {

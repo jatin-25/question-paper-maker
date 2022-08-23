@@ -25,39 +25,44 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		if (authState.token) {
-			if (location.state) {
-				navigate(location.state.prevPath)
-			}
+		if (authState.token && location.state) {
+			navigate(location.state.prevPath)
 		}
 	}, [authState.token])
 
 	return (
 		<div>
-			{authState.token !== null ? <Toolbar initialToolbar={true} /> : null}
-			{authState.token ? (
+			{authState.token ? <Toolbar /> : null}
+			{
 				<Routes>
-					<Route path='/' exact element={<NewPaper />} />
-					<Route path='/newPaper' exact element={<NewPaper />} />
-					<Route path='/response' exact element={<PaperResponses />} />
-					<Route path='/yourPapers' exact element={<YourPapers />} />
-					<Route path='/submittedResponses' exact element={<SubmittedResponses />} />
-					<Route exact path='/papers/:qkey' element={<QuestionPaper />} />
-					<Route exact path={'/papers/:qkey/responses'} element={<PaperResponses />} />
-					<Route path='/profile' exact element={<Profile />} />
-					<Route path='*' element={<NotFound />} />
+					{authState.token ? (
+						<>
+							<Route path='/' exact element={<NewPaper />} />
+							<Route path='/newPaper' element={<NewPaper />} />
+							<Route path='/response' element={<PaperResponses />} />
+							<Route path='/yourPapers' element={<YourPapers />} />
+							<Route path='/submittedResponses' element={<SubmittedResponses />} />
+							<Route path='/papers/:qkey' element={<QuestionPaper />} />
+							<Route path={'/papers/:qkey/responses'} element={<PaperResponses />} />
+							<Route path='/profile' element={<Profile />} />
+							<Route path='/*' element={<NotFound />} />
+						</>
+					) : null}
+					{authState.token == null ? (
+						<>
+							<Route path='/authenticate' element={<AuthForm />} />
+							{localStorage.getItem('token') == null && (
+								<Route
+									path={'*'}
+									element={
+										<Navigate to='/authenticate' replace state={{ prevPath: location.pathname }} />
+									}
+								/>
+							)}
+						</>
+					) : null}
 				</Routes>
-			) : (
-				<Routes>
-					<Route path='/login' exact element={<AuthForm />} />
-					{localStorage.getItem('token') === null && (
-						<Route
-							path={'*'}
-							element={<Navigate to='/login' replace state={{ prevPath: location.pathname }} />}
-						/>
-					)}
-				</Routes>
-			)}
+			}
 		</div>
 	)
 }

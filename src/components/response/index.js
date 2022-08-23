@@ -16,7 +16,6 @@ const Response = (props) => {
 							answer={props.data[i].answer}
 							key={i}
 							qkey={i}
-							questionNo={i + 1}
 							pageOnWhichRendered='response'
 						/>
 					)
@@ -27,10 +26,9 @@ const Response = (props) => {
 						<MCQuestion
 							optionsList={props.data[i].optionsList}
 							question={props.data[i].question}
-							answer={props.data[i].answer}
+							answersArr={props.data[i].answer}
 							key={i}
 							qkey={i}
-							questionNo={i + 1}
 							pageOnWhichRendered='response'
 						/>
 					)
@@ -43,7 +41,6 @@ const Response = (props) => {
 							answer={props.data[i].answer}
 							key={i}
 							qkey={i}
-							questionNo={i + 1}
 							pageOnWhichRendered='response'
 						/>
 					)

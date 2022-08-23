@@ -119,7 +119,7 @@ const SignupForm = () => {
 				email: signUpForm.elements[1].value,
 			}
 
-			const userResponse = axiosCaller({
+			const userResponse = await axiosCaller({
 				method: 'post',
 				url: '/users.json',
 				params: {

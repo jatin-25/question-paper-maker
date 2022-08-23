@@ -77,3 +77,8 @@ export const checkFormValidation = (form) => {
 
 	return newForm
 }
+
+// checks the validation of Responder Info Form
+export const checkResponderFormValidation = (formFields) => {
+	return formFields.every((field) => field.value != null && field.value.length >= 1)
+}

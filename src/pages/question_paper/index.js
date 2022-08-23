@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { SCQuestion, MCQuestion, PGQuestion } from '../../components/question_types'
+import { checkResponderFormValidation } from '../../utils/validation'
 import ResponderInfoForm from '../../components/forms/responder_info_form'
 import { useSelector, useDispatch } from 'react-redux'
 import { setLoading } from '../../store/actions'
@@ -15,9 +16,8 @@ const QuestionPaper = () => {
 	const [title, setTitle] = useState('')
 	const { qkey } = useParams()
 	const [isSubmitted, setIsSubmitted] = useState('Not Known')
-	const [responderInfoFeilds, setResponderInfoFeilds] = useState({
-		answer: [],
-	})
+	const [responderInfoFeilds, setResponderInfoFeilds] = useState([])
+
 	const [questionArr, setQuestionArr] = useState([])
 
 	const authState = useSelector((state) => state.auth)
@@ -27,10 +27,13 @@ const QuestionPaper = () => {
 		const getPaper = async () => {
 			try {
 				dispatch(setLoading(true))
-				const queryParams = `?orderBy="paperId"&equalTo="${qkey}"`
 				const response = await axiosCaller({
 					method: 'get',
-					url: '/users/' + authState.userKey + '/submittedResponses.json' + queryParams,
+					url: '/users/' + authState.userKey + '/submittedResponses.json',
+					params: {
+						orderBy: `"paperId"`,
+						equalTo: `"${qkey}"`,
+					},
 				})
 
 				if (Object.values(response.data).length > 0) {
@@ -39,10 +42,13 @@ const QuestionPaper = () => {
 					return
 				}
 
-				const queryParams2 = `?orderBy="paperId"&equalTo="${qkey}"`
 				const paper = await axiosCaller({
 					method: 'get',
-					url: '/questionPapers.json' + queryParams2,
+					url: '/questionPapers.json',
+					params: {
+						orderBy: `"paperId"`,
+						equalTo: `"${qkey}"`,
+					},
 				})
 
 				const questionPaper = Object.values(paper.data)
@@ -72,16 +78,16 @@ const QuestionPaper = () => {
 		setQuestionArr(newQuestionArr)
 	}
 
-	const updateResponderInfoFeildAnswerHandler = (answer) => {
-		if (answer == null) return
+	const updateResponderInfoFeildAnswerHandler = (fieldsArr) => {
+		if (fieldsArr == null) return
 
-		let responderInfoFeild = { ...responderInfoFeilds, answer: [] }
-		responderInfoFeild.answer = answer
-		setResponderInfoFeilds(responderInfoFeild)
+		setResponderInfoFeilds(fieldsArr)
 	}
 
-	const submitQuestionPaperHandler = () => {
-		if (!onSubmitHandler()) {
+	const submitQuestionPaperHandler = (event) => {
+		event.preventDefault()
+
+		if (!checkResponderFormValidation(responderInfoFeilds)) {
 			swal('Warning', "Essential Feilds can't be Empty!", 'warning')
 			return
 		}
@@ -95,32 +101,28 @@ const QuestionPaper = () => {
 		}).then((willSubmit) => {
 			if (!willSubmit) return
 
-			const questionPaperResponse = {
-				responseId: uuid(),
-				paperId: qkey,
-				responderInfoFeilds: responderInfoFeilds,
-				questionArr: questionArr,
-			}
-
-			try {
-				dispatch(setLoading(true))
-				axiosCaller({
-					method: 'post',
-					url: '/responses.json',
-					data: questionPaperResponse,
-				})
-
-				addToSubmittedPapers(questionPaperResponse.responseId)
-			} catch (error) {
-				dispatch(setLoading(false))
-			}
+			sendPaperToServer()
 		})
 	}
 
-	const addToSubmittedPapers = async (responseId) => {
+	const sendPaperToServer = async () => {
+		const questionPaperResponse = {
+			responseId: uuid(),
+			paperId: qkey,
+			responderInfoFeilds: responderInfoFeilds,
+			questionArr: questionArr,
+		}
+
 		try {
+			dispatch(setLoading(true))
+			await axiosCaller({
+				method: 'post',
+				url: '/responses.json',
+				data: questionPaperResponse,
+			})
+
 			const currentResponseId = {
-				responseId: responseId,
+				responseId: questionPaperResponse.responseId,
 				paperId: qkey,
 				paperTitle: title,
 			}
@@ -138,34 +140,12 @@ const QuestionPaper = () => {
 		}
 	}
 
-	const onSubmitHandler = () => {
-		if (responderInfoFeilds.answer) {
-			const answers = responderInfoFeilds.answer
-			let isFormInvalid = false
-			for (let i = 0; i < answers.length; ++i) {
-				if (answers[i] == null || answers[i] === '') {
-					isFormInvalid = true
-					break
-				}
-			}
-			if (isFormInvalid) {
-				return false
-			}
-			return true
-		} else {
-			return false
-		}
-	}
-
-	let responderInfoInputForm = null
-	if (Object.keys(responderInfoFeilds || {})?.indexOf('title') !== -1) {
-		responderInfoInputForm = (
-			<ResponderInfoForm
-				feilds={responderInfoFeilds.title}
-				updateAnswer={updateResponderInfoFeildAnswerHandler}
-			/>
-		)
-	}
+	let responderInfoInputForm = (
+		<ResponderInfoForm
+			fields={responderInfoFeilds}
+			updateAnswer={updateResponderInfoFeildAnswerHandler}
+		/>
+	)
 
 	let questionsComponent = questionArr.map((question, i) => {
 		let questionComp = null
@@ -175,10 +155,12 @@ const QuestionPaper = () => {
 					<SCQuestion
 						optionsList={questionArr[i]?.optionsList}
 						question={questionArr[i]?.question}
+						answer={
+							questionArr[i]?.answer ? questionArr[i]?.answer : { index: 0, value: 'Not Marked' }
+						}
 						key={i}
 						qkey={i}
 						updateAnswer={updateAnswerHandler}
-						questionNo={i + 1}
 						pageOnWhichRendered='questionPaper'
 					/>
 				)
@@ -189,10 +171,12 @@ const QuestionPaper = () => {
 					<MCQuestion
 						optionsList={questionArr[i]?.optionsList}
 						question={questionArr[i]?.question}
+						answersArr={
+							questionArr[i]?.answer ? questionArr[i]?.answer : [{ index: 0, value: 'Not Marked' }]
+						}
 						key={i}
 						qkey={i}
 						updateAnswer={updateAnswerHandler}
-						questionNo={i + 1}
 						pageOnWhichRendered='questionPaper'
 					/>
 				)
@@ -204,8 +188,8 @@ const QuestionPaper = () => {
 						question={questionArr[i]?.question}
 						key={i}
 						qkey={i}
+						answer={questionArr[i]?.answer ? questionArr[i]?.answer : ''}
 						updateAnswer={updateAnswerHandler}
-						questionNo={i + 1}
 						pageOnWhichRendered='questionPaper'
 					/>
 				)

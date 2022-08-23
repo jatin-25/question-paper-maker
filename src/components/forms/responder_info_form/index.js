@@ -1,32 +1,26 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
-import Input from '../../UI/input'
+import { Input } from '../../UI'
 import './styles.css'
 
-const ResponderInfoForm = (props) => {
+const ResponderInfoForm = ({ fields, updateAnswer }) => {
 	const authState = useSelector((state) => state.auth)
 
-	const [answers, setAnswers] = useState(props.feilds ? Array(props.feilds.length) : [])
-
 	// changes the form feilds of responder info form except email.
-	const onAnswerChangeHandler = (object) => {
-		let answerArr = [...answers]
+	const onAnswerChangeHandler = ({ e, idx }) => {
+		let fieldsArr = [...fields]
 
-		// prefilling the value of email in the responser form
-		if (answerArr.indexOf(authState.email) === -1) {
-			answerArr[2] = authState.email
-		}
+		fieldsArr[2].value = authState.email
 
-		answerArr[object.idx] = object.e.target.value
-		setAnswers(answerArr)
+		fieldsArr[idx].value = e.target.value
 
-		props.updateAnswer(answerArr)
+		updateAnswer(fieldsArr)
 	}
 
-	let responderInfoForm = props.feilds?.map((feildTitle, i) => {
+	let responderInfoForm = fields?.map((field, i) => {
 		return (
 			<div key={i}>
-				<p>{feildTitle}</p>
+				<p>{field.name}</p>
 				{i === 2 ? (
 					<Input
 						type='text'
@@ -40,6 +34,7 @@ const ResponderInfoForm = (props) => {
 				) : (
 					<Input
 						type='text'
+						value={field.value ? field.value : ''}
 						onChange={(e) => onAnswerChangeHandler({ e: e, idx: i })}
 						elementConfig={{ minLength: 1 }}
 						style={{ marginBottom: '1rem' }}

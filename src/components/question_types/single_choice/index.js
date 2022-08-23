@@ -1,20 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import * as BiIcons from 'react-icons/bi'
 import * as MdIcons from 'react-icons/md'
 import './styles.css'
 
 const SCQuestion = (props) => {
-	const [answer, setAnswer] = useState(
-		props.showEditButton || !props.answer ? 'Not Marked' : props.answer
-	)
-
-	const setAnswerHandler = (idx) => {
-		props.updateAnswer({ answer: answer, index: idx })
-	}
-
-	const markAnswerHandler = (markedOption) => {
-		setAnswer(markedOption)
-		setAnswerHandler(props.qkey)
+	const markAnswerHandler = (markedOption, index) => {
+		props.updateAnswer({ answer: { index: index, value: markedOption }, index: props.qkey })
 	}
 
 	let options = props.optionsList
@@ -24,7 +15,8 @@ const SCQuestion = (props) => {
 						<input
 							type='radio'
 							name={props.qkey}
-							onChange={() => markAnswerHandler(option)}
+							checked={option === props.answer?.value && props.answer?.index === index}
+							onChange={() => markAnswerHandler(option, index)}
 							disabled={props.pageOnWhichRendered !== 'questionPaper'}
 						></input>
 						<span>{option}</span>
@@ -36,7 +28,7 @@ const SCQuestion = (props) => {
 	let answerComp = null
 	if (props.pageOnWhichRendered !== 'newPaper') {
 		answerComp = props.question ? (
-			<p style={{ display: 'inline-block' }}>Selected Answer: {answer}</p>
+			<p style={{ display: 'inline-block' }}>Selected Answer: {props.answer.value}</p>
 		) : null
 	}
 

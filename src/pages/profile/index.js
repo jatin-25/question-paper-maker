@@ -18,11 +18,14 @@ const Profile = () => {
 		const getProfileInfo = async () => {
 			try {
 				dispatch(setLoading(true))
-				const queryParams = `?orderBy="userId"&equalTo="${authState.userId}"`
 
 				const response = await axiosCaller({
 					method: 'get',
-					url: '/users.json' + queryParams,
+					url: '/users.json',
+					params: {
+						orderBy: `"userId"`,
+						equalTo: `"${authState.userId}"`,
+					},
 				})
 
 				if (!response.data) {
