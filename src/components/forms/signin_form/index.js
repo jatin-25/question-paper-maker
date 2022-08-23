@@ -103,7 +103,8 @@ const SigninForm = () => {
 				url: '/users.json',
 				params: {
 					auth: response.data.idToken,
-					userId: response.data.localId,
+					orderBy: `"userId"`,
+					equalTo: `"${response.data.localId}"`,
 				},
 			})
 

@@ -19,10 +19,17 @@ import BackDrop from '../../components/hoc/backdrop'
 
 const NewPaper = () => {
 	const [title, setTitle] = useState('')
-	const [responderInfoFeilds] = useState({
-		title: ['Name', 'Roll No.', 'Email Id'],
-		answer: [],
-	})
+	const [responderInfoFeilds] = useState([
+		{
+			name: 'Name',
+		},
+		{
+			name: 'Roll No.',
+		},
+		{
+			name: 'Email Id',
+		},
+	])
 
 	const [questionArr, setQuestionArr] = useState([])
 	const [openedModalType, setOpenedModalType] = useState(null)
@@ -64,7 +71,9 @@ const NewPaper = () => {
 		setOpenedModalType(modalType)
 	}
 
-	const submitQuestionPaperHandler = () => {
+	const submitQuestionPaperHandler = (event) => {
+		event.preventDefault()
+
 		if (title === '') {
 			swal('Warning', "Title can't be Empty!", 'warning')
 			return
@@ -294,7 +303,7 @@ const NewPaper = () => {
 	let paperTitle = isPaperReady ? (
 		<div className='paperTitle'>
 			<p>Paper Title</p>
-			<input type='text' onChange={(e) => setTitle(e.target.value)}></input>
+			<input type='text' value={title} onChange={(e) => setTitle(e.target.value)}></input>
 		</div>
 	) : null
 
@@ -342,7 +351,7 @@ const NewPaper = () => {
 				<div className='submitBtn'>
 					<Button
 						varient='secondary'
-						onClick={() => submitQuestionPaperHandler()}
+						onClick={(event) => submitQuestionPaperHandler(event)}
 						style={{ display: isPaperReady ? 'inline' : 'none' }}
 					>
 						Submit

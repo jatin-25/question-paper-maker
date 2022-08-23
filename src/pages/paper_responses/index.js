@@ -21,12 +21,15 @@ const Responses = () => {
 		const getPaperResponses = async () => {
 			try {
 				dispatch(setLoading(true))
-				const queryParams = `?orderBy="paperId"&equalTo="${qkey}"`
 
 				// getting all the responses whose paperId matches with our paparId
 				const response = await axiosCaller({
 					method: 'get',
-					url: '/responses.json' + queryParams,
+					url: '/responses.json',
+					params: {
+						orderBy: `"paperId"`,
+						equalTo: `"${qkey}"`,
+					},
 				})
 
 				if (response.data == null) {
@@ -64,8 +67,8 @@ const Responses = () => {
 	if (responseData[0] !== undefined) {
 		responderInfoFeildTitles = (
 			<div className='responseColNames'>
-				{responseData[0].responderInfoFeilds.title.map((title, i) => {
-					return <span key={i}>{title}</span>
+				{responseData[0].responderInfoFeilds.map((feild, i) => {
+					return <span key={i}>{feild.name}</span>
 				})}
 				<span>Responses</span>
 			</div>
@@ -78,8 +81,8 @@ const Responses = () => {
 			return (
 				<div key={i} className='response'>
 					<div className='responsesContent'>
-						{response.responderInfoFeilds.answer
-							? response.responderInfoFeilds.answer.map((feild, i) => <span key={i}>{feild}</span>)
+						{response.responderInfoFeilds
+							? response.responderInfoFeilds.map((feild, i) => <span key={i}>{feild.value}</span>)
 							: null}
 						<Button
 							varient='secondary'

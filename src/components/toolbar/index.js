@@ -21,7 +21,7 @@ const Toolbar = () => {
 	const onLogoutClickedHandler = () => {
 		sidebarToggle && setSidebarToggle(false)
 		dispatch(setExpirationTime(0))
-		navigate('/login')
+		navigate('/authenticate')
 	}
 
 	const sidebarItems = [
@@ -36,7 +36,7 @@ const Toolbar = () => {
 			<NavLink to='/profile' onClick={() => setMenuToggle(false)}>
 				Profile
 			</NavLink>
-			<NavLink to='/login' onClick={onLogoutClickedHandler}>
+			<NavLink to='/authenticate' onClick={onLogoutClickedHandler}>
 				Logout
 			</NavLink>
 		</div>

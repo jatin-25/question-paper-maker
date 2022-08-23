@@ -3,6 +3,8 @@
 	z-index: 0;
 	display: flex;
 	width: 100%;
+	max-width: 370px;
+	margin: 0 auto;
 	flex-direction: column;
 	transition: all 0.2s 0.7s;
 	justify-content: center;

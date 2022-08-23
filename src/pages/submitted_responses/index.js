@@ -26,10 +26,13 @@ const SubmittedResponses = () => {
 		}
 
 		const getResponse = async () => {
-			const queryParams = `?orderBy="responseId"&equalTo="${responseId}"`
 			const response = await axiosCaller({
 				method: 'get',
-				url: '/responses.json' + queryParams,
+				url: '/responses.json',
+				params: {
+					orderBy: `"responseId"`,
+					equalTo: `"${responseId}"`,
+				},
 			})
 
 			const currentResponseData = Object.values(response.data)[0]
