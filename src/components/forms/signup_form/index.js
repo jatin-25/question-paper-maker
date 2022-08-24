@@ -133,8 +133,6 @@ const SignupForm = () => {
 				return
 			}
 
-			console.log(userResponse)
-
 			dispatch(
 				authSuccess(
 					response.data.idToken,
