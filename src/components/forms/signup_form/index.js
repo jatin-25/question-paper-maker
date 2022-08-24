@@ -133,11 +133,13 @@ const SignupForm = () => {
 				return
 			}
 
+			console.log(userResponse)
+
 			dispatch(
 				authSuccess(
 					response.data.idToken,
 					response.data.localId,
-					userResponse.name,
+					userResponse.data.name,
 					response.data.email,
 					expirationDate
 				)
