@@ -68,6 +68,9 @@
 	margin: auto;
 }
 
+.questionTypes{
+	list-style: none;
+}
 
 .questionTypes li:nth-of-type(1) {
 	padding: 1em 0.5em;
