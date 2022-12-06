@@ -47,11 +47,6 @@
 	color: black;
 }
 
-.mobile span,
-.tab span {
-	word-break: break-word;
-}
-
 .row{
 	grid-auto-flow: column;
 	align-content: center;
