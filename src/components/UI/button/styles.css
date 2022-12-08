@@ -4,7 +4,7 @@
 	text-decoration: none;
 	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
 	color: #fff;
-	background: linear-gradient(to left, #7b0a08, crimson);
+	background: var(--left-linear-gradient);
 	padding: 10px 20px;
 	border: 0px;
 	border-radius: 20px;
@@ -18,7 +18,7 @@
 }
 
 .secondary{
-	background: linear-gradient(to right, rgb(226, 15, 57), #c31432,#560011);
+	background: var(--right-linear-gradient);
 	width: max-content;
 }
 

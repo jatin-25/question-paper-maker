@@ -4,8 +4,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgb(255, 254, 254);
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  background-color: var(--prim-bg-color);
+  box-shadow: var(--box-shadow-md);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,7 +43,7 @@
   flex-direction: column;
   height: 100vh;
   padding-top: 2.5rem;
-  background-color: rgb(255,254,254);
+  background-color: var(--prim-bg-color);
   box-shadow: 0 5px 20px 5px rgba(0,0,0,0.2);
   z-index: 1000;
 }
@@ -92,7 +92,7 @@
   top: 100%;
   width: 100%;
   left: 0;
-  background: linear-gradient(to right, rgb(233, 34, 74), #c31432,#560011);
+  background: var(--right-linear-gradient);
 }
 
 
@@ -133,7 +133,7 @@
   display: flex;
   flex-direction: column;
   width: 120px;
-  background-color: rgb(255,254,254);
+  background-color: var(--prim-bg-color);
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 12px 0px;
   border-radius: 2px;
   color: black;

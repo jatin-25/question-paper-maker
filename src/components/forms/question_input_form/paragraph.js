@@ -1,22 +1,28 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import swal from 'sweetalert'
 import Button from '../../UI/button'
 import Input from '../../UI/input'
 
-const PGQuestionForm = (props) => {
-	const [questionData, setQuestionData] = useState({
-		type: 'ParagraphQuestion',
-		question: props.question ? props.question : '',
-	})
+const PGQuestionForm = ({ question: globalQuestion, edit = false, ...props }) => {
+	const [question, setQuestion] = useState('')
+
+	useEffect(() => {
+		if (globalQuestion) setQuestion(globalQuestion)
+	}, [edit])
 
 	// adds new question in new paper's question Array or updates the question if edit button clicked.
 	const updateQuestionArr = () => {
-		if (questionData.question === '') {
+		if (question === '') {
 			swal('Warning', "Question can't be Empty!", 'warning')
 			return
 		}
 
-		if (props.edit) {
+		const questionData = {
+			type: 'ParagraphQuestion',
+			question: question,
+		}
+
+		if (edit) {
 			props.updatePQOnEdit({ question: questionData, index: props.qkey })
 			return
 		}
@@ -26,17 +32,12 @@ const PGQuestionForm = (props) => {
 
 	// updates question of the question object.
 	const onChangeQuestionHandler = (e) => {
-		const newQuestion = e.target.value
-		const newQuestionData = {
-			type: 'ParagraphQuestion',
-			question: newQuestion,
-		}
-		setQuestionData(newQuestionData)
+		setQuestion(e.target.value)
 	}
 
 	// closes the modal and doesn't update the array
 	const cancelButtonHandler = () => {
-		if (props.edit) {
+		if (edit) {
 			props.updatePQOnEdit()
 			return
 		}
@@ -47,11 +48,7 @@ const PGQuestionForm = (props) => {
 	let inputForm = (
 		<div>
 			<p>Question</p>
-			<Input
-				type='text'
-				onChange={(e) => onChangeQuestionHandler(e)}
-				value={questionData.question}
-			></Input>
+			<Input type='text' onChange={(e) => onChangeQuestionHandler(e)} value={question}></Input>
 			<br></br>
 		</div>
 	)
@@ -60,7 +57,7 @@ const PGQuestionForm = (props) => {
 		<div className='questionForm'>
 			{inputForm}
 			<p>Preview</p>
-			<p>{questionData.question}</p>
+			<p>{question}</p>
 			<Button
 				onClick={() => updateQuestionArr()}
 				varient='secondary'

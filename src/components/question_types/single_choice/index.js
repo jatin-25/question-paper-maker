@@ -28,7 +28,7 @@ const SCQuestion = (props) => {
 	let answerComp = null
 	if (props.pageOnWhichRendered !== 'newPaper') {
 		answerComp = props.question ? (
-			<p style={{ display: 'inline-block' }}>Selected Answer: {props.answer.value}</p>
+			<p style={{ display: 'inline-block' }}>Selected Answer: {props.answer?.value}</p>
 		) : null
 	}
 

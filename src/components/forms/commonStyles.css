@@ -1,7 +1,7 @@
 .title-heading {
 	font-size: 2.2rem;
 	background: -webkit-linear-gradient(to left, #7b0a08, crimson);
-	background: linear-gradient(to left, #7b0a08, crimson);
+	background: var(--left-linear-gradient);
 	background-clip: text;
 	-webkit-background-clip: text;
 	color: transparent;
