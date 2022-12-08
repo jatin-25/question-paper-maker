@@ -4,8 +4,8 @@
 	align-items: center;
 	justify-content: center;
 	color: black;
-	background: rgb(255, 254, 254);
-	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	background: var(--prim-bg-color);
+	box-shadow: var(--box-shadow-md);
 	width: 95%;
 	max-width: 800px;
 	margin: 5rem auto;
@@ -84,7 +84,7 @@
 }
 
 .noPapers {
-	background: rgb(255, 254, 254);
+	background: var(--prim-bg-color);
 	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 20px 0px;
 	margin: 0 auto;
 	padding: 1em;

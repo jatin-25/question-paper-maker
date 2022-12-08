@@ -1,31 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import swal from 'sweetalert'
 import Button from '../../UI/button'
 import Input from '../../UI/input'
 import './styles.css'
 
-const MCQuestionForm = (props) => {
-	const [questionData, setQuestionData] = useState({
-		type: 'MultipleChoiceQuestion',
-		question: props.question ? props.question : '',
-		optionsList: props.optionsList ? props.optionsList : [],
-	})
+const MCQuestionForm = ({
+	question: globalQuestion,
+	optionsList: globalOptionsList,
+	edit = false,
+	...props
+}) => {
+	const [question, setQuestion] = useState('')
+	const [optionsList, setOptionsList] = useState([])
 
-	const [optionsString, setOptionsString] = useState(props.optionsStr ? props.optionsStr : '')
+	const [optionsString, setOptionsString] = useState('')
+
+	useEffect(() => {
+		if (globalQuestion) setQuestion(globalQuestion)
+		if (globalOptionsList) {
+			setOptionsList(globalOptionsList)
+			setOptionsString(globalOptionsList.join(','))
+		}
+	}, [edit])
 
 	// adds new question in new paper's question Array or updates the question if edit button clicked.
 	const updateQuestionArr = () => {
-		if (questionData.question === '') {
+		if (question === '') {
 			swal('Warning', "Question can't be Empty!", 'warning')
 			return
 		}
 
-		if (questionData.optionsList.length < 2) {
+		if (optionsList.length < 2) {
 			swal('Warning', 'There should be atleast two options in the Question!', 'warning')
 			return
 		}
 
-		if (props.edit) {
+		const questionData = {
+			type: 'MultipleChoiceQuestion',
+			question: question,
+			optionsList: optionsList,
+		}
+
+		if (edit) {
 			props.updateMCQOnEdit({
 				question: questionData,
 				index: props.qkey,
@@ -38,7 +54,7 @@ const MCQuestionForm = (props) => {
 
 	// closes the modal and doesn't update the array
 	const cancelButtonHandler = () => {
-		if (props.edit) {
+		if (edit) {
 			props.updateMCQOnEdit()
 			return
 		}
@@ -48,13 +64,7 @@ const MCQuestionForm = (props) => {
 
 	// updates question of the question object.
 	const onChangeQuestionHandler = (e) => {
-		const newQuestion = e.target.value
-		const newQuestionData = {
-			type: 'MultipleChoiceQuestion',
-			question: newQuestion,
-			optionsList: questionData.optionsList,
-		}
-		setQuestionData(newQuestionData)
+		setQuestion(e.target.value)
 	}
 
 	// updates options of the question object.
@@ -68,20 +78,13 @@ const MCQuestionForm = (props) => {
 			newOptions = [...options]
 		}
 
-		let oldQuestionData = questionData
-		const newQuestionData = {
-			type: 'MultipleChoiceQuestion',
-			question: oldQuestionData.question,
-			optionsList: newOptions,
-		}
-
-		setQuestionData(newQuestionData)
+		setOptionsList(newOptions)
 		setOptionsString(optionsListString)
 	}
 
 	let options = null
-	if (questionData.optionsList) {
-		options = questionData.optionsList.map((option, i) => {
+	if (optionsList) {
+		options = optionsList.map((option, i) => {
 			return (
 				<div key={i} className='option'>
 					<input type='checkbox'></input>
@@ -94,11 +97,7 @@ const MCQuestionForm = (props) => {
 	let inputForm = (
 		<>
 			<p>Question</p>
-			<Input
-				type='text'
-				onChange={(e) => onChangeQuestionHandler(e)}
-				value={questionData.question}
-			></Input>
+			<Input type='text' onChange={(e) => onChangeQuestionHandler(e)} value={question}></Input>
 			<p>Options in the form of comma seperated values.</p>
 			<Input type='text' onChange={(e) => onChangeOptionsHandler(e)} value={optionsString}></Input>
 			<br></br>
@@ -109,7 +108,7 @@ const MCQuestionForm = (props) => {
 		<div className='questionForm'>
 			{inputForm}
 			<p>Preview</p>
-			<p>{questionData.question}</p>
+			<p>{question}</p>
 			<div className='optionsContainer'> {options}</div>
 
 			<Button

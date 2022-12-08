@@ -237,68 +237,40 @@ const NewPaper = () => {
 		return questionComp
 	})
 
-	let singleChoiceQuestionForm = null
-	if (openedModalType === 'SingleChoiceQuestion') {
-		singleChoiceQuestionForm = <SCQuestionForm questionDataPass={updateQuestionArr} edit={false} />
-	}
+	let singleChoiceQuestionForm = <SCQuestionForm questionDataPass={updateQuestionArr} />
 
-	let multipleChoiceQuestionForm = null
-	if (openedModalType === 'MultipleChoiceQuestion') {
-		multipleChoiceQuestionForm = (
-			<MCQuestionForm questionDataPass={updateQuestionArr} edit={false} />
-		)
-	}
+	let multipleChoiceQuestionForm = <MCQuestionForm questionDataPass={updateQuestionArr} />
 
-	let paragraphQuestionForm = null
-	if (openedModalType === 'ParagraphQuestion') {
-		paragraphQuestionForm = <PGQuestionForm questionDataPass={updateQuestionArr} edit={false} />
-	}
+	let paragraphQuestionForm = <PGQuestionForm questionDataPass={updateQuestionArr} />
 
-	let singleChoiceEditForm = null
-	if (editData.clicked && editData.type === 'SingleChoiceQuestion') {
-		let optionsString = null
-		let tempOptionsString = questionArr[editData.idx].optionsList.join(',')
-		optionsString = tempOptionsString.substring(0, tempOptionsString.length)
-		singleChoiceEditForm = (
-			<SCQuestionForm
-				optionsList={questionArr[editData.idx].optionsList}
-				question={questionArr[editData.idx].question}
-				edit={editData.clicked}
-				updateSCQOnEdit={updateQuestionOnEdit}
-				qkey={editData.idx}
-				optionsStr={optionsString}
-			/>
-		)
-	}
+	let singleChoiceEditForm = (
+		<SCQuestionForm
+			optionsList={questionArr[editData.idx]?.optionsList}
+			question={questionArr[editData.idx]?.question}
+			edit={editData.clicked}
+			updateSCQOnEdit={updateQuestionOnEdit}
+			qkey={editData.idx}
+		/>
+	)
 
-	let multipleChoiceEditForm = null
-	if (editData.clicked && editData.type === 'MultipleChoiceQuestion') {
-		let optionsString = null
-		let tempOptionsString = questionArr[editData.idx].optionsList.join(',')
-		optionsString = tempOptionsString.substring(0, tempOptionsString.length)
-		multipleChoiceEditForm = (
-			<MCQuestionForm
-				optionsList={questionArr[editData.idx].optionsList}
-				question={questionArr[editData.idx].question}
-				edit={editData.clicked}
-				updateMCQOnEdit={updateQuestionOnEdit}
-				qkey={editData.idx}
-				optionsStr={optionsString}
-			/>
-		)
-	}
+	let multipleChoiceEditForm = (
+		<MCQuestionForm
+			optionsList={questionArr[editData.idx]?.optionsList}
+			question={questionArr[editData.idx]?.question}
+			edit={editData.clicked}
+			updateMCQOnEdit={updateQuestionOnEdit}
+			qkey={editData.idx}
+		/>
+	)
 
-	let paragraphEditForm = null
-	if (editData.clicked && editData.type === 'ParagraphQuestion') {
-		paragraphEditForm = (
-			<PGQuestionForm
-				question={questionArr[editData.idx].question}
-				edit={editData.clicked}
-				updatePQOnEdit={updateQuestionOnEdit}
-				qkey={editData.idx}
-			/>
-		)
-	}
+	let paragraphEditForm = (
+		<PGQuestionForm
+			question={questionArr[editData.idx]?.question}
+			edit={editData.clicked}
+			updatePQOnEdit={updateQuestionOnEdit}
+			qkey={editData.idx}
+		/>
+	)
 
 	let paperTitle = isPaperReady ? (
 		<div className='paperTitle'>

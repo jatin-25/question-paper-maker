@@ -8,8 +8,8 @@
 	margin: 0 auto;
 	margin-top: 5rem;
 	color: black;
-	background: rgb(255, 254, 254);
-	box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+	background: var(--prim-bg-color);
+	box-shadow: var(--box-shadow-md);
 	max-width: 750px;
 	width: 92%;
 	border-radius: 8px;
@@ -69,7 +69,7 @@
 .collapsibleContent {
 	width: 100%;
 	margin-bottom: 0.5em;
-	background: linear-gradient(to right, rgb(233, 34, 74), #c31432,#560011);
+	background: var(--right-linear-gradient);
 }
 
 
