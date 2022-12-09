@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import swal from 'sweetalert'
 import Button from '../../UI/button'
 import Input from '../../UI/input'
@@ -13,15 +13,17 @@ const MCQuestionForm = ({
 	const [question, setQuestion] = useState('')
 	const [optionsList, setOptionsList] = useState([])
 
-	const [optionsString, setOptionsString] = useState('')
+	const [prevEdit, setPrevEdit] = useState(edit)
 
-	useEffect(() => {
+	const optionsString = optionsList.join(',')
+
+	if (prevEdit !== edit) {
+		setPrevEdit(edit)
 		if (globalQuestion) setQuestion(globalQuestion)
 		if (globalOptionsList) {
 			setOptionsList(globalOptionsList)
-			setOptionsString(globalOptionsList.join(','))
 		}
-	}, [edit])
+	}
 
 	// adds new question in new paper's question Array or updates the question if edit button clicked.
 	const updateQuestionArr = () => {
@@ -79,7 +81,6 @@ const MCQuestionForm = ({
 		}
 
 		setOptionsList(newOptions)
-		setOptionsString(optionsListString)
 	}
 
 	let options = null

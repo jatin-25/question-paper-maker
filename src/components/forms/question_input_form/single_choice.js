@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import swal from 'sweetalert'
 import Button from '../../UI/button'
 import Input from '../../UI/input'
@@ -12,16 +12,17 @@ const SCQuestionForm = ({
 }) => {
 	const [question, setQuestion] = useState('')
 	const [optionsList, setOptionsList] = useState([])
+	const [prevEdit, setPrevEdit] = useState(edit)
 
-	const [optionsString, setOptionsString] = useState('')
+	const optionsString = optionsList.join(',')
 
-	useEffect(() => {
+	if (prevEdit !== edit) {
+		setPrevEdit(edit)
 		if (globalQuestion) setQuestion(globalQuestion)
 		if (globalOptionsList) {
 			setOptionsList(globalOptionsList)
-			setOptionsString(globalOptionsList.join(','))
 		}
-	}, [edit])
+	}
 
 	// adds new question in new paper's question Array or updates the question if edit button clicked.
 	const updateQuestionArr = () => {
@@ -71,7 +72,6 @@ const SCQuestionForm = ({
 		}
 
 		setOptionsList(newOptions)
-		setOptionsString(optionsListString)
 	}
 
 	// closes the modal and doesn't update the array
@@ -89,7 +89,6 @@ const SCQuestionForm = ({
 	const clearQuestionData = () => {
 		setQuestion('')
 		setOptionsList([])
-		setOptionsString('')
 	}
 
 	let options = null
